@@ -1,10 +1,10 @@
 ﻿<script setup lang="ts">
-import {computed, inject, ref, watch} from "vue";
+import {computed, type CSSProperties, inject, ref, watch} from "vue";
 import ToastProgress from "./ToastProgress.vue";
 import type {ToastContext, ToastId, ToastInstance, ToastStore, ToastType,} from "toastflow-core";
 import {toastStoreKey} from "../symbols";
 
-import {AlertTriangle, CheckCircle2, Info, X as XIcon, XCircle,} from "lucide-vue-next";
+import {AlertTriangle, BadgeInfo, CheckCircle2, Info, X as XIcon, XCircle,} from "lucide-vue-next";
 
 const {toast, progressResetKey, duplicateKey, clearAllClass} = defineProps<{
   toast: ToastInstance;
@@ -26,98 +26,75 @@ const store: ToastStore = injectedStore;
 const isHovered = ref(false);
 const isBumped = ref(false);
 
+const typeMeta: Record<ToastType, {
+  accent: string;
+  icon: string;
+  close: string;
+  component: typeof CheckCircle2;
+}> = {
+  success: {
+    accent: "tf-toast-accent--success",
+    icon: "tf-toast-icon--success",
+    close: "tf-toast-close--success",
+    component: CheckCircle2,
+  },
+  error: {
+    accent: "tf-toast-accent--error",
+    icon: "tf-toast-icon--error",
+    close: "tf-toast-close--error",
+    component: XCircle,
+  },
+  warning: {
+    accent: "tf-toast-accent--warning",
+    icon: "tf-toast-icon--warning",
+    close: "tf-toast-close--warning",
+    component: AlertTriangle,
+  },
+  info: {
+    accent: "tf-toast-accent--info",
+    icon: "tf-toast-icon--info",
+    close: "tf-toast-close--info",
+    component: Info,
+  },
+  default: {
+    accent: "tf-toast-accent--default",
+    icon: "tf-toast-icon--default",
+    close: "tf-toast-close--default",
+    component: BadgeInfo,
+  },
+};
+
 const role = computed(function () {
-  return resolveRole(toast.type);
+  return assertiveTypes.has(toast.type) ? "alert" : "status";
 });
 
 const ariaLive = computed(function () {
-  return resolveAriaLive(toast.type);
+  return assertiveTypes.has(toast.type) ? "assertive" : "polite";
 });
 
 const accentClass = computed(function () {
-  const type = toast.type;
-  if (type === "success") {
-    return "tf-toast-accent--success";
-  }
-  if (type === "error") {
-    return "tf-toast-accent--error";
-  }
-  if (type === "warning") {
-    return "tf-toast-accent--warning";
-  }
-  if (type === "info") {
-    return "tf-toast-accent--info";
-  }
-  return "tf-toast-accent--default";
+  return typeMeta[toast.type].accent;
 });
 
 const iconWrapperClass = computed(function () {
-  const type = toast.type;
-  if (type === "success") {
-    return "tf-toast-icon--success";
-  }
-  if (type === "error") {
-    return "tf-toast-icon--error";
-  }
-  if (type === "warning") {
-    return "tf-toast-icon--warning";
-  }
-  if (type === "info") {
-    return "tf-toast-icon--info";
-  }
-  return "tf-toast-icon--default";
+  return typeMeta[toast.type].icon;
 });
 
 const closeWrapperClass = computed(function () {
-  const type = toast.type;
-  if (type === "success") {
-    return "tf-toast-close--success";
-  }
-  if (type === "error") {
-    return "tf-toast-close--error";
-  }
-  if (type === "warning") {
-    return "tf-toast-close--warning";
-  }
-  if (type === "info") {
-    return "tf-toast-close--info";
-  }
-  return "tf-toast-close--default";
+  return typeMeta[toast.type].close;
 });
 
 const defaultIconComponent = computed(function () {
-  const type = toast.type;
-  if (type === "success") {
-    return CheckCircle2;
-  }
-  if (type === "error") {
-    return XCircle;
-  }
-  if (type === "warning") {
-    return AlertTriangle;
-  }
-  return Info;
+  return typeMeta[toast.type].component;
 });
 
-const progressStyle = computed(function () {
+const assertiveTypes = new Set<ToastType>(["error", "warning"]);
+
+const progressStyle = computed(function (): CSSProperties {
   return {
     "--tf-toast-progress-duration": `${toast.duration}ms`,
-  } as Record<string, string>;
+  };
 });
-
-function resolveRole(type: ToastType): "status" | "alert" {
-  if (type === "error" || type === "warning") {
-    return "alert";
-  }
-  return "status";
-}
-
-function resolveAriaLive(type: ToastType): "polite" | "assertive" {
-  if (type === "error" || type === "warning") {
-    return "assertive";
-  }
-  return "polite";
-}
 
 function createContext(): ToastContext {
   return {

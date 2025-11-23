@@ -1,8 +1,24 @@
 <script setup lang="ts">
-import {computed, inject, onMounted, onUnmounted, ref, watch} from "vue";
+import { computed, inject, onMounted, onUnmounted, ref, watch } from "vue";
 import Toast from "./Toast.vue";
-import {toastStoreKey} from "../symbols";
-import type {ToastId, ToastInstance, ToastPosition, ToastStore,} from "toastflow-core";
+import { toastStoreKey } from "../symbols";
+import {
+  defaults,
+  ToastConfig,
+  ToastId,
+  ToastInstance,
+  ToastPosition,
+  ToastStore,
+} from "toastflow-core";
+
+const positions: ToastPosition[] = [
+  "top-left",
+  "top-center",
+  "top-right",
+  "bottom-left",
+  "bottom-center",
+  "bottom-right",
+];
 
 const injectedStore = inject<ToastStore | null>(toastStoreKey, null);
 if (!injectedStore) {
@@ -11,14 +27,15 @@ if (!injectedStore) {
 const store: ToastStore = injectedStore;
 
 const toasts = ref<ToastInstance[]>([]);
-const animationByPosition = ref<Record<ToastPosition, ToastInstance["animation"] | null>>({
-  "top-left": null,
-  "top-center": null,
-  "top-right": null,
-  "bottom-left": null,
-  "bottom-center": null,
-  "bottom-right": null,
-});
+const animationByPosition = ref<
+  Record<ToastPosition, ToastInstance["animation"] | null>
+>(
+  Object.fromEntries(
+    positions.map(function (position) {
+      return [position, null];
+    }),
+  ) as Record<ToastPosition, ToastInstance["animation"] | null>,
+);
 
 // event-driven keys
 const progressResetMap = ref<Record<ToastId, number>>({});
@@ -60,15 +77,6 @@ function getDuplicateKey(id: ToastId): number {
   return duplicateMap.value[id] ?? 0;
 }
 
-const positions: ToastPosition[] = [
-  "top-left",
-  "top-center",
-  "top-right",
-  "bottom-left",
-  "bottom-center",
-  "bottom-right",
-];
-
 const grouped = computed(function () {
   const byPos: Record<ToastPosition, ToastInstance[]> = {
     "top-left": [],
@@ -86,20 +94,12 @@ const grouped = computed(function () {
   return byPos;
 });
 
-const layout = computed(function () {
-  const anyToast = toasts.value[0];
-
-  return {
-    offset: anyToast?.offset ?? "16px",
-    gap: anyToast?.gap ?? "8px",
-    zIndex: anyToast?.zIndex ?? 9999,
-    width: anyToast?.width ?? "350px",
-  };
-});
+const config = ref<ToastConfig>({ ...defaults });
 
 function stackStyle(position: ToastPosition): Record<string, string> {
-  const {offset} = layout.value;
-  const style: Record<string, string> = {};
+  const { offset, width } = config.value;
+  // Lock the stack width, so it doesn't collapse when leaving items get absolute-positioned
+  const style: Record<string, string> = { width, maxWidth: "100%" };
 
   if (position.startsWith("top-")) {
     style.top = offset;
@@ -145,12 +145,13 @@ function beforeLeave(el: Element) {
     return;
   }
 
-  const {width} = parent.getBoundingClientRect();
   const top = element.offsetTop;
+  const parentWidth = parent.clientWidth;
 
   element.style.position = "absolute";
-  element.style.width = `${width}px`;
+  element.style.width = `${parentWidth}px`;
   element.style.left = "0";
+  element.style.right = "0";
   element.style.top = `${top}px`;
   element.style.pointerEvents = "none";
 }
@@ -160,68 +161,111 @@ function afterLeave(el: Element) {
   element.style.position = "";
   element.style.width = "";
   element.style.left = "";
+  element.style.right = "";
   element.style.top = "";
   element.style.pointerEvents = "";
 }
 
 watch(
-    grouped,
-    function (next) {
-      for (const position of positions) {
-        const first = next[position]?.[0];
-        if (first?.animation) {
-          animationByPosition.value[position] = first.animation;
-        }
+  grouped,
+  function (next) {
+    for (const position of positions) {
+      const first = next[position]?.[0];
+      animationByPosition.value[position] = first?.animation ?? null;
+    }
+  },
+  { immediate: true },
+);
+
+watch(
+  toasts,
+  function (current) {
+    const head = current[0];
+    if (head) {
+      config.value = {
+        ...config.value,
+        offset: head.offset ?? defaults.offset,
+        gap: head.gap ?? defaults.gap,
+        zIndex: head.zIndex ?? defaults.zIndex,
+        width: head.width ?? defaults.width,
+      };
+    }
+
+    const ids = new Set(
+      current.map(function (toast) {
+        return toast.id;
+      }),
+    );
+
+    for (const key of Object.keys(progressResetMap.value)) {
+      if (!ids.has(key as ToastId)) {
+        delete progressResetMap.value[key as ToastId];
       }
-    },
-    {immediate: true},
+    }
+
+    for (const key of Object.keys(duplicateMap.value)) {
+      if (!ids.has(key as ToastId)) {
+        delete duplicateMap.value[key as ToastId];
+      }
+    }
+  },
+  { deep: false },
 );
 </script>
 
 <template>
-  <div
-      class="tf-toast-root"
-      :style="{ zIndex: String(layout.zIndex) }"
-  >
+  <div class="tf-toast-root" :style="{ zIndex: String(config.zIndex) }">
     <div
-        v-for="position in positions"
-        :key="position"
-        class="tf-toast-stack"
-        :class="stackAlignClass(position)"
-        :style="stackStyle(position)"
+      v-for="position in positions"
+      :key="position"
+      class="tf-toast-stack"
+      :class="stackAlignClass(position)"
+      :style="stackStyle(position)"
     >
       <TransitionGroup
-          :enter-active-class="animationConfig(position)?.enter ?? 'Toastflow__animation-enter'"
-          :leave-active-class="animationConfig(position)?.leave ?? 'Toastflow__animation-leave'"
-          :name="undefined"
-          :move-class="animationConfig(position)?.move ?? 'Toastflow__animation-move'"
-          @before-leave="beforeLeave"
-          @after-leave="afterLeave"
-          tag="div"
-          class="tf-toast-stack-inner"
-          :style="{ gap: layout.gap }"
+        :enter-active-class="
+          animationConfig(position)?.enter ?? 'Toastflow__animation-enter'
+        "
+        :leave-active-class="
+          animationConfig(position)?.leave ?? 'Toastflow__animation-leave'
+        "
+        :move-class="
+          animationConfig(position)?.move ?? 'Toastflow__animation-move'
+        "
+        @before-leave="beforeLeave"
+        @after-leave="afterLeave"
+        tag="div"
+        class="tf-toast-stack-inner"
+        :style="{ gap: config.gap }"
       >
         <div
-            v-for="toast in grouped[position]"
-            :key="toast.id"
-            class="tf-toast-item"
-            :style="{ width: layout.width, maxWidth: '100%' }"
+          v-for="toast in grouped[position]"
+          :key="toast.id"
+          class="tf-toast-item"
+          :style="{ width: config.width, maxWidth: '100%' }"
         >
           <slot
-              v-if="$slots.default"
-              :toast="toast"
-              :progressResetKey="getProgressResetKey(toast.id)"
-              :duplicateKey="getDuplicateKey(toast.id)"
-              :dismiss="handleDismiss"
+            v-if="$slots.default"
+            :toast="toast"
+            :progressResetKey="getProgressResetKey(toast.id)"
+            :duplicateKey="getDuplicateKey(toast.id)"
+            :clearAllClass="
+              animationConfig(position)?.clearAll ??
+              'Toastflow__animation-clearAll'
+            "
+            :dismiss="handleDismiss"
           />
 
           <Toast
-              v-else
-              :toast="toast"
-              :progress-reset-key="getProgressResetKey(toast.id)"
-              :duplicate-key="getDuplicateKey(toast.id)"
-              :clear-all-class="animationConfig(position)?.clearAll ?? 'Toastflow__animation-clearAll'"
-              @dismiss="handleDismiss"
+            v-else
+            :toast="toast"
+            :progressResetKey="getProgressResetKey(toast.id)"
+            :duplicateKey="getDuplicateKey(toast.id)"
+            :clearAllClass="
+              animationConfig(position)?.clearAll ??
+              'Toastflow__animation-clearAll'
+            "
+            @dismiss="handleDismiss"
           />
         </div>
       </TransitionGroup>
@@ -243,6 +287,8 @@ watch(
 .tf-toast-stack-inner {
   display: flex;
   flex-direction: column;
+  position: relative;
+  width: 100%;
 }
 
 .tf-toast-stack--left {

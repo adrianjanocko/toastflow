@@ -101,8 +101,8 @@ const useOnUnmount = ref(false);
 const useOnClick = ref(false);
 const useOnClose = ref(false);
 
-const title = ref("Saved");
-const description = ref("Your changes have been stored.");
+const title = ref("");
+const description = ref("");
 
 const lastId = ref<ToastId | null>(null);
 
@@ -236,7 +236,7 @@ function resetToDefaults() {
   duration.value = 5000;
   maxVisible.value = 5;
 
-  preventDuplicates.value = true;
+  preventDuplicates.value = false;
   order.value = "newest";
 
   progressBar.value = true;
@@ -251,8 +251,8 @@ function resetToDefaults() {
   useOnClick.value = false;
   useOnClose.value = false;
 
-  title.value = "Saved";
-  description.value = "Your changes have been stored.";
+  title.value = "";
+  description.value = "";
 }
 </script>
 
@@ -261,14 +261,12 @@ function resetToDefaults() {
     class="w-full max-w-5xl rounded-3xl bg-white/90 p-6 shadow-2xl ring-1 ring-slate-200 backdrop-blur-md"
   >
     <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <p class="ml-2 hidden text-xs text-slate-500 md:inline">
-          Configure options and push toasts to see them in action.
-        </p>
-      </div>
+      <p class="ml-2 hidden text-xs text-slate-500 md:inline">
+        Configure options and push toasts to see them in action.
+      </p>
 
       <div
-        class="flex items-center gap-2 rounded-full bg-slate-50 px-3 py-1 text-[0.7rem] text-slate-500"
+        class="flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-[0.7rem] text-slate-500"
       >
         <span>Last toast ID:</span>
         <span class="font-mono text-[0.7rem] text-slate-700">
