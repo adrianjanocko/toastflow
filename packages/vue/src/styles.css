@@ -1,0 +1,161 @@
+﻿:root {
+    /* base look */
+    --tf-toast-font-family: system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+
+    --tf-toast-radius: 0.75rem;
+    --tf-toast-padding: 1rem;
+
+    --normal-bg: #fff;
+    --normal-border: #e6e8eb;
+    --normal-text: #11181c;
+
+    --tf-toast-bg: var(--normal-bg);
+    --tf-toast-color: var(--normal-text);
+    --tf-toast-border-color: var(--normal-border);
+
+    --success-bg: hsl(143, 85%, 96%);
+    --success-border: hsl(145, 92%, 87%);
+    --success-text: hsl(140, 100%, 27%);
+
+    --info-bg: hsl(208, 100%, 97%);
+    --info-border: hsl(221, 91%, 93%);
+    --info-text: hsl(210, 92%, 45%);
+
+    --warning-bg: hsl(49, 100%, 97%);
+    --warning-border: hsl(49, 91%, 84%);
+    --warning-text: hsl(31, 92%, 45%);
+
+    --error-bg: hsl(359, 100%, 97%);
+    --error-border: hsl(359, 100%, 94%);
+    --error-text: hsl(360, 100%, 45%);
+
+    /* text */
+    --tf-toast-title-font-size: 0.85rem;
+    --tf-toast-title-font-weight: 600;
+    --tf-toast-description-font-size: 0.8rem;
+    --tf-toast-description-color: var(--tf-toast-color);
+
+    /* layout inside toast */
+    --tf-toast-gap: 0.8rem;
+
+    /* accent bar */
+    --tf-toast-accent-default: var(--normal-text);
+    --tf-toast-accent-success: var(--success-text);
+    --tf-toast-accent-error: var(--error-text);
+    --tf-toast-accent-warning: var(--warning-text);
+    --tf-toast-accent-info: var(--info-text);
+
+    /* icon */
+    --tf-toast-icon-size: 18px;
+
+    --tf-toast-icon-default: var(--normal-text);
+    --tf-toast-icon-success: var(--success-text);
+    --tf-toast-icon-error: var(--error-text);
+    --tf-toast-icon-warning: var(--warning-text);
+    --tf-toast-icon-info: var(--info-text);
+
+    /* close button */
+    --tf-toast-close-size: 20px;
+
+    --tf-toast-close-border-color: var(--tf-toast-border-color);
+    --tf-toast-close-color: var(--tf-toast-color);
+    --tf-toast-close-bg: var(--tf-toast-bg);
+    --tf-toast-close-ring-color: var(--tf-toast-border-color);
+
+    /* progress bar */
+    --tf-toast-progress-height: 4px;
+    --tf-toast-progress-bg: transparent;
+    --tf-toast-progress-bar-bg: var(--tf-toast-accent-success); /* fallback; per-type je v class */
+    --tf-toast-progress-duration: 5000ms;
+
+    --tf-toast-motion-offset: 10px;
+}
+
+.tf-toast--paused .tf-toast-progress-bar {
+    animation-play-state: paused;
+}
+
+.tf-toast[data-position^="top-"] {
+    --tf-toast-motion-offset: -10px;
+}
+
+.tf-toast[data-position^="bottom-"] {
+    --tf-toast-motion-offset: 10px;
+}
+
+.Toastflow__animation-enter {
+    animation-name: tf-toast-enter;
+    animation-duration: 220ms;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+    animation-fill-mode: both;
+    will-change: transform, opacity;
+}
+
+@keyframes tf-toast-enter {
+    0% {
+        transform: translate3d(0, var(--tf-toast-motion-offset), 0) scale(0.9);
+        opacity: 0;
+    }
+    100% {
+        transform: translate3d(0, 0, 0) scale(1);
+        opacity: 1;
+    }
+}
+
+.Toastflow__animation-leave {
+    animation-name: tf-toast-leave;
+    animation-duration: 220ms;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+    animation-fill-mode: both;
+    will-change: transform, opacity;
+}
+
+@keyframes tf-toast-leave {
+    0% {
+        transform: translate3d(0, 0, 0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate3d(0, var(--tf-toast-motion-offset), 0) scale(0.9);
+        opacity: 0;
+    }
+}
+
+.Toastflow__animation-move {
+    transition: transform 220ms cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+.Toastflow__animation-clearAll {
+    animation-name: tf-toast-fade-out;
+    animation-duration: 180ms;
+    animation-timing-function: ease-out;
+    animation-fill-mode: both;
+    will-change: opacity;
+}
+
+@keyframes tf-toast-fade-out {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+.tf-toast--bump {
+    animation: tf-toast-bump 140ms ease-out;
+}
+
+@keyframes tf-toast-bump {
+    0% {
+        transform: scale(1);
+    }
+    40% {
+        transform: scale(1.01);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
