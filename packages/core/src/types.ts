@@ -30,6 +30,7 @@ export interface ToastContext {
   type: ToastType;
   title: string;
   description: string;
+  createdAt: number;
 }
 
 export interface ToastConfig {

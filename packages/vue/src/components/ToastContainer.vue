@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { computed, inject, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import Toast from "./Toast.vue";
-import { toastStoreKey } from "../symbols";
 import type {
+  ToastAnimation,
   ToastConfig,
   ToastId,
   ToastInstance,
   ToastPosition,
   ToastStore,
 } from "toastflow-core";
+import { getToastStore } from "../toast";
 
 const positions: ToastPosition[] = [
   "top-left",
@@ -19,11 +20,7 @@ const positions: ToastPosition[] = [
   "bottom-right",
 ];
 
-const injectedStore = inject<ToastStore | null>(toastStoreKey, null);
-if (!injectedStore) {
-  throw new Error("[vue-toastflow] Plugin not installed");
-}
-const store: ToastStore = injectedStore;
+const store: ToastStore = getToastStore();
 
 const toasts = ref<ToastInstance[]>([]);
 
@@ -84,10 +81,29 @@ const grouped = computed(function () {
   return byPos;
 });
 
-const config: ToastConfig = store.getConfig();
+const baseConfig: ToastConfig = store.getConfig();
+const stackConfigs = ref<Record<ToastPosition, ToastConfig>>({
+  "top-left": { ...baseConfig, position: "top-left" },
+  "top-center": { ...baseConfig, position: "top-center" },
+  "top-right": { ...baseConfig, position: "top-right" },
+  "bottom-left": { ...baseConfig, position: "bottom-left" },
+  "bottom-center": { ...baseConfig, position: "bottom-center" },
+  "bottom-right": { ...baseConfig, position: "bottom-right" },
+});
+
+const globalZIndex = computed(function () {
+  if (!toasts.value.length) {
+    return baseConfig.zIndex;
+  }
+  return Math.max(...toasts.value.map((toast) => toast.zIndex));
+});
+
+function stackConfig(position: ToastPosition): ToastConfig {
+  return stackConfigs.value[position] ?? { ...baseConfig, position };
+}
 
 function stackStyle(position: ToastPosition): Record<string, string> {
-  const { offset, width } = config;
+  const { offset, width } = stackConfig(position);
   // Lock the stack width, so it doesn't collapse when leaving items get absolute-positioned
   const style: Record<string, string> = { width, maxWidth: "100%" };
 
@@ -189,10 +205,42 @@ watch(
   },
   { deep: false },
 );
+
+function animationForToast(toast: ToastInstance): Partial<ToastAnimation> {
+  return {
+    ...baseConfig.animation,
+    ...toast.animation,
+  };
+}
+
+watch(
+  grouped,
+  function (byPos) {
+    const next = { ...stackConfigs.value };
+
+    (Object.keys(byPos) as ToastPosition[]).forEach(function (position) {
+      const first = byPos[position][0];
+      if (first) {
+        next[position] = {
+          ...baseConfig,
+          ...first,
+          position,
+          animation: {
+            ...baseConfig.animation,
+            ...first.animation,
+          },
+        };
+      }
+    });
+
+    stackConfigs.value = next;
+  },
+  { deep: false },
+);
 </script>
 
 <template>
-  <div class="tf-toast-root" :style="{ zIndex: config.zIndex }">
+  <div class="tf-toast-root" :style="{ zIndex: globalZIndex }">
     <div
       v-for="position in positions"
       :key="position"
@@ -201,18 +249,18 @@ watch(
       :style="stackStyle(position)"
     >
       <TransitionGroup
-        :name="config.animation.name"
+        :name="stackConfig(position).animation.name"
         @before-leave="beforeLeave"
         @after-leave="afterLeave"
         tag="div"
         :class="['tf-toast-stack-inner', stackAxisClass(position)]"
-        :style="{ gap: config.gap }"
+        :style="{ gap: stackConfig(position).gap }"
       >
         <div
           v-for="toast in grouped[position]"
           :key="toast.id"
           class="tf-toast-item"
-          :style="{ width: config.width, maxWidth: '100%' }"
+          :style="{ width: toast.width, maxWidth: '100%' }"
           :data-position="toast.position"
         >
           <slot
@@ -220,8 +268,8 @@ watch(
             :toast="toast"
             :progressResetKey="getProgressResetKey(toast.id)"
             :duplicateKey="getDuplicateKey(toast.id)"
-            :bumpAnimationClass="config.animation.bump"
-            :clearAllAnimationClass="config.animation.clearAll"
+            :bumpAnimationClass="animationForToast(toast).bump"
+            :clearAllAnimationClass="animationForToast(toast).clearAll"
             :dismiss="handleDismiss"
           />
 
@@ -230,8 +278,8 @@ watch(
             :toast="toast"
             :progressResetKey="getProgressResetKey(toast.id)"
             :duplicateKey="getDuplicateKey(toast.id)"
-            :bumpAnimationClass="config.animation.bump"
-            :clearAllAnimationClass="config.animation.clearAll"
+            :bumpAnimationClass="animationForToast(toast).bump"
+            :clearAllAnimationClass="animationForToast(toast).clearAll"
             @dismiss="handleDismiss"
           />
         </div>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, inject, ref } from 'vue'
-import { type ToastContext, type ToastStore, useToast } from 'vue-toastflow'
+import { computed, ref } from 'vue';
+import { toast, type ToastContext } from 'vue-toastflow';
 import type {
   PauseStrategy,
   ToastId,
@@ -8,7 +8,7 @@ import type {
   ToastOrder,
   ToastPosition,
   ToastType,
-} from 'toastflow-core'
+} from 'toastflow-core';
 import {
   ArrowDown,
   ArrowDownLeft,
@@ -16,25 +16,17 @@ import {
   ArrowUp,
   ArrowUpLeft,
   ArrowUpRight,
-} from 'lucide-vue-next'
-import { toastStoreKey } from 'vue-toastflow/src/symbols.ts'
+} from 'lucide-vue-next';
 
-const injectedStore = inject<ToastStore | null>(toastStoreKey, null)
-if (!injectedStore) {
-  throw new Error('[vue-toastflow] Plugin not installed')
-}
-const store: ToastStore = injectedStore
-const config = store.getConfig()
-
-const { show, update, dismissAll } = useToast()
+const config = toast.getConfig();
 
 /* ----- options / enums ----- */
 
 const positionOptions: {
-  value: ToastPosition
-  label: string
-  icon: string
-  short: string
+  value: ToastPosition;
+  label: string;
+  icon: string;
+  short: string;
 }[] = [
   { value: 'top-left', label: 'Top left', icon: '↖', short: 'TL' },
   { value: 'top-center', label: 'Top center', icon: '↑', short: 'TC' },
@@ -42,25 +34,25 @@ const positionOptions: {
   { value: 'bottom-left', label: 'Bottom left', icon: '↙', short: 'BL' },
   { value: 'bottom-center', label: 'Bottom center', icon: '↓', short: 'BC' },
   { value: 'bottom-right', label: 'Bottom right', icon: '↘', short: 'BR' },
-]
+];
 
 function iconForPosition(position: ToastPosition) {
   if (position === 'top-left') {
-    return ArrowUpLeft
+    return ArrowUpLeft;
   }
   if (position === 'top-center') {
-    return ArrowUp
+    return ArrowUp;
   }
   if (position === 'top-right') {
-    return ArrowUpRight
+    return ArrowUpRight;
   }
   if (position === 'bottom-left') {
-    return ArrowDownLeft
+    return ArrowDownLeft;
   }
   if (position === 'bottom-center') {
-    return ArrowDown
+    return ArrowDown;
   }
-  return ArrowDownRight
+  return ArrowDownRight;
 }
 
 const typeOptions: { value: ToastType; label: string }[] = [
@@ -69,92 +61,92 @@ const typeOptions: { value: ToastType; label: string }[] = [
   { value: 'error', label: 'Error' },
   { value: 'warning', label: 'Warning' },
   { value: 'info', label: 'Info' },
-]
+];
 
 const orderOptions: { value: ToastOrder; label: string }[] = [
   { value: 'newest', label: 'Newest' },
   { value: 'oldest', label: 'Oldest' },
-]
+];
 
 const pauseStrategyOptions: { value: PauseStrategy; label: string }[] = [
   { value: 'resume', label: 'Resume' },
   { value: 'reset', label: 'Reset' },
-]
+];
 
 /* ----- reactive state ----- */
 
-const position = ref<ToastPosition>(config.position)
-const type = ref<ToastType>('success')
+const position = ref<ToastPosition>(config.position);
+const type = ref<ToastType>('success');
 
-const offset = ref(config.offset)
-const gap = ref(config.gap)
-const zIndex = ref(config.zIndex)
-const width = ref(config.width)
+const offset = ref(config.offset);
+const gap = ref(config.gap);
+const zIndex = ref(config.zIndex);
+const width = ref(config.width);
 
-const duration = ref(config.duration)
-const maxVisible = ref(config.maxVisible)
+const duration = ref(config.duration);
+const maxVisible = ref(config.maxVisible);
 
-const preventDuplicates = ref(config.preventDuplicates)
-const order = ref<ToastOrder>(config.order)
+const preventDuplicates = ref(config.preventDuplicates);
+const order = ref<ToastOrder>(config.order);
 
-const progressBar = ref(config.progressBar)
-const pauseOnHover = ref(config.pauseOnHover)
-const pauseStrategy = ref<PauseStrategy>(config.pauseStrategy)
+const progressBar = ref(config.progressBar);
+const pauseOnHover = ref(config.pauseOnHover);
+const pauseStrategy = ref<PauseStrategy>(config.pauseStrategy);
 
-const closeButton = ref(config.closeButton)
-const closeOnClick = ref(config.closeOnClick)
+const closeButton = ref(config.closeButton);
+const closeOnClick = ref(config.closeOnClick);
 
-const supportHtml = ref(config.supportHtml)
+const supportHtml = ref(config.supportHtml);
 
-const useOnMount = ref(false)
-const useOnUnmount = ref(false)
-const useOnClick = ref(false)
-const useOnClose = ref(false)
+const useOnMount = ref(false);
+const useOnUnmount = ref(false);
+const useOnClick = ref(false);
+const useOnClose = ref(false);
 
-const title = ref('')
-const description = ref('')
-const fallbackTitle = ref(true)
-const fallbackDescription = ref(true)
+const title = ref('');
+const description = ref('');
+const fallbackTitle = ref(true);
+const fallbackDescription = ref(true);
 
-const lastId = ref<ToastId | null>(null)
+const lastId = ref<ToastId | null>(null);
 
 /* ----- helpers ----- */
 
 function defaultTitleForType(t: ToastType): string {
   if (t === 'success') {
-    return 'Saved'
+    return 'Saved';
   }
   if (t === 'error') {
-    return 'Something went wrong'
+    return 'Something went wrong';
   }
   if (t === 'warning') {
-    return 'Heads up'
+    return 'Heads up';
   }
-  return 'Information'
+  return 'Information';
 }
 
 function defaultDescriptionForType(t: ToastType): string {
   if (t === 'success') {
-    return 'Your changes have been stored.'
+    return 'Your changes have been stored.';
   }
   if (t === 'error') {
-    return 'Check the console for more details.'
+    return 'Check the console for more details.';
   }
   if (t === 'warning') {
-    return 'Please double-check your input.'
+    return 'Please double-check your input.';
   }
-  return 'This is just an informational toast.'
+  return 'This is just an informational toast.';
 }
 
 function resolveContent(value: string, fallback: string, allowFallback: boolean) {
-  const trimmed = value.trim()
+  const trimmed = value.trim();
   if (trimmed) {
-    return trimmed
+    return trimmed;
   }
   if (allowFallback) {
-    return fallback
+    return fallback;
   }
-  return ''
+  return '';
 }
 
 /* ----- computed config for show() ----- */
@@ -187,115 +179,115 @@ const baseConfig = computed<Partial<ToastOptions>>(function () {
     closeOnClick: closeOnClick.value,
 
     supportHtml: supportHtml.value,
-  }
+  };
 
   if (useOnMount.value) {
     reactiveConfig.onMount = function (ctx: ToastContext) {
-      console.log('[toastflow] onMount', ctx)
-    }
+      console.log('[vue-toastflow] onMount', ctx);
+    };
   }
 
   if (useOnUnmount.value) {
     reactiveConfig.onUnmount = function (ctx: ToastContext) {
-      console.log('[toastflow] onUnmount', ctx)
-    }
+      console.log('[vue-toastflow] onUnmount', ctx);
+    };
   }
 
   if (useOnClick.value) {
     reactiveConfig.onClick = function (ctx: ToastContext, event: MouseEvent) {
-      console.log('[toastflow] onClick', ctx, event)
-    }
+      console.log('[vue-toastflow] onClick', ctx, event);
+    };
   }
 
   if (useOnClose.value) {
     reactiveConfig.onClose = function (ctx: ToastContext) {
-      console.log('[toastflow] onClose', ctx)
-    }
+      console.log('[vue-toastflow] onClose', ctx);
+    };
   }
 
-  return reactiveConfig
-})
+  return reactiveConfig;
+});
 
 /* ----- actions ----- */
 
 function push(typeOverride?: ToastType) {
-  const toastType = typeOverride ?? type.value
+  const toastType = typeOverride ?? type.value;
   const resolvedTitle = resolveContent(
     title.value,
     defaultTitleForType(toastType),
     fallbackTitle.value,
-  )
+  );
   const resolvedDescription = resolveContent(
     description.value,
     defaultDescriptionForType(toastType),
     fallbackDescription.value,
-  )
+  );
 
-  lastId.value = show({
+  lastId.value = toast.show({
     ...baseConfig.value,
     type: toastType,
     title: resolvedTitle,
     description: resolvedDescription,
-  })
+  });
 }
 
 function pushBurst() {
   for (let i = 0; i < 5; i += 1) {
-    push(type.value)
+    push(type.value);
   }
 }
 
 function updateLast() {
   if (!lastId.value) {
-    return
+    return;
   }
 
-  const updatedTitle = resolveContent(title.value, 'Updated toast', fallbackTitle.value)
+  const updatedTitle = resolveContent(title.value, 'Updated toast', fallbackTitle.value);
   const updatedDescription = resolveContent(
     description.value,
     'This toast was updated from the Toastflow playground.',
     fallbackDescription.value,
-  )
+  );
 
-  update(lastId.value, {
+  toast.update(lastId.value, {
     title: updatedTitle ? `${updatedTitle} (updated)` : '',
     description: updatedDescription,
-  })
+  });
 }
 
-function resetToconfig() {
-  position.value = 'top-right'
-  type.value = 'success'
+function resetToDefaults() {
+  position.value = 'top-right';
+  type.value = 'success';
 
-  offset.value = '16px'
-  gap.value = '8px'
-  zIndex.value = 9999
-  width.value = '350px'
+  offset.value = '16px';
+  gap.value = '8px';
+  zIndex.value = 9999;
+  width.value = '350px';
 
-  duration.value = 5000
-  maxVisible.value = 5
+  duration.value = 5000;
+  maxVisible.value = 5;
 
-  preventDuplicates.value = false
-  order.value = 'newest'
+  preventDuplicates.value = false;
+  order.value = 'newest';
 
-  progressBar.value = true
-  pauseOnHover.value = true
-  pauseStrategy.value = 'resume'
+  progressBar.value = true;
+  pauseOnHover.value = true;
+  pauseStrategy.value = 'resume';
 
-  closeButton.value = true
-  closeOnClick.value = false
+  closeButton.value = true;
+  closeOnClick.value = false;
 
-  supportHtml.value = false
+  supportHtml.value = false;
 
-  useOnMount.value = false
-  useOnUnmount.value = false
-  useOnClick.value = false
-  useOnClose.value = false
+  useOnMount.value = false;
+  useOnUnmount.value = false;
+  useOnClick.value = false;
+  useOnClose.value = false;
 
-  title.value = ''
-  description.value = ''
-  fallbackTitle.value = true
-  fallbackDescription.value = true
+  title.value = '';
+  description.value = '';
+  fallbackTitle.value = true;
+  fallbackDescription.value = true;
 }
 </script>
 
@@ -743,7 +735,7 @@ function resetToconfig() {
         <button
           type="button"
           class="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-1.5 text-xs font-medium text-rose-700 transition hover:border-rose-300 hover:bg-rose-100"
-          @click="dismissAll"
+          @click="toast.dismissAll"
         >
           Dismiss all
         </button>
@@ -751,7 +743,7 @@ function resetToconfig() {
         <button
           type="button"
           class="rounded-2xl border border-slate-300 bg-white px-4 py-1.5 text-xs font-medium text-slate-700 transition hover:border-slate-400 hover:bg-slate-50"
-          @click="resetToconfig"
+          @click="resetToDefaults"
         >
           Reset config
         </button>

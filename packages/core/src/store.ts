@@ -128,45 +128,47 @@ export function createToastStore(
     const id = uuidv4();
     const createdAt = Date.now();
 
-    const instance: ToastInstance = {
+    const toastInstance: ToastInstance = {
       ...toast,
       id,
       createdAt,
       phase: "enter",
     };
 
-    const context: ToastContext = {
-      id,
-      position: instance.position,
-      type: instance.type,
-      title: instance.title,
-      description: instance.description,
-    };
-
     const samePos = state.toasts.filter(function (t) {
       return (
-        t.position === instance.position &&
+        t.position === toastInstance.position &&
         t.phase !== "leaving" &&
         t.phase !== "clear-all"
       );
     });
 
-    if (instance.maxVisible > 0 && samePos.length >= instance.maxVisible) {
-      const toEvict = pickOverflowToast(samePos, instance.order);
+    if (
+      toastInstance.maxVisible > 0 &&
+      samePos.length >= toastInstance.maxVisible
+    ) {
+      const toEvict = pickOverflowToast(samePos, toastInstance.order);
       if (toEvict) {
         dismiss(toEvict.id);
       }
     }
 
     state = {
-      toasts: insertToast(state.toasts, instance),
+      toasts: insertToast(state.toasts, toastInstance),
     };
 
-    if (instance.onMount) {
-      instance.onMount(context);
+    if (toastInstance.onMount) {
+      toastInstance.onMount({
+        id,
+        position: toastInstance.position,
+        type: toastInstance.type,
+        title: toastInstance.title,
+        description: toastInstance.description,
+        createdAt: toastInstance.createdAt,
+      });
     }
 
-    scheduleAutoDismiss(instance);
+    scheduleAutoDismiss(toastInstance);
     notify();
 
     return id;
@@ -220,6 +222,7 @@ export function createToastStore(
       type: toast.type,
       title: toast.title,
       description: toast.description,
+      createdAt: toast.createdAt,
     };
 
     if (toast.onClose) {
@@ -274,6 +277,7 @@ export function createToastStore(
         type: toast.type,
         title: toast.title,
         description: toast.description,
+        createdAt: toast.createdAt,
       };
 
       if (toast.onClose) {
@@ -300,6 +304,7 @@ export function createToastStore(
           type: toast.type,
           title: toast.title,
           description: toast.description,
+          createdAt: toast.createdAt,
         };
 
         if (toast.onUnmount) {
@@ -312,20 +317,23 @@ export function createToastStore(
     }, HIDE_ANIMATION_DURATION);
   }
 
-  function scheduleAutoDismiss(instance: ToastInstance) {
-    if (!Number.isFinite(instance.duration) || instance.duration <= 0) {
-      timers.delete(instance.id);
+  function scheduleAutoDismiss(toastInstance: ToastInstance) {
+    if (
+      !Number.isFinite(toastInstance.duration) ||
+      toastInstance.duration <= 0
+    ) {
+      timers.delete(toastInstance.id);
       return;
     }
 
     const now = Date.now();
-    const duration = instance.duration;
+    const duration = toastInstance.duration;
 
     const handle: TimeoutHandle = setTimeout(() => {
-      dismiss(instance.id);
+      dismiss(toastInstance.id);
     }, duration);
 
-    timers.set(instance.id, {
+    timers.set(toastInstance.id, {
       timeout: handle,
       startTime: now,
       remaining: duration,
@@ -365,30 +373,33 @@ export function createToastStore(
 
   function resume(id: ToastId): void {
     const timer = timers.get(id);
-    const instance = state.toasts.find((t) => t.id === id);
+    const toastInstance = state.toasts.find((t) => t.id === id);
 
-    if (!instance) {
+    if (!toastInstance) {
       timers.delete(id);
       return;
     }
 
-    if (instance.duration === 0 || !Number.isFinite(instance.duration)) {
+    if (
+      toastInstance.duration === 0 ||
+      !Number.isFinite(toastInstance.duration)
+    ) {
       timers.delete(id);
       return;
     }
 
-    const strategy = instance.pauseStrategy;
+    const strategy = toastInstance.pauseStrategy;
 
     let remaining: number;
 
     if (!timer || !timer.paused) {
-      remaining = instance.duration;
+      remaining = toastInstance.duration;
       if (strategy === "reset") {
         emitEvent({ id, kind: "timer-reset" });
       }
     } else {
       if (strategy === "reset") {
-        remaining = instance.duration;
+        remaining = toastInstance.duration;
         emitEvent({ id, kind: "timer-reset" });
       } else {
         remaining = timer.remaining;
