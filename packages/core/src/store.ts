@@ -673,9 +673,14 @@ function pickOverflowToast(
     return null;
   }
 
+  const [first, ...rest] = samePos;
+  if (!first) {
+    return null;
+  }
+
   if (order === "newest") {
-    let oldest = samePos[0];
-    for (const t of samePos) {
+    let oldest = first;
+    for (const t of rest) {
       if (t.createdAt < oldest.createdAt) {
         oldest = t;
       }
@@ -683,8 +688,8 @@ function pickOverflowToast(
     return oldest;
   }
 
-  let newest = samePos[0];
-  for (const t of samePos) {
+  let newest = first;
+  for (const t of rest) {
     if (t.createdAt > newest.createdAt) {
       newest = t;
     }
