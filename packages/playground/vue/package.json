@@ -4,8 +4,9 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": "^24.11.1"
+    "node": "^20.19.0"
   },
+  "packageManager": "pnpm@9.12.3",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
