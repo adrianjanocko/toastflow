@@ -12,7 +12,7 @@
     "vue": "^3.4.0"
   },
   "dependencies": {
-    "toastflow-core": "^0.0.1"
+    "toastflow-core": "^0.0.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.2",

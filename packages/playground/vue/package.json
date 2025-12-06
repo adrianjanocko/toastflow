@@ -22,7 +22,7 @@
     "lucide-vue-next": "^0.554.0",
     "pinia": "^3.0.3",
     "tailwindcss": "^4.1.17",
-    "toastflow-core": "^0.0.1",
+    "toastflow-core": "^0.0.2",
     "vue": "^3.5.22",
     "vue-toastflow": "^0.0.5"
   },
