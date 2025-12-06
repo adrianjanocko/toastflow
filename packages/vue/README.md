@@ -1,8 +1,4 @@
-<!-- readme-top -->
-
-<p align="center">
-  <img src="../../images/banner.png" alt="Toastflow banner" width="900" />
-</p>
+https://github.com/adrianjanocko/toastflow
 
 <h1 align="center">Toastflow</h1>
 <p align="center">
@@ -10,12 +6,6 @@
 </p>
 
 ---
-
-## Preview
-
-<p align="center">
-  <img src="../../images/showcase.png" alt="Toastflow showcase" width="850" />
-</p>
 
 ## Usage (Vue.js 3 Composition API)
 
