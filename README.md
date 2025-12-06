@@ -1,5 +1,3 @@
-<!-- readme-top -->
-
 <p align="center">
   <img src="images/banner.png" alt="Toastflow banner" width="900" />
 </p>
@@ -9,9 +7,14 @@
   Framework-agnostic toast engine with a Vue 3 renderer. Typed core, smooth stack animations, CSS-first theming, and full control over layout and behavior.
 </p>
 <p align="center">
-  <a href="#getting-started">Get started</a> &middot;
-  <a href="#usage">Usage</a> &middot;
+  <a href="#usage-vuejs-3-composition-api">Usage</a> &middot;
   <a href="#configuration">Configuration</a>
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/vue-toastflow">
+    <img src="https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white" alt="NPM" />
+  </a>
 </p>
 
 ---
@@ -24,7 +27,7 @@
     <li><a href="#packages">Packages</a></li>
     <li><a href="#built-with">Built with</a></li>
     <li>
-      <a href="#usage">Usage</a>
+      <a href="#usage-vuejs-3-composition-api">Usage</a>
       <ul>
         <li><a href="#quick-start">Quick start</a></li>
         <li><a href="#async-flows">Async flows</a></li>
@@ -69,6 +72,16 @@ you can render it your way while keeping predictable behaviors.
 ![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
 ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
 ![PNPM](https://img.shields.io/badge/pnpm-%234a4a4a.svg?style=for-the-badge&logo=pnpm&logoColor=f69220)
+
+## Installation
+
+```shell
+pnpm add vue-toastflow
+
+# npm i vue-toastflow
+# yarn add vue-toastflow
+# bun i vue-toastflow
+```
 
 ## Usage (Vue.js 3 Composition API)
 
@@ -229,4 +242,4 @@ Contributions are welcome! Fork the repo, create a branch, and open a PR. For bi
 
 ## License
 
-MIT - see [LICENSE](LICENSE).
+MIT - see [LICENSE](https://github.com/adrianjanocko/toastflow/blob/main/LICENSE).

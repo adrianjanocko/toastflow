@@ -1,11 +1,87 @@
-https://github.com/adrianjanocko/toastflow
+<p align="center">
+  <img src="https://raw.githubusercontent.com/adrianjanocko/toastflow/main/images/banner.png" alt="Toastflow banner" width="900" />
+</p>
 
 <h1 align="center">Toastflow</h1>
 <p align="center">
   Framework-agnostic toast engine with a Vue 3 renderer. Typed core, smooth stack animations, CSS-first theming, and full control over layout and behavior.
 </p>
+<p align="center">
+  <a href="#usage-vuejs-3-composition-api">Usage</a> &middot;
+  <a href="#configuration">Configuration</a>
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/vue-toastflow">
+    <img src="https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white" alt="NPM" />
+  </a>
+</p>
 
 ---
+
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li><a href="#about-the-project">About the project</a></li>
+    <li><a href="#preview">Preview</a></li>
+    <li><a href="#packages">Packages</a></li>
+    <li><a href="#built-with">Built with</a></li>
+    <li>
+      <a href="#usage-vuejs-3-composition-api">Usage</a>
+      <ul>
+        <li><a href="#quick-start">Quick start</a></li>
+        <li><a href="#async-flows">Async flows</a></li>
+        <li><a href="#html-content">HTML content</a></li>
+        <li><a href="#headless-rendering">Headless rendering</a></li>
+      </ul>
+    </li>
+    <li><a href="#configuration">Configuration</a></li>
+    <li><a href="#theming">Theming</a></li>
+    <li><a href="#events-and-store-access">Events and store access</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+  </ol>
+</details>
+
+## About the project
+
+Toastflow is a headless toast engine with a Vue 3 renderer. It keeps toast state in a tiny framework-agnostic store so
+you can render it your way while keeping predictable behaviors.
+
+- Deterministic rules for duplicates, timers, pause-on-hover, close-on-click, and clear-all.
+- CSS-first theming: swap the look by editing a handful of variables.
+- Works inside components or in plain TS/JS modules and services.
+- Headless slot to render your own card while reusing the store logic.
+
+## Preview
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/adrianjanocko/toastflow/main/images/showcase.png" alt="Toastflow showcase" width="850" />
+</p>
+
+## Packages
+
+- [toastflow-core](https://www.npmjs.com/package/toastflow-core): typed, framework-agnostic toast store.
+- [vue-toastflow](https://www.npmjs.com/package/vue-toastflow): Vue 3 renderer with `<ToastContainer />`, a
+  global `toast` helper, defaults, and icons.
+- [playground-vue](https://github.com/adrianjanocko/toastflow/blob/main/packages/playground/vue): Vite + Vue demo playground for manual testing.
+
+## Built with
+
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
+![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
+![PNPM](https://img.shields.io/badge/pnpm-%234a4a4a.svg?style=for-the-badge&logo=pnpm&logoColor=f69220)
+
+## Installation
+
+```shell
+pnpm add vue-toastflow
+
+# npm i vue-toastflow
+# yarn add vue-toastflow
+# bun i vue-toastflow
+```
 
 ## Usage (Vue.js 3 Composition API)
 
@@ -124,7 +200,7 @@ toast.info({
 
 ## Configuration
 
-Pass any [types.ts](../../packages/core/src/types.ts) fields to `createToastflow`; per-toast options override them:
+Pass any [types.ts](https://github.com/adrianjanocko/toastflow/blob/main/packages/core/src/types.ts) fields to `createToastflow`; per-toast options override them:
 
 - `position`: "top-right" (default), "top-left", "top-center", "bottom-*"
 - `duration`: `5000` ms by default; `Infinity` or `0` disables auto-dismiss (progress bar auto-hides when disabled)
@@ -141,7 +217,7 @@ Pass any [types.ts](../../packages/core/src/types.ts) fields to `createToastflow
 
 ## Theming
 
-- CSS variables live in [styles.css](../../packages/vue/src/styles.css) and are auto-imported with the Vue package.
+- CSS variables live in [styles.css](https://github.com/adrianjanocko/toastflow/blob/main/packages/vue/src/styles.css) and are auto-imported with the Vue package.
 - Key
   variables: `--tf-toast-bg`, `--tf-toast-color`, `--tf-toast-border-color`, `--tf-toast-radius`, `--tf-toast-padding`, `--tf-toast-icon-size`, `--tf-toast-progress-height`,
   plus per-type colors like `--success-bg` and `--error-text`.
@@ -166,4 +242,4 @@ Contributions are welcome! Fork the repo, create a branch, and open a PR. For bi
 
 ## License
 
-MIT - see [LICENSE](../../LICENSE).
+MIT - see [LICENSE](https://github.com/adrianjanocko/toastflow/blob/main/LICENSE).
