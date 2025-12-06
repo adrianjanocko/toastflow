@@ -1,6 +1,20 @@
 {
   "name": "vue-toastflow",
-  "version": "0.0.5",
+  "author": "adrianjanocko",
+  "description": "Framework-agnostic toast engine with a Vue 3 renderer. Typed core, smooth stack animations, CSS-first theming, and full control over layout and behavior.",
+  "keywords": [
+    "notifications",
+    "typescript",
+    "vue",
+    "toastr",
+    "toast",
+    "notification",
+    "toast-notifications",
+    "toaster",
+    "toastify"
+  ],
+  "license": "MIT",
+  "version": "0.0.7",
   "main": "src/index.ts",
   "module": "src/index.ts",
   "types": "src/index.ts",
@@ -12,7 +26,7 @@
     "vue": "^3.4.0"
   },
   "dependencies": {
-    "toastflow-core": "^0.0.2"
+    "toastflow-core": "^0.0.4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.2",

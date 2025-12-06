@@ -673,27 +673,18 @@ function pickOverflowToast(
     return null;
   }
 
-  const [first, ...rest] = samePos;
+  const first = samePos[0];
   if (!first) {
     return null;
   }
 
   if (order === "newest") {
-    let oldest = first;
-    for (const t of rest) {
-      if (t.createdAt < oldest.createdAt) {
-        oldest = t;
-      }
-    }
-    return oldest;
+    return samePos.slice(1).reduce((oldest, toast) => {
+      return toast.createdAt < oldest.createdAt ? toast : oldest;
+    }, first);
   }
 
-  let newest = first;
-  for (const t of rest) {
-    if (t.createdAt > newest.createdAt) {
-      newest = t;
-    }
-  }
-
-  return newest;
+  return samePos.slice(1).reduce((newest, toast) => {
+    return toast.createdAt > newest.createdAt ? toast : newest;
+  }, first);
 }

@@ -1,6 +1,8 @@
 {
   "name": "toastflow-core",
-  "version": "0.0.2",
+  "author": "adrianjanocko",
+  "license": "MIT",
+  "version": "0.0.4",
   "main": "src/index.ts",
   "module": "src/index.ts",
   "types": "src/index.ts",
