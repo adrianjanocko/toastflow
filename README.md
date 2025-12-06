@@ -1,31 +1,77 @@
-﻿# Toastflow
+<!-- readme-top -->
 
-Framework-agnostic toast engine with a Vue 3 renderer. Typed core, smooth stack animations, CSS-first theming, and full
-control over layout and behavior.
+<p align="center">
+  <img src="images/banner.png" alt="Toastflow banner" width="900" />
+</p>
 
-## What's inside
+<h1 align="center">Toastflow</h1>
+<p align="center">
+  Framework-agnostic toast engine with a Vue 3 renderer. Typed core, smooth stack animations, CSS-first theming, and full control over layout and behavior.
+</p>
+<p align="center">
+  <a href="#getting-started">Get started</a> &middot;
+  <a href="#usage">Usage</a> &middot;
+  <a href="#configuration">Configuration</a>
+</p>
 
-- [toastflow-core](packages/core): tiny, framework-agnostic store with a typed API.
-- [vue-toastflow](packages/vue): Vue 3 layer with `<ToastContainer />`, a global `toast` helper, defaults, and icons.
+---
 
-## Why it exists
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li><a href="#about-the-project">About the project</a></li>
+    <li><a href="#preview">Preview</a></li>
+    <li><a href="#packages">Packages</a></li>
+    <li><a href="#built-with">Built with</a></li>
+    <li>
+      <a href="#usage">Usage</a>
+      <ul>
+        <li><a href="#quick-start">Quick start</a></li>
+        <li><a href="#async-flows">Async flows</a></li>
+        <li><a href="#html-content">HTML content</a></li>
+        <li><a href="#headless-rendering">Headless rendering</a></li>
+      </ul>
+    </li>
+    <li><a href="#configuration">Configuration</a></li>
+    <li><a href="#theming">Theming</a></li>
+    <li><a href="#events-and-store-access">Events and store access</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+  </ol>
+</details>
 
-- Testable, framework-agnostic store that can power Vue today (and other renderers later).
-- Layout + animation are yours: no black-box component you cannot restyle.
-- Works both in components and in plain TS/JS modules (services, API clients, etc.).
-- Predictable rules for duplicates, timers, pause-on-hover, close-on-click, clear-all.
-- CSS-driven: swap the look by editing a handful of vars.
+## About the project
 
-## Install
+Toastflow is a headless toast engine with a Vue 3 renderer. It keeps toast state in a tiny framework-agnostic store so
+you can render it your way while keeping predictable behaviors.
 
-```bash
-pnpm add vue-toastflow
-# or: npm install vue-toastflow
-```
+- Deterministic rules for duplicates, timers, pause-on-hover, close-on-click, and clear-all.
+- CSS-first theming: swap the look by editing a handful of variables.
+- Works inside components or in plain TS/JS modules and services.
+- Headless slot to render your own card while reusing the store logic.
 
-## Quick start (Vue 3 + TS)
+## Preview
 
-1) Register the plugin once (all config keys, typescript, etc. live in [types.ts](packages/core/src/types.ts)):
+<p align="center">
+  <img src="images/showcase.png" alt="Toastflow showcase" width="850" />
+</p>
+
+## Packages
+
+- [toastflow-core](packages/core): typed, framework-agnostic toast store.
+- [vue-toastflow](packages/vue): Vue 3 renderer with `<ToastContainer />`, a global `toast` helper, defaults, and icons.
+- [playground-vue](packages/playground/vue): Vite + Vue demo playground for manual testing.
+
+## Built with
+
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
+![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
+![PNPM](https://img.shields.io/badge/pnpm-%234a4a4a.svg?style=for-the-badge&logo=pnpm&logoColor=f69220)
+
+## Usage (Vue.js 3 Composition API)
+
+### Quick start
 
 ```ts
 // main.ts
@@ -46,11 +92,11 @@ app.use(
 // register globally or import locally where you render it
 app.component("ToastContainer", ToastContainer);
 
-// call toast.* only after the plugin is installed (also in services/modules)
+// call toast.* only after the plugin is installed
 app.mount("#app");
 ```
 
-2) Drop a single container in your root layout:
+Render a container and fire toasts anywhere:
 
 ```vue
 <!-- App.vue -->
@@ -60,20 +106,18 @@ app.mount("#app");
 </template>
 ```
 
-3) Fire toasts anywhere (all accessible methods available in [toast.ts](packages/vue/src/toast.ts)):
-
 ```ts
 import {toast} from "vue-toastflow";
 
 toast.success({title: "Saved", description: "Your changes are live."});
-toast.warning({description: "Low balance"}); // description-only is fine
+toast.warning({description: "Low balance"});
 
 const id = toast.error({title: "Oops", description: "Check console."});
 toast.update(id, {description: "Fixed. All good now."});
 toast.dismiss(id);
 ```
 
-4) Async flows with `toast.loading`:
+### Async flows
 
 ```ts
 const run = toast.loading(
@@ -91,11 +135,11 @@ const run = toast.loading(
     },
 );
 
-await run; // Promise result of your task
-console.log(run.toastId); // toast id you can dismiss/update later
+await run;
+console.log(run.toastId);
 ```
 
-5) HTML content (opt-in):
+### HTML content
 
 ```ts
 toast.info({
@@ -105,19 +149,7 @@ toast.info({
 });
 ```
 
-6) Show sent time:
-
-```ts
-toast.success({
-    title: "Saved",
-    showCreatedAt: true,
-    createdAtFormatter: (ts) => new Date(ts).toLocaleString("sk-SK"),
-});
-```
-
-## Headless / custom card
-
-Use the container slot to render your own card while keeping store logic:
+### Headless rendering
 
 ```vue
 
@@ -127,7 +159,7 @@ Use the container slot to render your own card while keeping store logic:
     dismiss,
     bumpAnimationClass,
     clearAllAnimationClass,
-    updateAnimationClass
+    updateAnimationClass,
   }"
 >
   <div
@@ -152,8 +184,6 @@ Use the container slot to render your own card while keeping store logic:
 </ToastContainer>
 ```
 
-You still control everything via `toast.show`/`toast.success`/`toast.loading`; only the rendering changes.
-
 ## Configuration
 
 Pass any [types.ts](packages/core/src/types.ts) fields to `createToastflow`; per-toast options override them:
@@ -171,30 +201,31 @@ Pass any [types.ts](packages/core/src/types.ts) fields to `createToastflow`; per
 - `showCreatedAt` and `createdAtFormatter` for timestamps
 - lifecycle hooks: `onMount`, `onUnmount`, `onClick`, `onClose`
 
-## Slots and theming
+## Theming
 
-- CSS variables live in `packages/vue/src/styles.css` and are auto-imported. Key
-  ones: `--tf-toast-bg`, `--tf-toast-color`, `--tf-toast-border-color`, `--tf-toast-radius`, `--tf-toast-padding`, `--tf-toast-icon-size`, `--tf-toast-progress-height`,
-  per-type colors like `--success-bg`, `--error-text`, etc.
-- `<Toast>` slots: `icon`, `progress`, `close-icon`, `created-at`, plus the default slot for extra content inside the
-  body.
-- `<ToastContainer>` default slot
-  receives `{ toast, dismiss, progressResetKey, duplicateKey, updateKey, bumpAnimationClass, clearAllAnimationClass, updateAnimationClass }`.
-- Animations are pure CSS class names; swap them via `animation` config or override the `Toastflow__*` keyframes.
+- CSS variables live in [styles.css](packages/vue/src/styles.css) and are auto-imported with the Vue package.
+- Key
+  variables: `--tf-toast-bg`, `--tf-toast-color`, `--tf-toast-border-color`, `--tf-toast-radius`, `--tf-toast-padding`, `--tf-toast-icon-size`, `--tf-toast-progress-height`,
+  plus per-type colors like `--success-bg` and `--error-text`.
+- Animations are pure CSS class names; override them via the `animation` config or by redefining the `Toastflow__*`
+  keyframes. **Animations are implemented using [TransitionGroup](https://vuejs.org/guide/built-ins/transition-group).**
 
 ## Events and store access
 
-- `toast.subscribeEvents(listener)` gets `duplicate`, `timer-reset`, `update` events.
-- `toast.getState()` returns the current snapshot; all helper
-  methods (`toast.show`, `toast.success`, `toast.error`, `toast.warning`, `toast.info`, `toast.loading`, `toast.update`, `toast.dismiss`, `toast.dismissAll`, `toast.pause`, `toast.resume`, `toast.getConfig`)
-  are available after installing the plugin.
+- `toast.subscribeEvents(listener)` gets `duplicate`, `timer-reset`, and `update` events.
+- `toast.getState()` returns the current snapshot; helper
+  methods: `toast.show`, `toast.success`, `toast.error`, `toast.warning`, `toast.info`, `toast.loading`, `toast.update`, `toast.dismiss`, `toast.dismissAll`, `toast.pause`, `toast.resume`, `toast.getConfig`.
 
-## TypeScript
+## Contributing
 
-All types live in [types.ts](packages/core/src/types.ts) and are re-exported
-from `vue-toastflow` (`ToastConfig`, `ToastOptions`, `ToastInstance`, `ToastId`, `ToastPosition`, `ToastType`, `ToastEvent`, `ToastStore`,
-etc.).
+Contributions are welcome! Fork the repo, create a branch, and open a PR. For bigger changes, open an issue first.
+
+1. Fork the project
+2. Create your branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
 
 ## License
 
-MIT
+MIT - see [LICENSE](LICENSE).
