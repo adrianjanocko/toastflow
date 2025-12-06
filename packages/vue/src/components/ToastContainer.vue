@@ -10,6 +10,7 @@ import type {
   ToastStore,
 } from "toastflow-core";
 import { toastStoreKey } from "../symbols";
+import { getToastStore } from "../toast";
 
 const positions: ToastPosition[] = [
   "top-left",
@@ -21,10 +22,7 @@ const positions: ToastPosition[] = [
 ];
 
 const injectedStore = inject<ToastStore | null>(toastStoreKey, null);
-if (!injectedStore) {
-  throw new Error("[vue-toastflow] Plugin not installed");
-}
-const store: ToastStore = injectedStore;
+const store: ToastStore = injectedStore ?? getToastStore();
 
 const toasts = ref<ToastInstance[]>([]);
 

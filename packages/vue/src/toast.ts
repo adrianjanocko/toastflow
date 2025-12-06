@@ -12,13 +12,24 @@ import {
   ToastUpdateInput,
 } from "toastflow-core";
 
+const GLOBAL_STORE_KEY = "__vue_toastflow_store__";
+type GlobalWithStore = typeof globalThis & { [GLOBAL_STORE_KEY]?: ToastStore };
+
 let globalStore: ToastStore | null = null;
 
 export function setToastStore(store: ToastStore) {
   globalStore = store;
+  try {
+    (globalThis as GlobalWithStore)[GLOBAL_STORE_KEY] = store;
+  } catch {
+    // ignore if globalThis is not writable
+  }
 }
 
 export function getToastStore(): ToastStore {
+  if (!globalStore) {
+    globalStore = (globalThis as GlobalWithStore)[GLOBAL_STORE_KEY] ?? null;
+  }
   if (!globalStore) {
     throw new Error(
       "[vue-toastflow] Toast store not initialized. Did you install the plugin?",

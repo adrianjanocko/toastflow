@@ -9,6 +9,7 @@ import type {
   ToastType,
 } from "toastflow-core";
 import { toastStoreKey } from "../symbols";
+import { getToastStore } from "../toast";
 import CheckCircle from "./icons/CheckCircle.vue";
 import XCircle from "./icons/XCircle.vue";
 import Bell from "./icons/Bell.vue";
@@ -40,10 +41,7 @@ const emit = defineEmits<{
 }>();
 
 const injectedStore = inject<ToastStore | null>(toastStoreKey, null);
-if (!injectedStore) {
-  throw new Error("[vue-toastflow] Plugin not installed");
-}
-const store: ToastStore = injectedStore;
+const store: ToastStore = injectedStore ?? getToastStore();
 
 const isHovered = ref(false);
 const isBumped = ref(false);

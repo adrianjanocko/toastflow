@@ -24,7 +24,7 @@
     "tailwindcss": "^4.1.17",
     "toastflow-core": "^0.0.1",
     "vue": "^3.5.22",
-    "vue-toastflow": "^0.0.4"
+    "vue-toastflow": "^0.0.5"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.2",
