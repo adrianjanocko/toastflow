@@ -16,11 +16,12 @@ import Playground from '@/components/Playground.vue';
           </span>
         </div>
 
-        <div class="flex gap-3 text-xs text-slate-500">
-          <a href="#" class="hover:text-slate-900">GitHub</a>
-          <span aria-hidden="true">—</span>
-          <a href="#" class="hover:text-slate-900">Docs</a>
-        </div>
+        <a
+          href="https://github.com/adrianjanocko/toastflow"
+          target="_blank"
+          class="text-xs text-slate-500 hover:text-slate-900"
+          >GitHub</a
+        >
       </header>
 
       <main class="flex flex-1 flex-col items-center justify-center">
