@@ -15,7 +15,6 @@ import type {
   ToastType,
   ToastUpdateInput,
 } from "./types";
-import { v4 as uuidv4 } from "uuid";
 
 type Listener = (state: ToastState) => void;
 type EventListener = (event: ToastEvent) => void;
@@ -150,7 +149,7 @@ export function createToastStore(
       }
     }
 
-    const id = uuidv4();
+    const id = crypto.randomUUID();
     const createdAt = Date.now();
 
     const toastInstance: ToastInstance = {

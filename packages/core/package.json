@@ -8,7 +8,7 @@
     "url": "https://github.com/adrianjanocko/toastflow.git",
     "directory": "packages/core"
   },
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "src/index.ts",
   "module": "src/index.ts",
   "types": "src/index.ts",
@@ -20,8 +20,5 @@
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "vitest": "^4.0.13"
-  },
-  "dependencies": {
-    "uuid": "^13.0.0"
   }
 }
