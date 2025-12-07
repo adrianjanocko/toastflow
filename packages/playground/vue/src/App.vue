@@ -25,6 +25,16 @@ import Playground from '@/components/Playground.vue';
       </header>
 
       <main class="flex flex-1 flex-col items-center justify-center">
+        <section class="mb-6 max-w-2xl text-center text-sm text-slate-600">
+          <h2 class="mb-2 text-2xl font-semibold text-slate-900">
+            Vue toast notifications playground
+          </h2>
+          <p>
+            Explore Toastflow, a Vue toast library for fast, accessible notifications. Adjust
+            placement, timing, and behaviors to see how Vue toasts feel before shipping them to
+            production.
+          </p>
+        </section>
         <Playground />
       </main>
     </div>
