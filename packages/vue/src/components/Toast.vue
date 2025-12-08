@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, type CSSProperties, inject, ref, watch } from "vue";
+import type { Ref } from "vue";
+import { computed, type CSSProperties, inject, ref, toRefs, watch } from "vue";
 import ToastProgress from "./ToastProgress.vue";
 import type {
   ToastContext,
@@ -18,15 +19,7 @@ import QuestionMarkCircle from "./icons/QuestionMarkCircle.vue";
 import ArrowPath from "./icons/ArrowPath.vue";
 import XMark from "./icons/XMark.vue";
 
-const {
-  toast,
-  progressResetKey,
-  duplicateKey,
-  updateKey,
-  bumpAnimationClass,
-  clearAllAnimationClass,
-  updateAnimationClass,
-} = defineProps<{
+const props = defineProps<{
   toast: ToastInstance;
   progressResetKey?: number;
   duplicateKey?: number;
@@ -35,6 +28,16 @@ const {
   clearAllAnimationClass?: string;
   updateAnimationClass?: string;
 }>();
+
+const {
+  toast,
+  progressResetKey,
+  duplicateKey,
+  updateKey,
+  bumpAnimationClass,
+  clearAllAnimationClass,
+  updateAnimationClass,
+} = toRefs(props);
 
 const emit = defineEmits<{
   (e: "dismiss", id: ToastId): void;
@@ -114,27 +117,30 @@ const { progressStyle, showProgressBar, progressKeyLocal } = useProgress(
   duplicateKey,
 );
 const { isBumped, isUpdated } = useAnimations(duplicateKey, updateKey);
-const { isHovered, handleMouseEnter, handleMouseLeave } = useHoverPause(
-  toast,
-  store,
-);
+const {
+  isHovered,
+  handleMouseEnter,
+  handleMouseLeave,
+  handlePointerDown,
+  handlePointerUp,
+} = useHoverPause(toast, store);
 const { handleClick, handleCloseClick } = useClickHandlers(toast, emit);
 
-function useTypeMeta(toast: ToastInstance) {
+function useTypeMeta(toast: Ref<ToastInstance>) {
   const accentClass = computed(function () {
-    return typeMeta[toast.type].accent;
+    return typeMeta[toast.value.type].accent;
   });
 
   const iconWrapperClass = computed(function () {
-    return typeMeta[toast.type].icon;
+    return typeMeta[toast.value.type].icon;
   });
 
   const closeWrapperClass = computed(function () {
-    return typeMeta[toast.type].close;
+    return typeMeta[toast.value.type].close;
   });
 
   const defaultIconComponent = computed(function () {
-    return typeMeta[toast.type].component;
+    return typeMeta[toast.value.type].component;
   });
 
   return {
@@ -145,17 +151,19 @@ function useTypeMeta(toast: ToastInstance) {
   };
 }
 
-function useAria(toast: ToastInstance) {
+function useAria(toast: Ref<ToastInstance>) {
   const role = computed(function () {
-    return assertiveTypes.has(toast.type) ? "alert" : "status";
+    return assertiveTypes.has(toast.value.type) ? "alert" : "status";
   });
 
   const ariaLive = computed(function () {
-    return assertiveTypes.has(toast.type) ? "assertive" : "polite";
+    return assertiveTypes.has(toast.value.type) ? "assertive" : "polite";
   });
 
   const hasCreatedAt = computed(function () {
-    return Boolean(toast.showCreatedAt && Number.isFinite(toast.createdAt));
+    return Boolean(
+      toast.value.showCreatedAt && Number.isFinite(toast.value.createdAt),
+    );
   });
 
   const createdAtText = computed(function () {
@@ -164,7 +172,7 @@ function useAria(toast: ToastInstance) {
     }
 
     try {
-      return toast.createdAtFormatter(toast.createdAt);
+      return toast.value.createdAtFormatter(toast.value.createdAt);
     } catch (error) {
       console.error(
         "[vue-toastflow] Something failed in createdAtFormatter",
@@ -181,11 +189,11 @@ function useAria(toast: ToastInstance) {
   });
 
   const titleAriaLabel = computed(function () {
-    return stripHtmlToText(toast.title);
+    return stripHtmlToText(toast.value.title);
   });
 
   const descriptionAriaLabel = computed(function () {
-    return stripHtmlToText(toast.description);
+    return stripHtmlToText(toast.value.description);
   });
 
   const toastAriaLabel = computed(function () {
@@ -204,7 +212,7 @@ function useAria(toast: ToastInstance) {
     }
 
     if (!parts.length) {
-      parts.push(`${toast.type} notification`);
+      parts.push(`${toast.value.type} notification`);
     }
 
     return parts.join(". ");
@@ -223,28 +231,30 @@ function useAria(toast: ToastInstance) {
 }
 
 function useProgress(
-  toast: ToastInstance,
-  progressResetKey?: number,
-  duplicateKey?: number,
+  toast: Ref<ToastInstance>,
+  progressResetKey?: Ref<number>,
+  duplicateKey?: Ref<number>,
 ) {
   const progressStyle = computed(function (): CSSProperties {
     return {
-      "--tf-toast-progress-duration": `${toast.duration}ms`,
+      "--tf-toast-progress-duration": `${toast.value.duration}ms`,
     };
   });
 
   const showProgressBar = computed(function () {
     return (
-      toast.progressBar && Number.isFinite(toast.duration) && toast.duration > 0
+      toast.value.progressBar &&
+      Number.isFinite(toast.value.duration) &&
+      toast.value.duration > 0
     );
   });
 
   const progressKeyLocal = ref(0);
 
   watch(
-    () => progressResetKey,
-    function () {
-      if (progressResetKey == null) {
+    () => progressResetKey?.value,
+    function (value) {
+      if (value == null) {
         return;
       }
       progressKeyLocal.value += 1;
@@ -252,9 +262,9 @@ function useProgress(
   );
 
   watch(
-    () => duplicateKey,
-    function () {
-      if (duplicateKey == null) {
+    () => duplicateKey?.value,
+    function (value) {
+      if (value == null) {
         return;
       }
       progressKeyLocal.value += 1;
@@ -268,7 +278,7 @@ function useProgress(
   };
 }
 
-function useAnimations(duplicateKey?: number, updateKey?: number) {
+function useAnimations(duplicateKey?: Ref<number>, updateKey?: Ref<number>) {
   const isBumped = ref(false);
   const isUpdated = ref(false);
 
@@ -287,9 +297,9 @@ function useAnimations(duplicateKey?: number, updateKey?: number) {
   }
 
   watch(
-    () => duplicateKey,
-    function () {
-      if (duplicateKey == null) {
+    () => duplicateKey?.value,
+    function (value) {
+      if (value == null) {
         return;
       }
       triggerBump();
@@ -297,9 +307,9 @@ function useAnimations(duplicateKey?: number, updateKey?: number) {
   );
 
   watch(
-    () => updateKey,
-    function () {
-      if (updateKey == null) {
+    () => updateKey?.value,
+    function (value) {
+      if (value == null) {
         return;
       }
       triggerUpdate();
@@ -312,61 +322,89 @@ function useAnimations(duplicateKey?: number, updateKey?: number) {
   };
 }
 
-function useHoverPause(toast: ToastInstance, store: ToastStore) {
+function useHoverPause(toast: Ref<ToastInstance>, store: ToastStore) {
   const isHovered = ref(false);
 
   function handleMouseEnter() {
-    if (!toast.pauseOnHover) {
+    if (!toast.value.pauseOnHover) {
       return;
     }
     isHovered.value = true;
-    store.pause(toast.id);
+    store.pause(toast.value.id);
   }
 
   function handleMouseLeave() {
-    if (!toast.pauseOnHover) {
+    if (!toast.value.pauseOnHover) {
       return;
     }
     isHovered.value = false;
-    store.resume(toast.id);
+    store.resume(toast.value.id);
+  }
+
+  function isTouchLike(event: PointerEvent) {
+    return event.pointerType === "touch" || event.pointerType === "pen";
+  }
+
+  function handlePointerDown(event: PointerEvent) {
+    if (!toast.value.pauseOnHover) {
+      return;
+    }
+    if (!isTouchLike(event)) {
+      return;
+    }
+    isHovered.value = true;
+    store.pause(toast.value.id);
+  }
+
+  function handlePointerUp(event: PointerEvent) {
+    if (!toast.value.pauseOnHover) {
+      return;
+    }
+    if (!isTouchLike(event)) {
+      return;
+    }
+    isHovered.value = false;
+    store.resume(toast.value.id);
   }
 
   return {
     isHovered,
     handleMouseEnter,
     handleMouseLeave,
+    handlePointerDown,
+    handlePointerUp,
   };
 }
 
 function useClickHandlers(
-  toast: ToastInstance,
+  toast: Ref<ToastInstance>,
   emit: (e: "dismiss", id: ToastId) => void,
 ) {
   function createContext(): ToastContext {
     return {
-      id: toast.id,
-      position: toast.position,
-      type: toast.type,
-      title: toast.title,
-      description: toast.description,
-      createdAt: toast.createdAt,
+      id: toast.value.id,
+      position: toast.value.position,
+      type: toast.value.type,
+      title: toast.value.title,
+      description: toast.value.description,
+      createdAt: toast.value.createdAt,
     };
   }
 
   function handleClick(event: MouseEvent) {
     const context = createContext();
 
-    if (toast.onClick) {
-      toast.onClick(context, event);
+    if (toast.value.onClick) {
+      toast.value.onClick(context, event);
     }
 
-    if (toast.closeOnClick) {
-      emit("dismiss", toast.id);
+    if (toast.value.closeOnClick) {
+      emit("dismiss", toast.value.id);
     }
   }
 
   function handleCloseClick() {
-    emit("dismiss", toast.id);
+    emit("dismiss", toast.value.id);
   }
 
   return {
@@ -423,6 +461,9 @@ function stripHtmlToText(value: string): string {
       @click="handleClick"
       @mouseenter="handleMouseEnter"
       @mouseleave="handleMouseLeave"
+      @pointerdown="handlePointerDown"
+      @pointerup="handlePointerUp"
+      @pointercancel="handlePointerUp"
     >
       <div class="tf-toast-surface">
         <!-- main row -->

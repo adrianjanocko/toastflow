@@ -326,6 +326,18 @@ watch(
   flex-direction: column;
   position: relative;
   width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  padding-top: var(--tf-toast-stack-padding-top);
+  padding-right: var(--tf-toast-stack-padding-right);
+  padding-bottom: var(--tf-toast-stack-padding-bottom);
+  padding-left: var(--tf-toast-stack-padding-left);
+  scroll-padding: var(--tf-toast-stack-padding-top)
+    var(--tf-toast-stack-padding-right) var(--tf-toast-stack-padding-bottom)
+    var(--tf-toast-stack-padding-left);
+  box-sizing: border-box;
 }
 
 .tf-toast-stack-inner--bottom {

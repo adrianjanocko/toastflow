@@ -44,6 +44,12 @@
     /* layout inside toast */
     --tf-toast-gap: 0.8rem;
 
+    /* stack padding (used for scrollable stack) */
+    --tf-toast-stack-padding-top: 8px;
+    --tf-toast-stack-padding-right: 8px;
+    --tf-toast-stack-padding-bottom: 18px;
+    --tf-toast-stack-padding-left: 0;
+
     /* accent bar */
     --tf-toast-accent-loading: var(--loading-text);
     --tf-toast-accent-default: var(--normal-text);
