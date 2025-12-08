@@ -20,12 +20,11 @@
     "url": "https://github.com/adrianjanocko/toastflow.git",
     "directory": "packages/vue"
   },
-  "version": "1.0.6",
+  "version": "1.0.7",
   "main": "src/index.ts",
   "module": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
-    "prepack": "node ../../scripts/sync-readme.js && pnpm run build",
     "build": "vite build",
     "test": "vitest"
   },

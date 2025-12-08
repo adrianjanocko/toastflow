@@ -232,8 +232,8 @@ function useAria(toast: Ref<ToastInstance>) {
 
 function useProgress(
   toast: Ref<ToastInstance>,
-  progressResetKey?: Ref<number>,
-  duplicateKey?: Ref<number>,
+  progressResetKey?: Ref<number | undefined>,
+  duplicateKey?: Ref<number | undefined>,
 ) {
   const progressStyle = computed(function (): CSSProperties {
     return {
@@ -278,7 +278,10 @@ function useProgress(
   };
 }
 
-function useAnimations(duplicateKey?: Ref<number>, updateKey?: Ref<number>) {
+function useAnimations(
+  duplicateKey?: Ref<number | undefined>,
+  updateKey?: Ref<number | undefined>,
+) {
   const isBumped = ref(false);
   const isUpdated = ref(false);
 
