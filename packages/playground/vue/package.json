@@ -1,5 +1,5 @@
 {
-  "name": "package.json",
+  "name": "vue-toastflow-playground",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -22,9 +22,9 @@
     "lucide-vue-next": "^0.554.0",
     "pinia": "^3.0.3",
     "tailwindcss": "^4.1.17",
-    "toastflow-core": "^1.0.4",
+    "toastflow-core": "workspace:^",
     "vue": "^3.5.22",
-    "vue-toastflow": "^1.0.8"
+    "vue-toastflow": "workspace:^"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.2",
