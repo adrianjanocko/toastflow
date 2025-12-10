@@ -43,6 +43,7 @@ const defaults: ToastConfig = {
   gap: "8px",
   zIndex: 9999,
   width: "350px",
+  overflowScroll: false,
   duration: 5000,
   maxVisible: 5,
   position: "top-right",

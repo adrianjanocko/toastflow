@@ -84,6 +84,7 @@ const offset = ref(config.offset);
 const gap = ref(config.gap);
 const zIndex = ref(config.zIndex);
 const width = ref(config.width);
+const overflowScroll = ref(config.overflowScroll);
 
 const duration = ref(config.duration);
 const maxVisible = ref(config.maxVisible);
@@ -183,6 +184,7 @@ const baseConfig = computed<Partial<ToastOptions>>(function () {
     gap: gap.value,
     zIndex: zIndex.value,
     width: width.value,
+    overflowScroll: overflowScroll.value,
 
     duration: duration.value,
     maxVisible: maxVisible.value,
@@ -387,6 +389,7 @@ function resetToDefaults() {
   gap.value = '8px';
   zIndex.value = 9999;
   width.value = '350px';
+  overflowScroll.value = false;
 
   duration.value = 5000;
   maxVisible.value = 5;
@@ -598,6 +601,19 @@ function resetToDefaults() {
               @click="showCreatedAt = !showCreatedAt"
             >
               <span>Created at</span>
+            </button>
+
+            <button
+              type="button"
+              class="inline-flex items-center justify-between rounded-xl border px-3 py-1.5 text-xs font-medium transition-all"
+              :class="
+                overflowScroll
+                  ? 'border-slate-900 bg-slate-900 text-white'
+                  : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-300 hover:bg-slate-100'
+              "
+              @click="overflowScroll = !overflowScroll"
+            >
+              <span>Overflow scroll (Beta)</span>
             </button>
           </div>
         </div>

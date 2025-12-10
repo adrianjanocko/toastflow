@@ -104,6 +104,10 @@ export interface ToastConfig {
    * Fixed width applied to each toast.
    */
   width: string;
+  /**
+   * Beta: enable scrolling when a stack overflows; currently only works for top-* positions.
+   */
+  overflowScroll: boolean;
 
   /**
    * Time in milliseconds before a toast auto-dismisses.

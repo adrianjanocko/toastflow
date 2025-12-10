@@ -20,12 +20,13 @@
     "url": "https://github.com/adrianjanocko/toastflow.git",
     "directory": "packages/vue"
   },
-  "version": "1.0.7",
+  "version": "1.0.8",
   "main": "src/index.ts",
   "module": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
     "build": "vite build",
+    "prepack": "pnpm run build",
     "test": "vitest"
   },
   "files": [
@@ -41,7 +42,7 @@
     "vue": "^3.4.0"
   },
   "dependencies": {
-    "toastflow-core": "^1.0.3"
+    "toastflow-core": "^1.0.4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.2",

@@ -154,6 +154,10 @@ function stackAxisClass(position: ToastPosition): string | null {
   return null;
 }
 
+function allowOverflowScroll(position: ToastPosition): boolean {
+  return stackConfig(position).overflowScroll && position.startsWith("top-");
+}
+
 function handleDismiss(id: ToastId) {
   store.dismiss(id);
 }
@@ -268,7 +272,11 @@ watch(
         @before-leave="beforeLeave"
         @after-leave="afterLeave"
         tag="div"
-        :class="['tf-toast-stack-inner', stackAxisClass(position)]"
+        :class="[
+          'tf-toast-stack-inner',
+          stackAxisClass(position),
+          allowOverflowScroll(position) && 'tf-toast-stack-inner--scroll',
+        ]"
         :style="{ gap: stackConfig(position).gap }"
       >
         <div
@@ -326,6 +334,10 @@ watch(
   flex-direction: column;
   position: relative;
   width: 100%;
+  box-sizing: border-box;
+}
+
+.tf-toast-stack-inner--scroll {
   max-height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
@@ -337,7 +349,6 @@ watch(
   scroll-padding: var(--tf-toast-stack-padding-top)
     var(--tf-toast-stack-padding-right) var(--tf-toast-stack-padding-bottom)
     var(--tf-toast-stack-padding-left);
-  box-sizing: border-box;
 }
 
 .tf-toast-stack-inner--bottom {
