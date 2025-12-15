@@ -15,6 +15,7 @@ import type {
   ToastType,
   ToastUpdateInput,
 } from "./types";
+import { generateUuid, isNumberFinite } from "./util";
 
 type Listener = (state: ToastState) => void;
 type EventListener = (event: ToastEvent) => void;
@@ -90,10 +91,12 @@ export function createToastStore(
     }
   }
 
+  // Return the current toast state.
   function getState(): ToastState {
     return state;
   }
 
+  // Subscribe to store updates and immediately receive the current state.
   function subscribe(listener: Listener): () => void {
     listeners.add(listener);
     listener(state);
@@ -102,6 +105,7 @@ export function createToastStore(
     };
   }
 
+  // Subscribe to toast lifecycle events only.
   function subscribeEvents(listener: EventListener): () => void {
     eventListeners.add(listener);
     return () => {
@@ -109,6 +113,7 @@ export function createToastStore(
     };
   }
 
+  // Show a toast, handling duplicates and auto-dismiss scheduling.
   function show(options: ToastShowInput): ToastId {
     assertShowInput(options, "show");
 
@@ -150,7 +155,7 @@ export function createToastStore(
       }
     }
 
-    const id = crypto.randomUUID();
+    const id = generateUuid();
     const createdAt = Date.now();
 
     const toastInstance: ToastInstance = {
@@ -199,6 +204,7 @@ export function createToastStore(
     return id;
   }
 
+  // Wrap a promise with loading/success/error toast states.
   function loading<T>(
     input: ToastLoadingInput<T>,
     config: ToastLoadingConfig<T>,
@@ -280,6 +286,7 @@ export function createToastStore(
     return result;
   }
 
+  // Update an existing toast and reset its timer.
   function update(id: ToastId, options: ToastUpdateInput): void {
     const existing = state.toasts.find((t) => t.id === id);
     if (!existing) {
@@ -318,6 +325,7 @@ export function createToastStore(
     notify();
   }
 
+  // Hide a toast, run lifecycle callbacks, and remove it after the leave animation.
   function dismiss(id: ToastId): void {
     const toast = state.toasts.find((t) => t.id === id);
     if (!toast) {
@@ -373,6 +381,7 @@ export function createToastStore(
     }, HIDE_ANIMATION_DURATION);
   }
 
+  // Clear all toasts in their current positions.
   function dismissAll(): void {
     if (!state.toasts.length) {
       return;
@@ -431,10 +440,7 @@ export function createToastStore(
   }
 
   function scheduleAutoDismiss(toastInstance: ToastInstance) {
-    if (
-      !Number.isFinite(toastInstance.duration) ||
-      toastInstance.duration <= 0
-    ) {
+    if (!isNumberFinite(toastInstance.duration)) {
       timers.delete(toastInstance.id);
       return;
     }
@@ -462,6 +468,7 @@ export function createToastStore(
     timers.delete(id);
   }
 
+  // Pause a toast timer and capture the remaining time.
   function pause(id: ToastId): void {
     const timer = timers.get(id);
     if (!timer || timer.paused) {
@@ -484,6 +491,7 @@ export function createToastStore(
     });
   }
 
+  // Resume a paused toast timer according to its pause strategy.
   function resume(id: ToastId): void {
     const timer = timers.get(id);
     const toastInstance = state.toasts.find((t) => t.id === id);
@@ -493,10 +501,7 @@ export function createToastStore(
       return;
     }
 
-    if (
-      toastInstance.duration === 0 ||
-      !Number.isFinite(toastInstance.duration)
-    ) {
+    if (!isNumberFinite(toastInstance.duration)) {
       timers.delete(id);
       return;
     }
@@ -537,6 +542,7 @@ export function createToastStore(
     });
   }
 
+  // Return the resolved global configuration for this store.
   function getConfig(): ToastConfig {
     return {
       ...defaults,
@@ -638,7 +644,7 @@ function insertToast(
   existing: ToastInstance[],
   next: ToastInstance,
 ): ToastInstance[] {
-  if (next.duration === 0 || !Number.isFinite(next.duration)) {
+  if (!isNumberFinite(next.duration)) {
     next.progressBar = false;
   }
 

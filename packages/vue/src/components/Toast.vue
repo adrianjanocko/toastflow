@@ -19,6 +19,7 @@ import InfoCircle from "./icons/InfoCircle.vue";
 import QuestionMarkCircle from "./icons/QuestionMarkCircle.vue";
 import ArrowPath from "./icons/ArrowPath.vue";
 import XMark from "./icons/XMark.vue";
+import { isNumberFinite } from "toastflow-core/src/util";
 
 const props = defineProps<{
   toast: ToastStandaloneInstance | ToastInstance;
@@ -130,11 +131,8 @@ const {
   descriptionAriaLabel,
   toastAriaLabel,
 } = useAria(toast);
-const { progressStyle, showProgressBar, progressKeyLocal } = useProgress(
-  toast,
-  progressResetKey,
-  duplicateKey,
-);
+const { duration, progressStyle, showProgressBar, progressKeyLocal } =
+  useProgress(toast, progressResetKey, duplicateKey);
 const { isBumped, isUpdated } = useAnimations(duplicateKey, updateKey);
 const {
   isHovered,
@@ -254,18 +252,24 @@ function useProgress(
   progressResetKey?: Ref<number | undefined>,
   duplicateKey?: Ref<number | undefined>,
 ) {
+  const duration = computed<number | undefined>(function () {
+    if (!isNumberFinite(toast.value.duration)) {
+      return undefined;
+    }
+    return toast.value.duration;
+  });
+
   const progressStyle = computed(function (): CSSProperties {
+    if (!duration.value) {
+      return {};
+    }
     return {
-      "--tf-toast-progress-duration": `${toast.value.duration}ms`,
+      "--tf-toast-progress-duration": `${duration.value}ms`,
     };
   });
 
   const showProgressBar = computed(function () {
-    return (
-      toast.value.progressBar &&
-      Number.isFinite(toast.value.duration) &&
-      toast.value.duration > 0
-    );
+    return toast.value.progressBar && Boolean(duration.value);
   });
 
   const progressKeyLocal = ref(0);
@@ -291,6 +295,7 @@ function useProgress(
   );
 
   return {
+    duration,
     progressStyle,
     showProgressBar,
     progressKeyLocal,
@@ -348,43 +353,54 @@ function useHoverPause(toast: Ref<ToastInstance>, store: ToastStore) {
   const isHovered = ref(false);
 
   function handleMouseEnter() {
-    if (!toast.value.pauseOnHover) {
+    if (!canPause()) {
       return;
     }
-    isHovered.value = true;
-    store.pause(toast.value.id);
+    pause();
   }
 
   function handleMouseLeave() {
-    if (!toast.value.pauseOnHover) {
+    if (!canPause()) {
       return;
     }
-    isHovered.value = false;
-    store.resume(toast.value.id);
+    resume();
+  }
+
+  function handlePointerDown(event: PointerEvent) {
+    if (!canPause(event, true)) {
+      return;
+    }
+    pause();
+  }
+
+  function handlePointerUp(event: PointerEvent) {
+    if (!canPause(event, true)) {
+      return;
+    }
+    resume();
+  }
+
+  /* HELPERS */
+  function canPause(event?: PointerEvent, requireTouch = false) {
+    if (!duration.value) {
+      return false;
+    }
+    if (!toast.value.pauseOnHover) {
+      return false;
+    }
+    return !(requireTouch && event && !isTouchLike(event));
   }
 
   function isTouchLike(event: PointerEvent) {
     return event.pointerType === "touch" || event.pointerType === "pen";
   }
 
-  function handlePointerDown(event: PointerEvent) {
-    if (!toast.value.pauseOnHover) {
-      return;
-    }
-    if (!isTouchLike(event)) {
-      return;
-    }
+  function pause() {
     isHovered.value = true;
     store.pause(toast.value.id);
   }
 
-  function handlePointerUp(event: PointerEvent) {
-    if (!toast.value.pauseOnHover) {
-      return;
-    }
-    if (!isTouchLike(event)) {
-      return;
-    }
+  function resume() {
     isHovered.value = false;
     store.resume(toast.value.id);
   }
@@ -507,7 +523,10 @@ function stripHtmlToText(value: string): string {
           </div>
 
           <!-- content -->
-          <div class="tf-toast-body">
+          <div
+            class="tf-toast-body"
+            :class="[hasCreatedAt && 'tf-toast-body--has-created-at']"
+          >
             <div class="tf-toast-text">
               <p
                 v-if="toast.title && !toast.supportHtml"
@@ -742,13 +761,32 @@ function stripHtmlToText(value: string): string {
   flex-direction: column;
 }
 
+.tf-toast-body--has-created-at {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: calc(var(--tf-toast-gap) / 2);
+  grid-auto-flow: row;
+}
+
+.tf-toast-body--has-created-at > :not(.tf-toast-created-at) {
+  grid-column: 1;
+}
+
+.tf-toast-text {
+  min-width: 0;
+}
+
 .tf-toast-created-at {
-  position: absolute;
-  bottom: 0;
-  right: 0;
   color: var(--tf-toast-description-color);
   font-size: var(--tf-toast-created-at-font-size);
   font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  align-self: end;
+  justify-self: end;
+  grid-column: 2;
+  grid-row: 1;
 }
 
 .tf-toast-title {
