@@ -111,8 +111,8 @@ importers:
   packages/vue:
     dependencies:
       toastflow-core:
-        specifier: ^1.0.5
-        version: 1.0.5
+        specifier: ^1.0.6
+        version: 1.0.6
     devDependencies:
       '@vitejs/plugin-vue':
         specifier: ^6.0.2
@@ -2359,8 +2359,8 @@ packages:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}
     engines: {node: '>=8.0'}
 
-  toastflow-core@1.0.5:
-    resolution: {integrity: sha512-l5l//Zly7wpPQVy0JpHRfUIWsuU3rpyb8pXocWiOhXSyZhtZSkNCIVarTAYDBLXjqOBW/E2yvIOEAq9QWSNv7Q==}
+  toastflow-core@1.0.6:
+    resolution: {integrity: sha512-Ng4A7yPUlirjhII6g7jsEV7HDZdsdKgBWVDxomOyZxtS36rtzApaxxfo/NVhZdX8y3PbEJV2rXlO38kR3JRfyw==}
 
   totalist@3.0.1:
     resolution: {integrity: sha512-sf4i37nQ2LBx4m3wB74y+ubopq6W/dIzXg0FDGjsYnZHVa1Da8FH853wlL2gtUhg+xJXjfk3kUZS3BRoQeoQBQ==}
@@ -4815,7 +4815,7 @@ snapshots:
     dependencies:
       is-number: 7.0.0
 
-  toastflow-core@1.0.5: {}
+  toastflow-core@1.0.6: {}
 
   totalist@3.0.1: {}
 
