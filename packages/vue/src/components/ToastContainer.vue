@@ -26,6 +26,13 @@ const store: ToastStore = injectedStore ?? getToastStore();
 
 const toasts = ref<ToastInstance[]>([]);
 
+const DEFAULT_ENTER_DURATION = 260;
+const DEFAULT_LEAVE_DURATION = 220;
+const transitionDurations = ref<{ enter: number; leave: number }>({
+  enter: DEFAULT_ENTER_DURATION,
+  leave: DEFAULT_LEAVE_DURATION,
+});
+
 // event-driven keys
 const progressResetMap = ref<Record<ToastId, number>>({});
 const duplicateMap = ref<Record<ToastId, number>>({});
@@ -52,6 +59,8 @@ onMounted(function () {
       updateMap.value[event.id] = Math.random();
     }
   });
+
+  refreshTransitionDurations();
 });
 
 onUnmounted(function () {
@@ -162,6 +171,45 @@ function handleDismiss(id: ToastId) {
   store.dismiss(id);
 }
 
+function parseDurationVariable(value: string, fallback: number): number {
+  const trimmed = value.trim().toLowerCase();
+  if (!trimmed) {
+    return fallback;
+  }
+
+  if (trimmed.endsWith("ms")) {
+    const numeric = Number(trimmed.slice(0, -2));
+    return Number.isFinite(numeric) ? numeric : fallback;
+  }
+
+  if (trimmed.endsWith("s")) {
+    const numeric = Number(trimmed.slice(0, -1));
+    return Number.isFinite(numeric) ? numeric * 1000 : fallback;
+  }
+
+  const numeric = Number(trimmed);
+  return Number.isFinite(numeric) ? numeric : fallback;
+}
+
+function refreshTransitionDurations() {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const style = getComputedStyle(document.documentElement);
+
+  transitionDurations.value = {
+    enter: parseDurationVariable(
+      style.getPropertyValue("--tf-toast-animation-in-duration"),
+      DEFAULT_ENTER_DURATION,
+    ),
+    leave: parseDurationVariable(
+      style.getPropertyValue("--tf-toast-animation-out-duration"),
+      DEFAULT_LEAVE_DURATION,
+    ),
+  };
+}
+
 function beforeLeave(el: Element) {
   const element = el as HTMLElement;
   const parent = element.parentElement;
@@ -169,16 +217,33 @@ function beforeLeave(el: Element) {
     return;
   }
 
+  const position = element.dataset.position ?? "";
+  const isBottom =
+    position.startsWith("bottom-") ||
+    parent.classList.contains("tf-toast-stack-inner--bottom");
+
   const top = element.offsetTop;
+  const height = element.offsetHeight;
   const parentHeight = parent.clientHeight;
   const parentWidth = parent.clientWidth;
 
-  parent.style.minHeight = `${parentHeight}px`;
+  if (!isBottom) {
+    parent.style.minHeight = `${parentHeight}px`;
+  }
+
   element.style.position = "absolute";
   element.style.width = `${parentWidth}px`;
   element.style.left = "0";
   element.style.right = "0";
-  element.style.top = `${top}px`;
+
+  if (isBottom) {
+    const bottom = parentHeight - (top + height);
+    element.style.bottom = `${bottom}px`;
+    element.style.top = "auto";
+  } else {
+    element.style.top = `${top}px`;
+    element.style.bottom = "auto";
+  }
 }
 
 function afterLeave(el: Element) {
@@ -193,6 +258,7 @@ function afterLeave(el: Element) {
   element.style.left = "";
   element.style.right = "";
   element.style.top = "";
+  element.style.bottom = "";
 }
 
 watch(
@@ -268,6 +334,8 @@ watch(
       :style="stackStyle(position)"
     >
       <TransitionGroup
+        appear
+        :duration="transitionDurations"
         :name="stackConfig(position).animation.name"
         @before-leave="beforeLeave"
         @after-leave="afterLeave"
@@ -280,35 +348,37 @@ watch(
         :style="{ gap: stackConfig(position).gap }"
       >
         <div
-          v-for="toast in grouped[position]"
+          v-for="(toast, i) in grouped[position]"
           :key="toast.id"
           class="tf-toast-item"
           :style="{ width: toast.width, maxWidth: '100%' }"
           :data-position="toast.position"
         >
-          <slot
-            v-if="$slots.default"
-            :toast="toast"
-            :progressResetKey="getProgressResetKey(toast.id)"
-            :duplicateKey="getDuplicateKey(toast.id)"
-            :updateKey="getUpdateKey(toast.id)"
-            :bumpAnimationClass="animationForToast(toast).bump"
-            :clearAllAnimationClass="animationForToast(toast).clearAll"
-            :updateAnimationClass="animationForToast(toast).update"
-            :dismiss="handleDismiss"
-          />
+          <div class="tf-toast-motion" :style="{ '--tf-toast-index': i }">
+            <slot
+              v-if="$slots.default"
+              :toast="toast"
+              :progressResetKey="getProgressResetKey(toast.id)"
+              :duplicateKey="getDuplicateKey(toast.id)"
+              :updateKey="getUpdateKey(toast.id)"
+              :bumpAnimationClass="animationForToast(toast).bump"
+              :clearAllAnimationClass="animationForToast(toast).clearAll"
+              :updateAnimationClass="animationForToast(toast).update"
+              :dismiss="handleDismiss"
+            />
 
-          <Toast
-            v-else
-            :toast="toast"
-            :progressResetKey="getProgressResetKey(toast.id)"
-            :duplicateKey="getDuplicateKey(toast.id)"
-            :updateKey="getUpdateKey(toast.id)"
-            :bumpAnimationClass="animationForToast(toast).bump"
-            :clearAllAnimationClass="animationForToast(toast).clearAll"
-            :updateAnimationClass="animationForToast(toast).update"
-            @dismiss="handleDismiss"
-          />
+            <Toast
+              v-else
+              :toast="toast"
+              :progressResetKey="getProgressResetKey(toast.id)"
+              :duplicateKey="getDuplicateKey(toast.id)"
+              :updateKey="getUpdateKey(toast.id)"
+              :bumpAnimationClass="animationForToast(toast).bump"
+              :clearAllAnimationClass="animationForToast(toast).clearAll"
+              :updateAnimationClass="animationForToast(toast).update"
+              @dismiss="handleDismiss"
+            />
+          </div>
         </div>
       </TransitionGroup>
     </div>

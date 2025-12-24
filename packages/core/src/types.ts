@@ -288,6 +288,10 @@ export interface ToastOptions extends ToastConfig {
   type: ToastType;
   title: string;
   description: string;
+  /**
+   * Custom accent theme applied by the renderer (e.g. "my-theme" -> "tf-toast-accent--my-theme").
+   */
+  theme?: string;
 }
 
 /**

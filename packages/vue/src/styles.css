@@ -6,33 +6,33 @@
     --tf-toast-radius: 0.75rem;
     --tf-toast-padding: 1rem;
 
-    --normal-bg: #fff;
-    --normal-border: #e6e8eb;
-    --normal-text: #11181c;
+    --tf-toast-normal-bg-default: #fff;
+    --tf-toast-normal-border-default: #e6e8eb;
+    --tf-toast-normal-text-default: #11181c;
 
-    --loading-bg: hsl(48, 100%, 96%);
-    --loading-border: hsl(46, 100%, 88%);
-    --loading-text: hsl(40, 100%, 32%);
+    --tf-toast-loading-bg-default: hsl(48, 100%, 96%);
+    --tf-toast-loading-border-default: hsl(46, 100%, 88%);
+    --tf-toast-loading-text-default: hsl(40, 100%, 32%);
 
-    --tf-toast-bg: var(--normal-bg);
-    --tf-toast-color: var(--normal-text);
-    --tf-toast-border-color: var(--normal-border);
+    --tf-toast-success-bg-default: hsl(143, 85%, 96%);
+    --tf-toast-success-border-default: hsl(145, 92%, 87%);
+    --tf-toast-success-text-default: hsl(140, 100%, 27%);
 
-    --success-bg: hsl(143, 85%, 96%);
-    --success-border: hsl(145, 92%, 87%);
-    --success-text: hsl(140, 100%, 27%);
+    --tf-toast-info-bg-default: hsl(208, 100%, 97%);
+    --tf-toast-info-border-default: hsl(221, 91%, 93%);
+    --tf-toast-info-text-default: hsl(210, 92%, 45%);
 
-    --info-bg: hsl(208, 100%, 97%);
-    --info-border: hsl(221, 91%, 93%);
-    --info-text: hsl(210, 92%, 45%);
+    --tf-toast-warning-bg-default: hsl(49, 100%, 97%);
+    --tf-toast-warning-border-default: hsl(49, 91%, 84%);
+    --tf-toast-warning-text-default: hsl(31, 92%, 45%);
 
-    --warning-bg: hsl(49, 100%, 97%);
-    --warning-border: hsl(49, 91%, 84%);
-    --warning-text: hsl(31, 92%, 45%);
+    --tf-toast-error-bg-default: hsl(359, 100%, 97%);
+    --tf-toast-error-border-default: hsl(359, 100%, 94%);
+    --tf-toast-error-text-default: hsl(360, 100%, 45%);
 
-    --error-bg: hsl(359, 100%, 97%);
-    --error-border: hsl(359, 100%, 94%);
-    --error-text: hsl(360, 100%, 45%);
+    --tf-toast-bg: var(--tf-toast-normal-bg-default);
+    --tf-toast-color: var(--tf-toast-normal-text-default);
+    --tf-toast-border-color: var(--tf-toast-normal-border-default);
 
     /* text */
     --tf-toast-title-font-size: 0.85rem;
@@ -52,27 +52,26 @@
     --tf-toast-stack-padding-bottom: 18px;
     --tf-toast-stack-padding-left: 0;
 
-    /* accent bar */
-    --tf-toast-accent-loading: var(--loading-text);
-    --tf-toast-accent-default: var(--normal-text);
-    --tf-toast-accent-success: var(--success-text);
-    --tf-toast-accent-error: var(--error-text);
-    --tf-toast-accent-warning: var(--warning-text);
-    --tf-toast-accent-info: var(--info-text);
+    /* progress bar */
+    --tf-toast-accent-loading: var(--tf-toast-loading-text-default);
+    --tf-toast-accent-default: var(--tf-toast-normal-text-default);
+    --tf-toast-accent-success: var(--tf-toast-success-text-default);
+    --tf-toast-accent-error: var(--tf-toast-error-text-default);
+    --tf-toast-accent-warning: var(--tf-toast-warning-text-default);
+    --tf-toast-accent-info: var(--tf-toast-info-text-default);
 
     /* icon */
     --tf-toast-icon-size: 24px;
 
-    --tf-toast-icon-loading: var(--loading-text);
-    --tf-toast-icon-default: var(--normal-text);
-    --tf-toast-icon-success: var(--success-text);
-    --tf-toast-icon-error: var(--error-text);
-    --tf-toast-icon-warning: var(--warning-text);
-    --tf-toast-icon-info: var(--info-text);
+    --tf-toast-icon-loading: var(--tf-toast-loading-text-default);
+    --tf-toast-icon-default: var(--tf-toast-normal-text-default);
+    --tf-toast-icon-success: var(--tf-toast-success-text-default);
+    --tf-toast-icon-error: var(--tf-toast-error-text-default);
+    --tf-toast-icon-warning: var(--tf-toast-warning-text-default);
+    --tf-toast-icon-info: var(--tf-toast-info-text-default);
 
     /* close button */
     --tf-toast-close-size: 18px;
-
     --tf-toast-close-border-color: var(--tf-toast-border-color);
     --tf-toast-close-color: var(--tf-toast-color);
     --tf-toast-close-bg: var(--tf-toast-bg);
@@ -81,10 +80,13 @@
     /* progress bar */
     --tf-toast-progress-height: 4px;
     --tf-toast-progress-bg: transparent;
-    --tf-toast-progress-bar-bg: var(--tf-toast-accent-success); /* fallback; per-type je v class */
+    --tf-toast-progress-bar-bg: var(--tf-toast-accent-success);
     --tf-toast-progress-duration: 5000ms;
 
+    /* animations */
     --tf-toast-motion-offset: 10px;
+    --tf-toast-animation-in-duration: 260ms;
+    --tf-toast-animation-out-duration: 220ms;
 }
 
 .tf-toast--paused .tf-toast-progress-bar {
@@ -99,56 +101,65 @@
     --tf-toast-motion-offset: 10px;
 }
 
-.Toastflow__animation-enter-active {
-    animation: Toastflow__enter-kf 260ms cubic-bezier(0.5, 1, 0.25, 1);
-    animation-fill-mode: both;
+.tf-toast-motion {
+    width: 100%;
+    will-change: transform, opacity;
+    transform-origin: center;
 }
 
-.Toastflow__animation-leave-active {
-    animation: Toastflow__leave-kf 220ms ease;
-    animation-fill-mode: both;
-}
-
-.Toastflow__animation-clearAll {
-    animation: Toastflow__clearAll-kf 260ms cubic-bezier(0.22, 1, 0.36, 1);
-    animation-fill-mode: both;
-}
-
+/* MOVE */
 .Toastflow__animation-move {
-    transition: transform 260ms cubic-bezier(0.5, 1, 0.25, 1);
+    transition: transform var(--tf-toast-animation-in-duration) cubic-bezier(0.5, 1, 0.25, 1);
     will-change: transform;
 }
 
+/* ENTER */
+.Toastflow__animation-enter-from > .tf-toast-motion,
+.Toastflow__animation-appear-from > .tf-toast-motion {
+    opacity: 0;
+    transform: translate3d(0, var(--tf-toast-motion-offset), 0) scale(0.96);
+}
+
+.Toastflow__animation-enter-active > .tf-toast-motion,
+.Toastflow__animation-appear-active > .tf-toast-motion {
+    transition: opacity var(--tf-toast-animation-in-duration) cubic-bezier(0.5, 1, 0.25, 1),
+    transform var(--tf-toast-animation-in-duration) cubic-bezier(0.5, 1, 0.25, 1);
+}
+
+.Toastflow__animation-enter-to > .tf-toast-motion,
+.Toastflow__animation-appear-to > .tf-toast-motion {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+}
+
+/* LEAVE */
+.Toastflow__animation-leave-from > .tf-toast-motion {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+}
+
+.Toastflow__animation-leave-active > .tf-toast-motion {
+    transition: opacity var(--tf-toast-animation-out-duration) ease,
+    transform var(--tf-toast-animation-out-duration) ease;
+}
+
+.Toastflow__animation-leave-to > .tf-toast-motion {
+    opacity: 0;
+    transform: translate3d(0, var(--tf-toast-motion-offset), 0) scale(0.96);
+}
+
+/* CLEAR ALL */
+.Toastflow__animation-clearAll .tf-toast-motion {
+    animation: Toastflow__clearAll-kf var(--tf-toast-animation-in-duration) cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* BUMP & UPDATE */
 .Toastflow__animation-bump {
-    animation: Toastflow__bump-kf 140ms ease-out;
-    animation-fill-mode: both;
+    animation: Toastflow__bump-kf var(--tf-toast-animation-in-duration) ease-out;
 }
 
 .Toastflow__animation-update {
-    animation: Toastflow__update-kf 320ms cubic-bezier(0.33, 1, 0.68, 1);
-    animation-fill-mode: both;
-}
-
-@keyframes Toastflow__enter-kf {
-    0% {
-        transform: translate3d(0, var(--tf-toast-motion-offset), 0) scale(0.9);
-        opacity: 0;
-    }
-    100% {
-        transform: translate3d(0, 0, 0) scale(1);
-        opacity: 1;
-    }
-}
-
-@keyframes Toastflow__leave-kf {
-    0% {
-        transform: translate3d(0, 0, 0) scale(1);
-        opacity: 1;
-    }
-    100% {
-        transform: translate3d(0, var(--tf-toast-motion-offset), 0) scale(0.9);
-        opacity: 0;
-    }
+    animation: Toastflow__update-kf var(--tf-toast-animation-in-duration) cubic-bezier(0.33, 1, 0.68, 1);
 }
 
 @keyframes Toastflow__clearAll-kf {
@@ -162,27 +173,39 @@
 
 @keyframes Toastflow__bump-kf {
     0% {
-        transform: scale(1);
+        transform: none;
     }
     40% {
         transform: scale(1.01);
     }
     100% {
-        transform: scale(1);
+        transform: none;
     }
 }
 
 @keyframes Toastflow__update-kf {
     0% {
-        opacity: 0.4;
-        transform: scale(0.985);
+        transform: none;
     }
     40% {
-        opacity: 1;
         transform: scale(1.01);
     }
     100% {
-        opacity: 1;
-        transform: scale(1);
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .Toastflow__animation-move {
+        transition: none;
+    }
+
+    .Toastflow__animation-enter-active .tf-toast-motion,
+    .Toastflow__animation-leave-active .tf-toast-motion {
+        transition: none;
+    }
+
+    .Toastflow__animation-clearAll .tf-toast-motion {
+        animation: none;
     }
 }

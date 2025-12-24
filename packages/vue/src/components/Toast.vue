@@ -171,6 +171,11 @@ const showFloatingCreatedAt = computed(function () {
 
 function useTypeMeta(toast: Ref<ToastInstance>) {
   const accentClass = computed(function () {
+    if (toast.value.theme) {
+      return toast.value.theme.startsWith("tf-toast-accent--")
+        ? toast.value.theme
+        : `tf-toast-accent--${toast.value.theme}`;
+    }
     return typeMeta[toast.value.type].accent;
   });
 
@@ -841,18 +846,6 @@ function stripHtmlToText(value: string): string {
   user-select: none;
 }
 
-.tf-toast-accent--loading {
-  --tf-toast-bg: var(--loading-bg);
-  --tf-toast-border-color: var(--loading-border);
-  --tf-toast-color: var(--loading-text);
-  --tf-toast-description-color: var(--loading-text);
-  --tf-toast-progress-bg: color-mix(
-    in srgb,
-    var(--loading-text) 20%,
-    transparent
-  );
-}
-
 .tf-toast[data-align="right"] .tf-toast-main-content {
   flex-direction: row-reverse;
 }
@@ -862,59 +855,75 @@ function stripHtmlToText(value: string): string {
 }
 
 .tf-toast-accent--default {
-  --tf-toast-bg: var(--normal-bg);
-  --tf-toast-border-color: var(--normal-border);
-  --tf-toast-color: var(--normal-text);
-  --tf-toast-description-color: var(--normal-text);
+  --tf-toast-bg: var(--tf-toast-normal-bg-default);
+  --tf-toast-border-color: var(--tf-toast-normal-border-default);
+  --tf-toast-color: var(--tf-toast-normal-text-default);
+  --tf-toast-description-color: var(--tf-toast-normal-text-default);
   --tf-toast-progress-bg: color-mix(
     in srgb,
-    var(--normal-text) 20%,
+    var(--tf-toast-normal-text-default) 20%,
+    transparent
+  );
+}
+
+.tf-toast-accent--loading {
+  --tf-toast-bg: var(--tf-toast-loading-bg-default);
+  --tf-toast-border-color: var(--tf-toast-loading-border-default);
+  --tf-toast-color: var(--tf-toast-loading-text-default);
+  --tf-toast-description-color: var(--tf-toast-loading-text-default);
+  --tf-toast-progress-bg: color-mix(
+    in srgb,
+    var(--tf-toast-loading-text-default) 20%,
     transparent
   );
 }
 
 .tf-toast-accent--success {
-  --tf-toast-bg: var(--success-bg);
-  --tf-toast-border-color: var(--success-border);
-  --tf-toast-color: var(--success-text);
-  --tf-toast-description-color: var(--success-text);
+  --tf-toast-bg: var(--tf-toast-success-bg-default);
+  --tf-toast-border-color: var(--tf-toast-success-border-default);
+  --tf-toast-color: var(--tf-toast-success-text-default);
+  --tf-toast-description-color: var(--tf-toast-success-text-default);
   --tf-toast-progress-bg: color-mix(
     in srgb,
-    var(--success-text) 20%,
+    var(--tf-toast-success-text-default) 20%,
     transparent
   );
 }
 
 .tf-toast-accent--error {
-  --tf-toast-bg: var(--error-bg);
-  --tf-toast-border-color: var(--error-border);
-  --tf-toast-color: var(--error-text);
-  --tf-toast-description-color: var(--error-text);
+  --tf-toast-bg: var(--tf-toast-error-bg-default);
+  --tf-toast-border-color: var(--tf-toast-error-border-default);
+  --tf-toast-color: var(--tf-toast-error-text-default);
+  --tf-toast-description-color: var(--tf-toast-error-text-default);
   --tf-toast-progress-bg: color-mix(
     in srgb,
-    var(--error-text) 20%,
+    var(--tf-toast-error-text-default) 20%,
     transparent
   );
 }
 
 .tf-toast-accent--warning {
-  --tf-toast-bg: var(--warning-bg);
-  --tf-toast-border-color: var(--warning-border);
-  --tf-toast-color: var(--warning-text);
-  --tf-toast-description-color: var(--warning-text);
+  --tf-toast-bg: var(--tf-toast-warning-bg-default);
+  --tf-toast-border-color: var(--tf-toast-warning-border-default);
+  --tf-toast-color: var(--tf-toast-warning-text-default);
+  --tf-toast-description-color: var(--tf-toast-warning-text-default);
   --tf-toast-progress-bg: color-mix(
     in srgb,
-    var(--warning-text) 20%,
+    var(--tf-toast-warning-text-default) 20%,
     transparent
   );
 }
 
 .tf-toast-accent--info {
-  --tf-toast-bg: var(--info-bg);
-  --tf-toast-border-color: var(--info-border);
-  --tf-toast-color: var(--info-text);
-  --tf-toast-description-color: var(--info-text);
-  --tf-toast-progress-bg: color-mix(in srgb, var(--info-text) 20%, transparent);
+  --tf-toast-bg: var(--tf-toast-info-bg-default);
+  --tf-toast-border-color: var(--tf-toast-info-border-default);
+  --tf-toast-color: var(--tf-toast-info-text-default);
+  --tf-toast-description-color: var(--tf-toast-info-text-default);
+  --tf-toast-progress-bg: color-mix(
+    in srgb,
+    var(--tf-toast-info-text-default) 20%,
+    transparent
+  );
 }
 
 /* card */
