@@ -88,7 +88,9 @@ if (isHolidayMode) {
         </div>
       </header>
 
-      <main class="flex flex-1 gap-6 flex-col items-center justify-center">
+      <main
+        class="flex flex-1 flex-col gap-6 items-center justify-start pb-24 lg:pb-0 lg:justify-center"
+      >
         <section class="max-w-2xl text-center text-sm text-slate-600 grid gap-2">
           <h2 class="text-2xl font-semibold text-slate-900">Vue toast notifications playground</h2>
           <p>

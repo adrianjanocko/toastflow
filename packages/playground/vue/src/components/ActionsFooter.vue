@@ -12,7 +12,7 @@ const emit = defineEmits<{
 
 <template>
   <div
-    class="bg-white/90 sticky bottom-0 p-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 text-xs md:text-sm"
+    class="p-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 text-xs md:text-sm"
   >
     <div class="flex flex-wrap gap-2">
       <Button variant="primary" tooltip="Push a toast" @click="emit('push')"> Push toast</Button>

@@ -897,7 +897,7 @@ onBeforeUnmount(function () {
 
 <template>
   <div
-    class="w-full max-w-5xl rounded-3xl bg-white/90 p-6 pb-0 shadow-2xl ring-1 ring-slate-200 backdrop-blur-md grid gap-6 max-h-[45rem] overflow-auto"
+    class="w-full max-w-5xl rounded-3xl bg-white/90 p-6 shadow-2xl ring-1 ring-slate-200 backdrop-blur-md grid gap-6 lg:max-h-[45rem] lg:overflow-auto lg:pb-0"
   >
     <div class="flex flex-col gap-3">
       <div class="flex flex-wrap items-center justify-between gap-3">
@@ -1026,14 +1026,28 @@ onBeforeUnmount(function () {
       />
     </section>
 
-    <ActionsFooter
-      @push="push()"
-      @push-burst="pushBurst"
-      @update-last="updateLast"
-      @dismiss-all="toast.dismissAll"
-      @reset="resetToDefaults"
-    />
+    <div class="hidden lg:block sticky bottom-0 bg-white/90">
+      <ActionsFooter
+        @push="push()"
+        @push-burst="pushBurst"
+        @update-last="updateLast"
+        @dismiss-all="toast.dismissAll"
+        @reset="resetToDefaults"
+      />
+    </div>
   </div>
+
+  <Teleport to="body">
+    <div class="lg:hidden fixed inset-x-0 bottom-0 z-40 w-full bg-white/95 shadow-lg backdrop-blur">
+      <ActionsFooter
+        @push="push()"
+        @push-burst="pushBurst"
+        @update-last="updateLast"
+        @dismiss-all="toast.dismissAll"
+        @reset="resetToDefaults"
+      />
+    </div>
+  </Teleport>
 
   <Modal v-model="isLogModalOpen" title="Event log">
     <div class="grid gap-4">
