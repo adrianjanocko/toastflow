@@ -191,6 +191,10 @@ export interface ToastConfig {
    */
   maxVisible: number;
   /**
+   * When true, overflowed toasts are queued and shown when space frees up instead of evicting. (Default: false)
+   */
+  queue: boolean;
+  /**
    * Default stack position used when none is provided. (Default: "top-right")
    */
   position: ToastPosition;
@@ -357,6 +361,7 @@ export type ToastStandaloneInstance = {
  */
 export interface ToastState {
   toasts: ToastInstance[];
+  queue: ToastInstance[];
 }
 
 /**
@@ -407,6 +412,16 @@ export interface ToastStore {
    * Resume the auto-dismiss timer using the configured strategy.
    */
   resume(id: ToastId): void;
+
+  /**
+   * Drop all queued toasts while leaving currently visible ones intact.
+   */
+  stopQueue(): void;
+
+  /**
+   * Resume queue processing so queued toasts can appear again.
+   */
+  resumeQueue(): void;
 
   /**
    * Return the resolved global configuration.

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { Copy, MessageCircle, Share2, Terminal } from 'lucide-vue-next';
 import {
   toast,
@@ -67,6 +67,8 @@ const gap = ref(config.gap);
 const zIndex = ref(config.zIndex);
 const width = ref(config.width);
 const overflowScroll = ref(config.overflowScroll);
+const queue = ref(config.queue);
+const queuePaused = ref(false);
 
 const duration = ref(config.duration);
 const maxVisible = ref(config.maxVisible);
@@ -307,6 +309,7 @@ const baseConfig = computed<Partial<ToastOptions>>(function () {
     zIndex: zIndex.value,
     width: width.value,
     overflowScroll: overflowScroll.value,
+    queue: queue.value,
 
     duration: duration.value,
     maxVisible: maxVisible.value,
@@ -467,6 +470,7 @@ function resetToDefaults() {
   zIndex.value = 9999;
   width.value = '350px';
   overflowScroll.value = false;
+  queue.value = false;
 
   duration.value = 5000;
   maxVisible.value = 5;
@@ -484,6 +488,8 @@ function resetToDefaults() {
   supportHtml.value = false;
 
   showCreatedAt.value = false;
+
+  resumeQueueProcessing();
 
   enableButtons.value = false;
   buttonsAlignment.value = 'bottom-right';
@@ -507,6 +513,16 @@ function resetToDefaults() {
   description.value = '';
   fallbackTitle.value = true;
   fallbackDescription.value = true;
+}
+
+function stopQueueProcessing() {
+  toast.stopQueue();
+  queuePaused.value = true;
+}
+
+function resumeQueueProcessing() {
+  toast.resumeQueue();
+  queuePaused.value = false;
 }
 
 function addPlaygroundButton() {
@@ -536,6 +552,7 @@ const shareableState = computed(function () {
     zIndex: zIndex.value,
     width: width.value,
     overflowScroll: overflowScroll.value,
+    queue: queue.value,
     duration: duration.value,
     maxVisible: maxVisible.value,
     preventDuplicates: preventDuplicates.value,
@@ -620,6 +637,7 @@ function hydrateFromQuery() {
   applyNumber(zIndex, 'zIndex');
   applyString(width, 'width');
   applyBoolean(overflowScroll, 'overflowScroll');
+  applyBoolean(queue, 'queue');
 
   applyNumber(duration, 'duration');
   applyNumber(maxVisible, 'maxVisible');
@@ -816,6 +834,7 @@ function buildOptionsLines(content: { title: string; description: string }, toas
   add('width', width.value);
   add('zIndex', zIndex.value);
   add('overflowScroll', overflowScroll.value);
+  add('queue', queue.value);
   add('duration', duration.value);
   add('maxVisible', maxVisible.value);
   add('preventDuplicates', preventDuplicates.value);
@@ -893,6 +912,12 @@ onBeforeUnmount(function () {
 });
 
 /* ----- watchers ----- */
+
+watch(queue, function (enabled) {
+  if (!enabled && queuePaused.value) {
+    resumeQueueProcessing();
+  }
+});
 </script>
 
 <template>
@@ -974,6 +999,7 @@ onBeforeUnmount(function () {
         v-model:order="order"
         v-model:pauseStrategy="pauseStrategy"
         v-model:overflowScroll="overflowScroll"
+        v-model:queue="queue"
         :playground-buttons="playgroundButtons"
         @add-button="addPlaygroundButton"
         @remove-button="removePlaygroundButton"
@@ -1028,9 +1054,13 @@ onBeforeUnmount(function () {
 
     <div class="hidden lg:block sticky bottom-0 bg-white/90">
       <ActionsFooter
+        :queue-enabled="queue"
+        :queue-paused="queuePaused"
         @push="push()"
         @push-burst="pushBurst"
         @update-last="updateLast"
+        @stop-queue="stopQueueProcessing"
+        @resume-queue="resumeQueueProcessing"
         @dismiss-all="toast.dismissAll"
         @reset="resetToDefaults"
       />

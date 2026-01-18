@@ -240,6 +240,8 @@ Pass any [types.ts](packages/core/src/types.ts) fields to `createToastflow`; per
 - `position`: "top-right" (default), "top-left", "top-center", "bottom-*"
 - `duration`: `5000` ms by default; `Infinity` or `0` disables auto-dismiss (progress bar auto-hides when disabled)
 - `maxVisible`: `5` per stack; eviction respects `order`
+- `queue`: `false`; when enabled, overflowed toasts wait in a queue and appear once space frees up per `maxVisible`
+  (use `toast.stopQueue()` / `toast.resumeQueue()` to pause or resume processing the queue)
 - `order`: "newest" (default) or "oldest" per stack
 - `preventDuplicates`: `false` by default; matches by position + type + title + description
 - `progressBar`, `pauseOnHover`, `pauseStrategy` ("resume" | "reset")
@@ -263,8 +265,10 @@ Pass any [types.ts](packages/core/src/types.ts) fields to `createToastflow`; per
 ## Events and store access
 
 - `toast.subscribeEvents(listener)` gets `duplicate`, `timer-reset`, and `update` events.
-- `toast.getState()` returns the current snapshot; helper
-  methods: `toast.show`, `toast.success`, `toast.error`, `toast.warning`, `toast.info`, `toast.loading`, `toast.update`, `toast.dismiss`, `toast.dismissAll`, `toast.pause`, `toast.resume`, `toast.getConfig`.
+- `toast.getState()` returns the current snapshot (`toasts` + `queue` when enabled); helper
+  methods: `toast.show`, `toast.success`, `toast.error`, `toast.warning`, `toast.info`, `toast.loading`, `toast.update`,
+  `toast.dismiss`, `toast.dismissAll`, `toast.pause`, `toast.resume`, `toast.stopQueue`, `toast.resumeQueue`,
+  `toast.getConfig`.
 
 ## License
 

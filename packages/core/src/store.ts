@@ -9,6 +9,7 @@ import type {
   ToastLoadingResult,
   ToastOptions,
   ToastOrder,
+  ToastPosition,
   ToastShowInput,
   ToastState,
   ToastStore,
@@ -47,6 +48,7 @@ const defaults: ToastConfig = {
   overflowScroll: false,
   duration: 5000,
   maxVisible: 5,
+  queue: false,
   position: "top-right",
   alignment: "left",
   progressAlignment: "right-to-left",
@@ -73,13 +75,219 @@ const HIDE_ANIMATION_DURATION = 50;
 export function createToastStore(
   globalConfig: Partial<ToastConfig> = {},
 ): ToastStore {
-  let state: ToastState = { toasts: [] };
+  let state: ToastState = { toasts: [], queue: [] };
   const listeners = new Set<Listener>();
   const eventListeners = new Set<EventListener>();
   const timers = new Map<ToastId, TimerState>();
   const promiseRuns = new Map<ToastId, symbol>();
+  const queueByPosition = new Map<ToastPosition, ToastInstance[]>();
+  let queuePaused = false;
 
   const resolvedGlobalConfig: ToastConfig = getConfig();
+
+  function flattenQueue(): ToastInstance[] {
+    const items: ToastInstance[] = [];
+    for (const queued of queueByPosition.values()) {
+      items.push(...queued);
+    }
+    return items;
+  }
+
+  function syncState(nextToasts: ToastInstance[] = state.toasts): void {
+    state = {
+      toasts: nextToasts,
+      queue: flattenQueue(),
+    };
+  }
+
+  function getVisibleAt(position: ToastPosition): ToastInstance[] {
+    return state.toasts.filter(function (t) {
+      return (
+        t.position === position &&
+        t.phase !== "leaving" &&
+        t.phase !== "clear-all"
+      );
+    });
+  }
+
+  type LocatedToast =
+    | { location: "visible"; toast: ToastInstance }
+    | {
+        location: "queue";
+        toast: ToastInstance;
+        position: ToastPosition;
+        index: number;
+      };
+
+  function findToastById(id: ToastId): LocatedToast | null {
+    const visible = state.toasts.find((t) => t.id === id);
+    if (visible) {
+      return { location: "visible", toast: visible };
+    }
+
+    for (const [position, queued] of queueByPosition.entries()) {
+      const index = queued.findIndex((t) => t.id === id);
+      if (index !== -1) {
+        const toastAtIndex = queued[index];
+        if (!toastAtIndex) {
+          continue;
+        }
+        return {
+          location: "queue",
+          toast: toastAtIndex,
+          position,
+          index,
+        };
+      }
+    }
+
+    return null;
+  }
+
+  function findDuplicateToast(toast: ToastInstance): LocatedToast | null {
+    const predicate = function (t: ToastInstance) {
+      return (
+        t.position === toast.position &&
+        t.type === toast.type &&
+        t.title === toast.title &&
+        t.description === toast.description &&
+        t.phase !== "leaving" &&
+        t.phase !== "clear-all"
+      );
+    };
+
+    const visible = state.toasts.find(predicate);
+    if (visible) {
+      return { location: "visible", toast: visible };
+    }
+
+    for (const [position, queued] of queueByPosition.entries()) {
+      const index = queued.findIndex(predicate);
+      if (index !== -1) {
+        const toastAtIndex = queued[index];
+        if (!toastAtIndex) {
+          continue;
+        }
+        return {
+          location: "queue",
+          toast: toastAtIndex,
+          position,
+          index,
+        };
+      }
+    }
+
+    return null;
+  }
+
+  function replaceQueuedToast(
+    position: ToastPosition,
+    index: number,
+    toast: ToastInstance,
+  ): void {
+    const queued = queueByPosition.get(position);
+    if (!queued) {
+      return;
+    }
+    queued[index] = toast;
+    queueByPosition.set(position, queued);
+    syncState();
+  }
+
+  function removeQueuedToast(
+    position: ToastPosition,
+    index: number,
+  ): ToastInstance | null {
+    const queued = queueByPosition.get(position);
+    if (!queued || index < 0 || index >= queued.length) {
+      return null;
+    }
+
+    const [removed] = queued.splice(index, 1);
+
+    if (!queued.length) {
+      queueByPosition.delete(position);
+    } else {
+      queueByPosition.set(position, queued);
+    }
+
+    syncState();
+    return removed ?? null;
+  }
+
+  function enqueueToast(toast: ToastInstance): void {
+    const queued = queueByPosition.get(toast.position) ?? [];
+    queued.push(toast);
+    queueByPosition.set(toast.position, queued);
+    syncState();
+  }
+
+  function dequeueNext(position: ToastPosition): ToastInstance | null {
+    const queued = queueByPosition.get(position);
+    if (!queued || !queued.length) {
+      return null;
+    }
+    const next = queued.shift() ?? null;
+    if (!queued.length) {
+      queueByPosition.delete(position);
+    } else {
+      queueByPosition.set(position, queued);
+    }
+    syncState();
+    return next;
+  }
+
+  function hasCapacityFor(toast: ToastInstance): boolean {
+    if (toast.maxVisible <= 0) {
+      return true;
+    }
+    const samePos = getVisibleAt(toast.position);
+    return samePos.length < toast.maxVisible;
+  }
+
+  function processQueue(position: ToastPosition): void {
+    if (queuePaused) {
+      return;
+    }
+
+    let changed = false;
+
+    while (true) {
+      const nextQueued = queueByPosition.get(position)?.[0];
+      if (!nextQueued) {
+        break;
+      }
+
+      if (!hasCapacityFor(nextQueued)) {
+        break;
+      }
+
+      const next = dequeueNext(position);
+      if (!next) {
+        break;
+      }
+
+      syncState(insertToast(state.toasts, next));
+
+      if (next.onMount) {
+        next.onMount({
+          id: next.id,
+          position: next.position,
+          type: next.type,
+          title: next.title,
+          description: next.description,
+          createdAt: next.createdAt,
+        });
+      }
+
+      scheduleAutoDismiss(next);
+      changed = true;
+    }
+
+    if (changed) {
+      notify();
+    }
+  }
 
   function notify() {
     for (const listener of listeners) {
@@ -120,43 +328,6 @@ export function createToastStore(
     assertShowInput(options, "show");
 
     const toast = resolveConfig(resolvedGlobalConfig, options);
-
-    if (toast.preventDuplicates) {
-      const duplicate = state.toasts.find(function (t) {
-        return (
-          t.position === toast.position &&
-          t.type === toast.type &&
-          t.title === toast.title &&
-          t.description === toast.description &&
-          t.phase !== "leaving" &&
-          t.phase !== "clear-all"
-        );
-      });
-
-      if (duplicate) {
-        const updated: ToastInstance = {
-          ...duplicate,
-          ...toast,
-          id: duplicate.id,
-          createdAt: duplicate.createdAt,
-        };
-
-        clearAutoDismiss(duplicate.id);
-        scheduleAutoDismiss(updated);
-
-        state = {
-          toasts: state.toasts.map(function (t) {
-            return t.id === updated.id ? updated : t;
-          }),
-        };
-
-        emitEvent({ id: updated.id, kind: "duplicate" });
-        notify();
-
-        return duplicate.id;
-      }
-    }
-
     const id = generateUuid();
     const createdAt = Date.now();
 
@@ -167,27 +338,54 @@ export function createToastStore(
       phase: "enter",
     };
 
-    const samePos = state.toasts.filter(function (t) {
-      return (
-        t.position === toastInstance.position &&
-        t.phase !== "leaving" &&
-        t.phase !== "clear-all"
-      );
-    });
+    if (toastInstance.preventDuplicates) {
+      const duplicate = findDuplicateToast(toastInstance);
 
-    if (
-      toastInstance.maxVisible > 0 &&
-      samePos.length >= toastInstance.maxVisible
-    ) {
-      const toEvict = pickOverflowToast(samePos, toastInstance.order);
+      if (duplicate) {
+        const updated: ToastInstance = {
+          ...duplicate.toast,
+          ...toastInstance,
+          id: duplicate.toast.id,
+          createdAt: duplicate.toast.createdAt,
+        };
+
+        clearAutoDismiss(duplicate.toast.id);
+
+        if (duplicate.location === "visible") {
+          scheduleAutoDismiss(updated);
+          syncState(
+            state.toasts.map(function (t) {
+              return t.id === updated.id ? updated : t;
+            }),
+          );
+        } else {
+          replaceQueuedToast(duplicate.position, duplicate.index, updated);
+        }
+
+        emitEvent({ id: updated.id, kind: "duplicate" });
+        notify();
+
+        return duplicate.toast.id;
+      }
+    }
+
+    if (!hasCapacityFor(toastInstance)) {
+      if (toastInstance.queue) {
+        enqueueToast(toastInstance);
+        notify();
+        return toastInstance.id;
+      }
+
+      const toEvict = pickOverflowToast(
+        getVisibleAt(toastInstance.position),
+        toastInstance.order,
+      );
       if (toEvict) {
         dismiss(toEvict.id);
       }
     }
 
-    state = {
-      toasts: insertToast(state.toasts, toastInstance),
-    };
+    syncState(insertToast(state.toasts, toastInstance));
 
     if (toastInstance.onMount) {
       toastInstance.onMount({
@@ -290,8 +488,8 @@ export function createToastStore(
 
   // Update an existing toast and reset its timer.
   function update(id: ToastId, options: ToastUpdateInput): void {
-    const existing = state.toasts.find((t) => t.id === id);
-    if (!existing) {
+    const located = findToastById(id);
+    if (!located) {
       return;
     }
 
@@ -302,42 +500,45 @@ export function createToastStore(
     }
 
     const merged: ToastOptions = {
-      ...existing,
+      ...located.toast,
       ...options,
     };
 
     const resolved = resolveConfig(resolvedGlobalConfig, merged);
 
     const updated: ToastInstance = {
-      ...existing,
+      ...located.toast,
       ...resolved,
-      id: existing.id,
-      createdAt: existing.createdAt,
+      id: located.toast.id,
+      createdAt: located.toast.createdAt,
     };
 
-    clearAutoDismiss(id);
-    scheduleAutoDismiss(updated);
+    if (located.location === "visible") {
+      clearAutoDismiss(id);
+      scheduleAutoDismiss(updated);
+      syncState(state.toasts.map((t) => (t.id === id ? updated : t)));
+      emitEvent({ id, kind: "timer-reset" });
+    } else {
+      replaceQueuedToast(located.position, located.index, updated);
+    }
 
-    state = {
-      toasts: state.toasts.map((t) => (t.id === id ? updated : t)),
-    };
-
-    emitEvent({ id, kind: "timer-reset" });
     emitEvent({ id, kind: "update" });
     notify();
   }
 
   // Hide a toast, run lifecycle callbacks, and remove it after the leave animation.
   function dismiss(id: ToastId): void {
-    const toast = state.toasts.find((t) => t.id === id);
-    if (!toast) {
+    const located = findToastById(id);
+    if (!located) {
       clearAutoDismiss(id);
+      promiseRuns.delete(id);
       return;
     }
 
     clearAutoDismiss(id);
     promiseRuns.delete(id);
 
+    const toast = located.toast;
     const context: ToastContext = {
       id,
       position: toast.position,
@@ -351,8 +552,14 @@ export function createToastStore(
       toast.onClose(context);
     }
 
-    state = {
-      toasts: state.toasts.map(function (t) {
+    if (located.location === "queue") {
+      removeQueuedToast(located.position, located.index);
+      notify();
+      return;
+    }
+
+    syncState(
+      state.toasts.map(function (t) {
         if (t.id !== id) {
           return t;
         }
@@ -361,9 +568,10 @@ export function createToastStore(
           phase: "leaving",
         };
       }),
-    };
+    );
 
     notify();
+    processQueue(toast.position);
 
     setTimeout(function () {
       const still = state.toasts.find((t) => t.id === id);
@@ -371,25 +579,25 @@ export function createToastStore(
         return;
       }
 
-      state = {
-        toasts: state.toasts.filter((t) => t.id !== id),
-      };
+      syncState(state.toasts.filter((t) => t.id !== id));
 
       if (toast.onUnmount) {
         toast.onUnmount(context);
       }
 
       notify();
+      processQueue(toast.position);
     }, HIDE_ANIMATION_DURATION);
   }
 
   // Clear all toasts in their current positions.
   function dismissAll(): void {
-    if (!state.toasts.length) {
+    if (!state.toasts.length && !state.queue.length) {
       return;
     }
 
     const current = state.toasts;
+    const queued = flattenQueue();
 
     for (const toast of current) {
       clearAutoDismiss(toast.id);
@@ -409,14 +617,31 @@ export function createToastStore(
       }
     }
 
-    state = {
-      toasts: state.toasts.map(function (t) {
+    for (const toast of queued) {
+      promiseRuns.delete(toast.id);
+
+      const context: ToastContext = {
+        id: toast.id,
+        position: toast.position,
+        type: toast.type,
+        title: toast.title,
+        description: toast.description,
+        createdAt: toast.createdAt,
+      };
+
+      if (toast.onClose) {
+        toast.onClose(context);
+      }
+    }
+
+    syncState(
+      state.toasts.map(function (t) {
         return {
           ...t,
           phase: "clear-all",
         };
       }),
-    };
+    );
 
     notify();
 
@@ -436,9 +661,26 @@ export function createToastStore(
         }
       }
 
-      state = { toasts: [] };
+      queueByPosition.clear();
+      syncState([]);
       notify();
     }, HIDE_ANIMATION_DURATION);
+  }
+
+  // Pause queue processing; queued toasts stay stored until resumed.
+  function stopQueue(): void {
+    queuePaused = true;
+  }
+
+  // Resume queue processing and try to render queued toasts.
+  function resumeQueue(): void {
+    if (!queuePaused) {
+      return;
+    }
+    queuePaused = false;
+    for (const position of queueByPosition.keys()) {
+      processQueue(position);
+    }
   }
 
   function scheduleAutoDismiss(toastInstance: ToastInstance) {
@@ -565,6 +807,8 @@ export function createToastStore(
     update,
     dismiss,
     dismissAll,
+    stopQueue,
+    resumeQueue,
     pause,
     resume,
     getConfig,

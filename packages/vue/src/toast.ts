@@ -69,6 +69,12 @@ export const toast = {
   resume(id: ToastId): void {
     return getToastStore().resume(id);
   },
+  stopQueue(): void {
+    return getToastStore().stopQueue();
+  },
+  resumeQueue(): void {
+    return getToastStore().resumeQueue();
+  },
   getConfig(): ToastConfig {
     return getToastStore().getConfig();
   },

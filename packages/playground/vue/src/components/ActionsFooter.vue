@@ -1,13 +1,34 @@
 <script setup lang="ts">
+import { toRefs } from 'vue';
 import Button from './Button.vue';
+
+const props = withDefaults(
+  defineProps<{
+    queueEnabled?: boolean;
+    queuePaused?: boolean;
+  }>(),
+  { queueEnabled: false, queuePaused: false },
+);
+
+const { queueEnabled, queuePaused } = toRefs(props);
 
 const emit = defineEmits<{
   push: [];
   'push-burst': [];
   'update-last': [];
   'dismiss-all': [];
+  'stop-queue': [];
+  'resume-queue': [];
   reset: [];
 }>();
+
+function toggleQueue() {
+  if (queuePaused.value) {
+    emit('resume-queue');
+  } else {
+    emit('stop-queue');
+  }
+}
 </script>
 
 <template>
@@ -27,6 +48,17 @@ const emit = defineEmits<{
     </div>
 
     <div class="flex flex-wrap gap-2">
+      <Button
+        v-if="queueEnabled"
+        :variant="queuePaused ? 'primary-muted' : 'outline'"
+        :tooltip="
+          queuePaused ? 'Resume processing queued toasts' : 'Temporarily pause queue processing'
+        "
+        @click="toggleQueue"
+      >
+        {{ queuePaused ? 'Resume queue' : 'Stop queue' }}
+      </Button>
+
       <Button variant="danger" tooltip="Dismiss all toasts" @click="emit('dismiss-all')">
         Dismiss all
       </Button>
