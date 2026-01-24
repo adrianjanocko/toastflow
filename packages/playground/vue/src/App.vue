@@ -6,6 +6,7 @@ import { onBeforeUnmount, onMounted } from 'vue';
 import { useSnowfall } from 'vue-snowfall';
 import { BookOpen, Github } from 'lucide-vue-next';
 import Button from './components/Button.vue';
+import { SpeedInsights } from '@vercel/speed-insights/vue';
 
 const SEASONAL_MODE = (import.meta.env.VITE_SEASONAL_MODE ?? 'holiday').toLowerCase();
 const isHolidayMode = SEASONAL_MODE === 'holiday';
@@ -133,6 +134,7 @@ if (isHolidayMode && !prefersReducedMotion) {
     </div>
 
     <ToastContainer />
+    <SpeedInsights />
   </div>
 </template>
 
