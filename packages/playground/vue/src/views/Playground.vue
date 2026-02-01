@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue';
 import { Copy, MessageCircle, Share2, Terminal } from 'lucide-vue-next';
 import {
   toast,
@@ -7,7 +7,6 @@ import {
   type ToastContext,
   type ToastProgressAlignment,
 } from 'vue-toastflow';
-import Giscus from '@giscus/vue';
 import type {
   PauseStrategy,
   ToastButton,
@@ -26,6 +25,8 @@ import TimingLayoutCard from '../components/cards/TimingLimitsCard.vue';
 import Button from '../components/Button.vue';
 import Modal from '../components/Modal.vue';
 import type { PlaygroundButton } from '../types/playgroundTypes.ts';
+
+const Giscus = defineAsyncComponent(() => import('@giscus/vue'));
 
 type EventLogEntry = {
   id: string;
@@ -897,7 +898,7 @@ onBeforeUnmount(function () {
 
 <template>
   <div
-    class="w-full max-w-5xl rounded-3xl bg-white/90 p-6 shadow-2xl ring-1 ring-slate-200 backdrop-blur-md grid gap-6 lg:max-h-[45rem] lg:overflow-auto lg:pb-0"
+    class="w-full max-w-5xl rounded-3xl bg-white/90 p-6 shadow-2xl ring-1 ring-slate-200 backdrop-blur-md grid gap-6 lg:max-h-180 lg:overflow-auto lg:pb-0"
   >
     <div class="flex flex-col gap-3">
       <div class="flex flex-wrap items-center justify-between gap-3">
@@ -1067,7 +1068,7 @@ onBeforeUnmount(function () {
       <div
         v-if="eventLog.length"
         class="max-h-[360px] space-y-3 overflow-auto"
-        style="content-visibility: auto; contain-intrinsic-size: 1px 600px;"
+        style="content-visibility: auto; contain-intrinsic-size: 1px 600px"
       >
         <div v-for="entry in eventLog" :key="entry.id" class="space-y-2">
           <div class="flex items-center justify-between text-[0.75rem] text-slate-500">
@@ -1099,7 +1100,7 @@ onBeforeUnmount(function () {
           input-position="top"
           lang="en"
           loading="lazy"
-          class="min-h-[320px]"
+          class="min-h-80"
         />
       </div>
     </div>

@@ -9,9 +9,10 @@
   "packageManager": "pnpm@9.12.3",
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check \"build-only {@}\" --",
+    "build": "run-s generate:sitemap type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "test:unit": "vitest",
+    "generate:sitemap": "node ./scripts/generate-sitemap.cjs",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix --cache",

@@ -31,6 +31,10 @@
     >
     <meta property="og:image"
           content="https://raw.githubusercontent.com/adrianjanocko/toastflow/main/images/banner.png">
+    <meta property="og:image:alt" content="Toastflow Vue toast notifications playground banner">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="en_US">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Vue Toast Notifications Playground | Toastflow">
@@ -59,10 +63,60 @@
             }
         }
     </script>
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": "Is Toastflow accessible?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes. Toastflow renders status/alert live regions, keeps ARIA labels even when you pass HTML, includes pause-on-hover, and respects prefers-reduced-motion."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Does it support SSR?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "The core store is isomorphic, the Vue renderer defers DOM access until mounted, and the playground guards window usage so Nuxt/Vite SSR works out of the box."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Can I use it outside Vue components?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes. Install the plugin once and call toast.* from stores or services. For non-Vue apps, use the headless toastflow-core store and render your own UI."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "How do I style it to match my brand?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Override CSS variables or animation class names, pass a theme/animation override, or use the headless slot to ship a fully custom card with the shared store logic."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "How do I log or react to toast events?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Use toast.subscribeEvents for duplicate/update/timer-reset signals, toast.subscribe for state changes, lifecycle hooks like onMount/onClose/onClick for telemetry, and toast.getState() for debugging."
+                    }
+                }
+            ]
+        }
+    </script>
 
     <!-- INTER FONT -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style"
+          href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap">
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
           rel="stylesheet">
 
