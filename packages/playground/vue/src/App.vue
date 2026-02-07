@@ -100,22 +100,22 @@ function openMore(targetId = 'more-info', offsetPx = 20) {
         <div class="flex items-center gap-2">
           <Button
             variant="outline"
-            href="https://deepwiki.com/adrianjanocko/toastflow"
-            target="_blank"
-            tooltip="Open AI Docs"
-          >
-            <BookOpen class="size-4" />
-            AI Docs
-          </Button>
-
-          <Button
-            variant="outline"
             href="https://github.com/adrianjanocko/toastflow"
             target="_blank"
             tooltip="View on GitHub"
           >
             <Github class="size-4" />
             GitHub
+          </Button>
+
+          <Button
+            variant="primary"
+            href="https://docs.toastflow.top/"
+            target="_blank"
+            tooltip="Open documentation"
+          >
+            <BookOpen class="size-4" />
+            Documentation
           </Button>
         </div>
       </header>
@@ -334,8 +334,8 @@ function openMore(targetId = 'more-info', offsetPx = 20) {
   --tf-toast-color: #fff7f2;
   --tf-toast-description-color: #fdeae2;
   --tf-toast-progress-bg: color-mix(in srgb, #f7ede2 20%, transparent);
+  --tf-toast-progress-bar-bg: #f7ede2;
 
-  --tf-toast-accent-info: white;
   --tf-toast-icon-info: #fff;
 }
 
@@ -345,8 +345,9 @@ function openMore(targetId = 'more-info', offsetPx = 20) {
   --tf-toast-color: #fff8f3;
   --tf-toast-description-color: #f2e6d9;
   --tf-toast-progress-bg: color-mix(in srgb, #f7ede2 22%, transparent);
+  --tf-toast-progress-bar-bg: #f1c46b;
 
-  --tf-toast-accent-success: #f1c46b;
   --tf-toast-icon-success: #f1c46b;
 }
 </style>
+

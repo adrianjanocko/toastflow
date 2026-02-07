@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { Copy, MessageCircle, Share2, Terminal } from 'lucide-vue-next';
 import {
   toast,
@@ -7,6 +7,7 @@ import {
   type ToastContext,
   type ToastProgressAlignment,
 } from 'vue-toastflow';
+import Giscus from '@giscus/vue';
 import type {
   PauseStrategy,
   ToastButton,
@@ -25,8 +26,6 @@ import TimingLayoutCard from '../components/cards/TimingLimitsCard.vue';
 import Button from '../components/Button.vue';
 import Modal from '../components/Modal.vue';
 import type { PlaygroundButton } from '../types/playgroundTypes.ts';
-
-const Giscus = defineAsyncComponent(() => import('@giscus/vue'));
 
 type EventLogEntry = {
   id: string;
@@ -68,6 +67,8 @@ const gap = ref(config.gap);
 const zIndex = ref(config.zIndex);
 const width = ref(config.width);
 const overflowScroll = ref(config.overflowScroll);
+const queue = ref(config.queue);
+const queuePaused = ref(false);
 
 const duration = ref(config.duration);
 const maxVisible = ref(config.maxVisible);
@@ -308,6 +309,7 @@ const baseConfig = computed<Partial<ToastOptions>>(function () {
     zIndex: zIndex.value,
     width: width.value,
     overflowScroll: overflowScroll.value,
+    queue: queue.value,
 
     duration: duration.value,
     maxVisible: maxVisible.value,
@@ -468,6 +470,7 @@ function resetToDefaults() {
   zIndex.value = 9999;
   width.value = '350px';
   overflowScroll.value = false;
+  queue.value = false;
 
   duration.value = 5000;
   maxVisible.value = 5;
@@ -485,6 +488,8 @@ function resetToDefaults() {
   supportHtml.value = false;
 
   showCreatedAt.value = false;
+
+  resumeQueueProcessing();
 
   enableButtons.value = false;
   buttonsAlignment.value = 'bottom-right';
@@ -508,6 +513,16 @@ function resetToDefaults() {
   description.value = '';
   fallbackTitle.value = true;
   fallbackDescription.value = true;
+}
+
+function pauseQueueProcessing() {
+  toast.pauseQueue();
+  queuePaused.value = true;
+}
+
+function resumeQueueProcessing() {
+  toast.resumeQueue();
+  queuePaused.value = false;
 }
 
 function addPlaygroundButton() {
@@ -537,6 +552,7 @@ const shareableState = computed(function () {
     zIndex: zIndex.value,
     width: width.value,
     overflowScroll: overflowScroll.value,
+    queue: queue.value,
     duration: duration.value,
     maxVisible: maxVisible.value,
     preventDuplicates: preventDuplicates.value,
@@ -621,6 +637,7 @@ function hydrateFromQuery() {
   applyNumber(zIndex, 'zIndex');
   applyString(width, 'width');
   applyBoolean(overflowScroll, 'overflowScroll');
+  applyBoolean(queue, 'queue');
 
   applyNumber(duration, 'duration');
   applyNumber(maxVisible, 'maxVisible');
@@ -817,6 +834,7 @@ function buildOptionsLines(content: { title: string; description: string }, toas
   add('width', width.value);
   add('zIndex', zIndex.value);
   add('overflowScroll', overflowScroll.value);
+  add('queue', queue.value);
   add('duration', duration.value);
   add('maxVisible', maxVisible.value);
   add('preventDuplicates', preventDuplicates.value);
@@ -894,11 +912,17 @@ onBeforeUnmount(function () {
 });
 
 /* ----- watchers ----- */
+
+watch(queue, function (enabled) {
+  if (!enabled && queuePaused.value) {
+    resumeQueueProcessing();
+  }
+});
 </script>
 
 <template>
   <div
-    class="w-full max-w-5xl rounded-3xl bg-white/90 p-6 shadow-2xl ring-1 ring-slate-200 backdrop-blur-md grid gap-6 lg:max-h-180 lg:overflow-auto lg:pb-0"
+    class="w-full max-w-5xl rounded-3xl bg-white/90 p-6 shadow-2xl ring-1 ring-slate-200 backdrop-blur-md grid gap-6 lg:max-h-[45rem] lg:overflow-auto lg:pb-0"
   >
     <div class="flex flex-col gap-3">
       <div class="flex flex-wrap items-center justify-between gap-3">
@@ -975,6 +999,7 @@ onBeforeUnmount(function () {
         v-model:order="order"
         v-model:pauseStrategy="pauseStrategy"
         v-model:overflowScroll="overflowScroll"
+        v-model:queue="queue"
         :playground-buttons="playgroundButtons"
         @add-button="addPlaygroundButton"
         @remove-button="removePlaygroundButton"
@@ -1029,9 +1054,13 @@ onBeforeUnmount(function () {
 
     <div class="hidden lg:block sticky bottom-0 bg-white/90">
       <ActionsFooter
+        :queue-enabled="queue"
+        :queue-paused="queuePaused"
         @push="push()"
         @push-burst="pushBurst"
         @update-last="updateLast"
+        @pause-queue="pauseQueueProcessing"
+        @resume-queue="resumeQueueProcessing"
         @dismiss-all="toast.dismissAll"
         @reset="resetToDefaults"
       />
@@ -1065,11 +1094,7 @@ onBeforeUnmount(function () {
         </Button>
       </div>
 
-      <div
-        v-if="eventLog.length"
-        class="max-h-[360px] space-y-3 overflow-auto"
-        style="content-visibility: auto; contain-intrinsic-size: 1px 600px"
-      >
+      <div v-if="eventLog.length" class="max-h-[360px] space-y-3 overflow-auto">
         <div v-for="entry in eventLog" :key="entry.id" class="space-y-2">
           <div class="flex items-center justify-between text-[0.75rem] text-slate-500">
             <span class="font-semibold text-slate-700">{{ entry.label }}</span>
@@ -1100,7 +1125,7 @@ onBeforeUnmount(function () {
           input-position="top"
           lang="en"
           loading="lazy"
-          class="min-h-80"
+          class="min-h-[320px]"
         />
       </div>
     </div>

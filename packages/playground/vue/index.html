@@ -1,131 +1,87 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96"/>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
-    <link rel="shortcut icon" href="/favicon.ico"/>
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
-    <meta name="apple-mobile-web-app-title" content="Toastflow"/>
-    <link rel="manifest" href="/site.webmanifest"/>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Toastflow" />
+    <link rel="manifest" href="/site.webmanifest" />
     <title>Vue Toast Notifications Playground | Toastflow</title>
     <meta
-            name="description"
-            content="Test Vue toast notifications with Toastflow. Adjust positions, timing, and behaviors in a live playground built for Vue 3."
-    >
+      name="description"
+      content="Test Vue toast notifications with Toastflow. Adjust positions, timing, and behaviors in a live playground built for Vue 3."
+    />
     <meta
-            name="keywords"
-            content="vue toast, vue toast notifications, toastflow, vue toast library, toast component vue, toast messages"
-    >
-    <meta name="robots" content="index,follow">
-    <link rel="canonical" href="https://toastflow.adrianjanocko.sk/">
+      name="keywords"
+      content="vue toast, vue toast notifications, toastflow, vue toast library, toast component vue, toast messages"
+    />
+    <meta name="robots" content="index,follow" />
+    <link rel="canonical" href="https://toastflow.top/" />
 
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://toastflow.adrianjanocko.sk/">
-    <meta property="og:site_name" content="Toastflow">
-    <meta property="og:title" content="Vue Toast Notifications Playground | Toastflow">
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://toastflow.top/" />
+    <meta property="og:site_name" content="Toastflow" />
+    <meta property="og:title" content="Vue Toast Notifications Playground | Toastflow" />
     <meta
-            property="og:description"
-            content="Experiment with Vue toast notifications powered by Toastflow. Tune positions, animations, and behaviors in real-time."
-    >
-    <meta property="og:image"
-          content="https://raw.githubusercontent.com/adrianjanocko/toastflow/main/images/banner.png">
-    <meta property="og:image:alt" content="Toastflow Vue toast notifications playground banner">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:locale" content="en_US">
+      property="og:description"
+      content="Experiment with Vue toast notifications powered by Toastflow. Tune positions, animations, and behaviors in real-time."
+    />
+    <meta
+      property="og:image"
+      content="https://raw.githubusercontent.com/adrianjanocko/toastflow/main/images/banner.png"
+    />
 
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Vue Toast Notifications Playground | Toastflow">
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Vue Toast Notifications Playground | Toastflow" />
     <meta
-            name="twitter:description"
-            content="Experiment with Vue toast notifications powered by Toastflow. Tune positions, animations, and behaviors in real-time."
-    >
-    <meta name="twitter:image"
-          content="https://raw.githubusercontent.com/adrianjanocko/toastflow/main/images/banner.png">
-    <meta name="theme-color" content="#0ea5e9">
+      name="twitter:description"
+      content="Experiment with Vue toast notifications powered by Toastflow. Tune positions, animations, and behaviors in real-time."
+    />
+    <meta
+      name="twitter:image"
+      content="https://raw.githubusercontent.com/adrianjanocko/toastflow/main/images/banner.png"
+    />
+    <meta name="theme-color" content="#0ea5e9" />
 
     <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "SoftwareApplication",
-            "name": "Toastflow Vue Toast Playground",
-            "applicationCategory": "DeveloperApplication",
-            "operatingSystem": "Web",
-            "url": "https://toastflow.adrianjanocko.sk/",
-            "image": "https://raw.githubusercontent.com/adrianjanocko/toastflow/main/images/banner.png",
-            "description": "Live playground for testing Vue toast notifications built with Toastflow.",
-            "offers": {
-                "@type": "Offer",
-                "price": "0",
-                "priceCurrency": "USD"
-            }
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Toastflow Vue Toast Playground",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Web",
+        "url": "https://toastflow.top/",
+        "image": "https://raw.githubusercontent.com/adrianjanocko/toastflow/main/images/banner.png",
+        "description": "Live playground for testing Vue toast notifications built with Toastflow.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
         }
-    </script>
-    <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            "mainEntity": [
-                {
-                    "@type": "Question",
-                    "name": "Is Toastflow accessible?",
-                    "acceptedAnswer": {
-                        "@type": "Answer",
-                        "text": "Yes. Toastflow renders status/alert live regions, keeps ARIA labels even when you pass HTML, includes pause-on-hover, and respects prefers-reduced-motion."
-                    }
-                },
-                {
-                    "@type": "Question",
-                    "name": "Does it support SSR?",
-                    "acceptedAnswer": {
-                        "@type": "Answer",
-                        "text": "The core store is isomorphic, the Vue renderer defers DOM access until mounted, and the playground guards window usage so Nuxt/Vite SSR works out of the box."
-                    }
-                },
-                {
-                    "@type": "Question",
-                    "name": "Can I use it outside Vue components?",
-                    "acceptedAnswer": {
-                        "@type": "Answer",
-                        "text": "Yes. Install the plugin once and call toast.* from stores or services. For non-Vue apps, use the headless toastflow-core store and render your own UI."
-                    }
-                },
-                {
-                    "@type": "Question",
-                    "name": "How do I style it to match my brand?",
-                    "acceptedAnswer": {
-                        "@type": "Answer",
-                        "text": "Override CSS variables or animation class names, pass a theme/animation override, or use the headless slot to ship a fully custom card with the shared store logic."
-                    }
-                },
-                {
-                    "@type": "Question",
-                    "name": "How do I log or react to toast events?",
-                    "acceptedAnswer": {
-                        "@type": "Answer",
-                        "text": "Use toast.subscribeEvents for duplicate/update/timer-reset signals, toast.subscribe for state changes, lifecycle hooks like onMount/onClose/onClick for telemetry, and toast.getState() for debugging."
-                    }
-                }
-            ]
-        }
+      }
     </script>
 
     <!-- INTER FONT -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="style"
-          href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
-          rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- UMAMI ANALYTICS -->
-    <script defer src="https://cloud.umami.is/script.js"
-            data-website-id="%VITE_UMAMI_WEBSITE_ID%"></script>
-</head>
-<body>
-<div id="app"></div>
-<script type="module" src="./src/main.ts"></script>
-</body>
+    <script
+      defer
+      src="https://cloud.umami.is/script.js"
+      data-website-id="%VITE_UMAMI_WEBSITE_ID%"
+    ></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
 </html>
+

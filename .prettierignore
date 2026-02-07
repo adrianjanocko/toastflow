@@ -1,0 +1,32 @@
+# deps
+node_modules
+
+# build outputs
+dist
+build
+coverage
+
+# common caches
+.cache
+.temp
+tmp
+**/.cache
+**/.turbo
+
+# tooling
+.vscode
+.idea
+
+# logs
+*.log
+
+# lockfiles
+pnpm-lock.yaml
+pnpm-workspace.yaml
+package-lock.json
+yarn.lock
+
+# other
+eslint.config.ts
+vite.config.ts
+vitest.config.ts

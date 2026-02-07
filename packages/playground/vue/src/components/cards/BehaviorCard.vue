@@ -19,6 +19,7 @@ const props = defineProps<{
   closeOnClick: boolean;
   supportHtml: boolean;
   showCreatedAt: boolean;
+  queue: boolean;
   enableButtons: boolean;
   buttonsAlignment: ToastButtonsAlignment;
   buttonsGap: string;
@@ -37,6 +38,7 @@ const emit = defineEmits<{
   'update:closeOnClick': [boolean];
   'update:supportHtml': [boolean];
   'update:showCreatedAt': [boolean];
+  'update:queue': [boolean];
   'update:enableButtons': [boolean];
   'update:buttonsAlignment': [ToastButtonsAlignment];
   'update:buttonsGap': [string];
@@ -183,6 +185,16 @@ function emitButtonUpdate(id: string, updates: Partial<PlaygroundButton>) {
           tooltip="Overflow scroll"
         >
           Overflow scroll
+        </Button>
+
+        <Button
+          variant="toggle"
+          :model-value="queue"
+          @update:model-value="emit('update:queue', $event)"
+          is-new
+          tooltip="Queue over maxVisible"
+        >
+          Queue
         </Button>
       </CardLayout>
     </div>

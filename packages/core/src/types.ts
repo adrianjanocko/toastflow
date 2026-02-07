@@ -191,6 +191,10 @@ export interface ToastConfig {
    */
   maxVisible: number;
   /**
+   * When true, overflowed toasts are queued and shown when space frees up instead of evicting. (Default: false)
+   */
+  queue: boolean;
+  /**
    * Default stack position used when none is provided. (Default: "top-right")
    */
   position: ToastPosition;
@@ -308,6 +312,14 @@ export type ToastContentInput = ToastTextInput &
   Partial<Omit<ToastOptions, "type" | "title" | "description">>;
 
 /**
+ * Options accepted when calling the show helper with text provided separately.
+ */
+export type ToastShowOptions = Partial<
+  Omit<ToastOptions, "title" | "description">
+> &
+  Partial<ToastTextInput> & { type?: ToastType };
+
+/**
  * Payload required to create a toast.
  */
 export type ToastShowInput = { type: ToastType } & ToastContentInput;
@@ -357,6 +369,7 @@ export type ToastStandaloneInstance = {
  */
 export interface ToastState {
   toasts: ToastInstance[];
+  queue: ToastInstance[];
 }
 
 /**
@@ -383,6 +396,8 @@ export interface ToastStore {
    */
   show(options: ToastShowInput): ToastId;
 
+  show(content: string | ToastTextInput, options?: ToastShowOptions): ToastId;
+
   /**
    * Update an existing toast by id.
    */
@@ -407,6 +422,16 @@ export interface ToastStore {
    * Resume the auto-dismiss timer using the configured strategy.
    */
   resume(id: ToastId): void;
+
+  /**
+   * Pause queue processing so queued toasts remain pending until resumed.
+   */
+  pauseQueue(): void;
+
+  /**
+   * Resume queue processing so queued toasts can appear again.
+   */
+  resumeQueue(): void;
 
   /**
    * Return the resolved global configuration.

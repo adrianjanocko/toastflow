@@ -7,8 +7,11 @@ import type {
   ToastLoadingInput,
   ToastLoadingResult,
   ToastShowInput,
+  ToastShowOptions,
   ToastState,
   ToastStore,
+  ToastTextInput,
+  ToastType,
   ToastUpdateInput,
 } from "toastflow-core";
 
@@ -38,16 +41,57 @@ export function getToastStore(): ToastStore {
   return globalStore;
 }
 
+type TypedToastShowOptions = Omit<ToastShowOptions, "type">;
+
+function createToastCaller<T extends Exclude<ToastType, "loading"> | undefined>(
+  type?: T,
+) {
+  type Options = T extends undefined ? ToastShowOptions : TypedToastShowOptions;
+
+  function showTypedToast(
+    options: T extends undefined ? ToastShowInput : ToastContentInput,
+  ): ToastId;
+  function showTypedToast(
+    content: string | ToastTextInput,
+    options?: Options,
+  ): ToastId;
+  function showTypedToast(
+    arg1: ToastShowInput | ToastContentInput | ToastTextInput | string,
+    arg2?: Options,
+  ): ToastId {
+    if (typeof arg1 === "string" || arg2 !== undefined) {
+      const merged =
+        type === undefined
+          ? (arg2 as ToastShowOptions | undefined)
+          : ({ ...(arg2 ?? {}), type } as ToastShowOptions);
+
+      return getToastStore().show(arg1 as string | ToastTextInput, merged);
+    }
+
+    if (type === undefined) {
+      return getToastStore().show(arg1 as ToastShowInput);
+    }
+
+    return getToastStore().show({
+      ...(arg1 as ToastContentInput),
+      type,
+    });
+  }
+
+  return showTypedToast;
+}
+
 export const toast = {
   getState(): ToastState {
     return getToastStore().getState();
   },
+  subscribe(listener: (state: ToastState) => void): () => void {
+    return getToastStore().subscribe(listener);
+  },
   subscribeEvents(listener: (event: ToastEvent) => void): () => void {
     return getToastStore().subscribeEvents(listener);
   },
-  show(options: ToastShowInput): ToastId {
-    return getToastStore().show(options);
-  },
+  show: createToastCaller(),
   loading<T>(
     input: ToastLoadingInput<T>,
     config: ToastLoadingConfig<T>,
@@ -69,23 +113,19 @@ export const toast = {
   resume(id: ToastId): void {
     return getToastStore().resume(id);
   },
+  pauseQueue(): void {
+    return getToastStore().pauseQueue();
+  },
+  resumeQueue(): void {
+    return getToastStore().resumeQueue();
+  },
   getConfig(): ToastConfig {
     return getToastStore().getConfig();
   },
 
-  toast(options: ToastContentInput): ToastId {
-    return getToastStore().show({ ...options, type: "default" });
-  },
-  success(options: ToastContentInput): ToastId {
-    return getToastStore().show({ ...options, type: "success" });
-  },
-  error(options: ToastContentInput): ToastId {
-    return getToastStore().show({ ...options, type: "error" });
-  },
-  info(options: ToastContentInput): ToastId {
-    return getToastStore().show({ ...options, type: "info" });
-  },
-  warning(options: ToastContentInput): ToastId {
-    return getToastStore().show({ ...options, type: "warning" });
-  },
+  default: createToastCaller("default"),
+  success: createToastCaller("success"),
+  error: createToastCaller("error"),
+  info: createToastCaller("info"),
+  warning: createToastCaller("warning"),
 };

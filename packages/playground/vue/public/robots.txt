@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://toastflow.adrianjanocko.sk/sitemap.xml
+Sitemap: https://toastflow.top/sitemap.xml
+
