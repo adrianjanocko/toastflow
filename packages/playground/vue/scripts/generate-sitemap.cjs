@@ -10,7 +10,7 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
   xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
     http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
   <url>
-    <loc>https://toastflow.adrianjanocko.sk/</loc>
+    <loc>https://toastflow.top/</loc>
     <lastmod>${today}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
