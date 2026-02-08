@@ -22,6 +22,28 @@ export default defineConfig({
     hostname: DOCS_HOSTNAME,
   },
   head: [
+    [
+      "link",
+      {
+        rel: "icon",
+        type: "image/png",
+        href: "/favicon-96x96.png",
+        sizes: "96x96",
+      },
+    ],
+    ["link", { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" }],
+    ["link", { rel: "shortcut icon", href: "/favicon.ico" }],
+    [
+      "link",
+      {
+        rel: "apple-touch-icon",
+        sizes: "180x180",
+        href: "/apple-touch-icon.png",
+      },
+    ],
+    ["meta", { name: "apple-mobile-web-app-title", content: "Toastflow" }],
+    ["link", { rel: "manifest", href: "/site.webmanifest" }],
+    ["meta", { name: "theme-color", content: "#0ea5e9" }],
     ["meta", { name: "robots", content: "index,follow" }],
     ["meta", { property: "og:site_name", content: "Toastflow Docs" }],
     ["meta", { property: "og:type", content: "website" }],
@@ -147,4 +169,3 @@ export default defineConfig({
     },
   },
 });
-
