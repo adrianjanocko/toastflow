@@ -54,4 +54,5 @@ Toastflow is a toast notification system with a typed core (`toastflow-core`) an
 
 - Setup and first toast: [Getting Started](/guide/getting-started)
 - Live interactive snippets: [Live Examples](/guide/live-examples)
+- Compare with other Vue toast options: [Comparisons](/comparisons/overview)
 - Full runtime options: [Configuration](/api/configuration)

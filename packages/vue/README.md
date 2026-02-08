@@ -7,6 +7,7 @@ Vue 3 package for Toastflow
 ## 📚 Documentation
 
 - Docs: https://docs.toastflow.top/
+- Comparisons (Vue toasts): https://docs.toastflow.top/comparisons/overview
 - Playground: https://toastflow.top/
 - npm: https://www.npmjs.com/package/vue-toastflow
 

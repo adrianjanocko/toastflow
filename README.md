@@ -7,6 +7,7 @@ Framework-agnostic toast engine with a Vue 3 renderer
 ## 📚 Documentation
 
 - Docs: https://docs.toastflow.top/
+- Comparisons (Vue toasts): https://docs.toastflow.top/comparisons/overview
 - Playground: https://toastflow.top/
 - Repository: https://github.com/adrianjanocko/toastflow
 

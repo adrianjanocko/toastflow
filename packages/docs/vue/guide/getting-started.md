@@ -145,4 +145,5 @@ State shape and event payloads: [State](/api/state) and [Events](/api/events).
 - Styling and token customization: [Theming](/guide/theming)
 - Toast payload model: [Toasts](/guide/toasts)
 - Runtime controls: [Programmatic API](/guide/programmatic-api)
+- Library positioning: [Comparisons](/comparisons/overview)
 - Run interactive examples: [Live Examples](/guide/live-examples)

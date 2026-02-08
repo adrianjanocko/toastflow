@@ -49,6 +49,7 @@ export default defineConfig({
     nav: [
       { text: "Guide", link: "/guide/introduction" },
       { text: "Examples", link: "/guide/live-examples" },
+      { text: "Comparisons", link: "/comparisons/overview" },
       { text: "Toastflow API", link: "/api/configuration" },
       { text: "Components", link: "/components/toast-container" },
       { text: "Playground", link: "https://toastflow.top/" },
@@ -80,6 +81,33 @@ export default defineConfig({
           { text: "Getters", link: "/api/getters" },
           { text: "Slots", link: "/api/slots" },
           { text: "Utilities", link: "/api/utilities" },
+        ],
+      },
+      {
+        text: "Comparisons",
+        collapsed: false,
+        items: [
+          { text: "Overview", link: "/comparisons/overview" },
+          {
+            text: "Toastflow vs vue3-notification",
+            link: "/comparisons/overview#vs-vue3-notification",
+          },
+          {
+            text: "Toastflow vs vue-sonner",
+            link: "/comparisons/overview#vs-vue-sonner",
+          },
+          {
+            text: "Toastflow vs vue-toast-notification",
+            link: "/comparisons/overview#vs-vue-toast-notification",
+          },
+          {
+            text: "Toastflow vs notivue",
+            link: "/comparisons/overview#vs-notivue",
+          },
+          {
+            text: "Toastflow vs vue3-toastify",
+            link: "/comparisons/overview#vs-vue3-toastify",
+          },
         ],
       },
       {

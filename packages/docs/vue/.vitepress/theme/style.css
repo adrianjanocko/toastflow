@@ -72,6 +72,81 @@
     color: var(--vp-c-text-2);
 }
 
+.VPDoc .tf-compare-legend {
+    margin: 10px 0 14px;
+    color: var(--vp-c-text-2);
+    font-size: 0.88rem;
+}
+
+.VPDoc .tf-compare-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.VPDoc .tf-compare-chip--better {
+    border-color: color-mix(in srgb, #16a34a 36%, transparent);
+    background: color-mix(in srgb, #16a34a 14%, transparent);
+    color: #166534;
+}
+
+.VPDoc .tf-compare-chip--tradeoff {
+    border-color: color-mix(in srgb, #dc2626 34%, transparent);
+    background: color-mix(in srgb, #dc2626 13%, transparent);
+    color: #991b1b;
+}
+
+.VPDoc .tf-compare-chip--neutral {
+    border-color: var(--vp-c-divider);
+    background: var(--vp-c-bg-soft);
+    color: var(--vp-c-text-2);
+}
+
+.VPDoc .tf-compare-cell {
+    display: block;
+    border-radius: 8px;
+    padding: 7px 10px;
+    border: 1px solid transparent;
+}
+
+.VPDoc .tf-compare-cell--better {
+    border-color: color-mix(in srgb, #16a34a 36%, transparent);
+    background: color-mix(in srgb, #16a34a 12%, transparent);
+}
+
+.VPDoc .tf-compare-cell--tradeoff {
+    border-color: color-mix(in srgb, #dc2626 34%, transparent);
+    background: color-mix(in srgb, #dc2626 10%, transparent);
+}
+
+.VPDoc .tf-compare-cell--neutral {
+    border-color: var(--vp-c-divider);
+    background: var(--vp-c-bg-soft);
+}
+
+.dark .VPDoc .tf-compare-chip--better {
+    color: #86efac;
+}
+
+.dark .VPDoc .tf-compare-chip--tradeoff {
+    color: #fda4af;
+}
+
+.VPDoc h2#decision-matrix ~ table th {
+    min-width: 170px;
+    white-space: nowrap;
+}
+
+.VPDoc h2#decision-matrix ~ table th:first-child {
+    min-width: 150px;
+}
+
 .tf-repl-shell {
     margin: 16px 0 26px;
     border: 1px solid var(--vp-c-divider);
