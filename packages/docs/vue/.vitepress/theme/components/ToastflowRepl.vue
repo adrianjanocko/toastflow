@@ -2,8 +2,17 @@
 import { computed, onErrorCaptured, onMounted, ref, shallowRef } from "vue";
 
 type ReplFiles = Record<string, string>;
-const TOASTFLOW_CORE_VERSION = "1.1.8";
-const VUE_TOASTFLOW_VERSION = "1.1.5";
+declare const __TOASTFLOW_CORE_VERSION__: string;
+declare const __VUE_TOASTFLOW_VERSION__: string;
+
+const TOASTFLOW_CORE_VERSION =
+  typeof __TOASTFLOW_CORE_VERSION__ === "string"
+    ? __TOASTFLOW_CORE_VERSION__
+    : "latest";
+const VUE_TOASTFLOW_VERSION =
+  typeof __VUE_TOASTFLOW_VERSION__ === "string"
+    ? __VUE_TOASTFLOW_VERSION__
+    : "latest";
 
 const props = withDefaults(
   defineProps<{
@@ -78,8 +87,7 @@ onMounted(async function () {
       {
         imports: {
           "toastflow-core": `https://esm.sh/toastflow-core@${TOASTFLOW_CORE_VERSION}?bundle`,
-          "vue-toastflow":
-            `https://cdn.jsdelivr.net/npm/vue-toastflow@${VUE_TOASTFLOW_VERSION}/dist/toastflow.es.js`,
+          "vue-toastflow": `https://cdn.jsdelivr.net/npm/vue-toastflow@${VUE_TOASTFLOW_VERSION}/dist/toastflow.es.js`,
         },
       },
       true,
@@ -121,7 +129,9 @@ onMounted(async function () {
       >
         <component
           :is="replComponent"
-          v-if="ready && replComponent && editorComponent && store && !runtimeError"
+          v-if="
+            ready && replComponent && editorComponent && store && !runtimeError
+          "
           :editor="editorComponent"
           :store="store"
           theme="dark"
@@ -135,7 +145,10 @@ onMounted(async function () {
           :show-compile-output="false"
           :clear-console="true"
           :auto-resize="true"
-          :split-pane-options="{ codeTogglerText: 'Code', outputTogglerText: 'Preview' }"
+          :split-pane-options="{
+            codeTogglerText: 'Code',
+            outputTogglerText: 'Preview',
+          }"
         />
 
         <div v-else class="tf-repl-fallback">

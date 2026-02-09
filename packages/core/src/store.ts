@@ -856,6 +856,7 @@ function normalizeShowArgs(
   } = arg2 ?? {};
 
   return {
+    ...arg1,
     ...rest,
     type,
     title: inputTitle ?? optionsTitle ?? "",

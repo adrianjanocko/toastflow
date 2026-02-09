@@ -34,7 +34,7 @@ Toastflow resolves config in this order:
 | `animation` | `Partial<ToastAnimation>` | See below | CSS classes for transitions and bump/update effects. |
 | `closeButton` | `boolean` | `true` | Show floating close button. |
 | `closeOnClick` | `boolean` | `false` | Dismiss when clicking toast body. |
-| `buttons` | `ToastButtonsConfig` | `undefined` | Inline action buttons config. |
+| `buttons` | `ToastButtonsConfig` | `undefined` | Inline action buttons config (alignment, layout, spacing). |
 | `supportHtml` | `boolean` | `false` | Allows HTML in `title` and `description`. |
 | `showCreatedAt` | `boolean` | `false` | Shows created-at text badge. |
 | `createdAtFormatter` | `(createdAt: number) => string` | locale time formatter | Formatter for created-at display text. |
@@ -65,6 +65,7 @@ interface ToastButtonsConfig {
     | "center-right"
     | "bottom-left"
     | "bottom-right";
+  layout?: "row" | "column";
   buttons: ToastButton[];
   gap?: string;
   contentGap?: string;

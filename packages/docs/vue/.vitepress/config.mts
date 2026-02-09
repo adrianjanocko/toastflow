@@ -1,6 +1,58 @@
 import { defineConfig } from "vitepress";
+import { existsSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
 
 const DOCS_HOSTNAME = "https://docs.toastflow.top";
+
+type PackageJson = {
+  version?: string;
+};
+
+function readPackageVersion(
+  packageJsonCandidates: string[],
+  fallback: string,
+): string {
+  const cwd = process.cwd();
+  const candidatePaths = packageJsonCandidates.map((candidate) =>
+    resolve(cwd, candidate),
+  );
+
+  for (const packageJsonPath of candidatePaths) {
+    if (!existsSync(packageJsonPath)) {
+      continue;
+    }
+
+    try {
+      const packageJsonRaw = readFileSync(packageJsonPath, "utf8");
+      const packageJson = JSON.parse(packageJsonRaw) as PackageJson;
+
+      if (typeof packageJson.version === "string" && packageJson.version.trim()) {
+        return packageJson.version;
+      }
+    } catch (error) {
+      console.warn(
+        `[toastflow-docs] Failed to read package version from ${packageJsonPath}`,
+        error,
+      );
+    }
+  }
+
+  console.warn(
+    `[toastflow-docs] Could not locate a package version in: ${candidatePaths.join(
+      ", ",
+    )}`,
+  );
+  return fallback;
+}
+
+const TOASTFLOW_CORE_VERSION = readPackageVersion(
+  ["../../core/package.json", "packages/core/package.json"],
+  "latest",
+);
+const VUE_TOASTFLOW_VERSION = readPackageVersion(
+  ["../../vue/package.json", "packages/vue/package.json"],
+  "latest",
+);
 
 function resolveCanonicalUrl(page: string): string {
   const normalizedPage = page.replace(/\\/g, "/");
@@ -62,6 +114,10 @@ export default defineConfig({
     ];
   },
   vite: {
+    define: {
+      __TOASTFLOW_CORE_VERSION__: JSON.stringify(TOASTFLOW_CORE_VERSION),
+      __VUE_TOASTFLOW_VERSION__: JSON.stringify(VUE_TOASTFLOW_VERSION),
+    },
     optimizeDeps: {
       exclude: ["@vue/repl"],
     },

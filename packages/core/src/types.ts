@@ -104,6 +104,11 @@ export type ToastButtonsAlignment =
   | "bottom-right";
 
 /**
+ * Layout direction for action buttons.
+ */
+export type ToastButtonsLayout = "row" | "column";
+
+/**
  * Single action button rendered inside a toast.
  * Use `label` for plain text or `html`.
  */
@@ -144,6 +149,10 @@ export interface ToastButtonHtml extends ToastButtonBase {
  */
 export interface ToastButtonsConfig {
   alignment: ToastButtonsAlignment;
+  /**
+   * Button stack direction. (Default: "row")
+   */
+  layout?: ToastButtonsLayout;
   buttons: ToastButton[];
   /**
    * Gap between individual buttons. (Default: "calc(var(--tf-toast-gap) / 2)")

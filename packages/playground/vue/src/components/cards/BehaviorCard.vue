@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Settings } from 'lucide-vue-next';
-import type { PauseStrategy, ToastButtonsAlignment, ToastOrder } from 'toastflow-core';
+import type {
+  PauseStrategy,
+  ToastButtonsAlignment,
+  ToastButtonsLayout,
+  ToastOrder,
+} from 'toastflow-core';
 
 import Button from '../Button.vue';
 import Modal from '../Modal.vue';
@@ -11,7 +16,7 @@ import Card from '@/components/card/Card.vue';
 import SectionHeading from '@/components/SectionHeading.vue';
 import CardLayout from '@/components/card/CardLayout.vue';
 
-const props = defineProps<{
+defineProps<{
   preventDuplicates: boolean;
   progressBar: boolean;
   pauseOnHover: boolean;
@@ -22,6 +27,7 @@ const props = defineProps<{
   queue: boolean;
   enableButtons: boolean;
   buttonsAlignment: ToastButtonsAlignment;
+  buttonsLayout: ToastButtonsLayout;
   buttonsGap: string;
   buttonsContentGap: string;
   playgroundButtons: PlaygroundButton[];
@@ -41,6 +47,7 @@ const emit = defineEmits<{
   'update:queue': [boolean];
   'update:enableButtons': [boolean];
   'update:buttonsAlignment': [ToastButtonsAlignment];
+  'update:buttonsLayout': [ToastButtonsLayout];
   'update:buttonsGap': [string];
   'update:buttonsContentGap': [string];
   'update:overflowScroll': [boolean];
@@ -68,6 +75,11 @@ const alignmentOptions: { value: ToastButtonsAlignment; label: string }[] = [
   { value: 'center-right', label: 'Center right' },
   { value: 'bottom-left', label: 'Bottom left' },
   { value: 'bottom-right', label: 'Bottom right' },
+];
+
+const layoutOptions: { value: ToastButtonsLayout; label: string }[] = [
+  { value: 'row', label: 'Row' },
+  { value: 'column', label: 'Column' },
 ];
 
 const buttonModeOptions: { value: PlaygroundButtonMode; label: string }[] = [
@@ -233,6 +245,13 @@ function emitButtonUpdate(id: string, updates: Partial<PlaygroundButton>) {
           :model-value="buttonsAlignment"
           :options="alignmentOptions"
           @update:model-value="emit('update:buttonsAlignment', $event as ToastButtonsAlignment)"
+        />
+
+        <InputField
+          label="Buttons layout"
+          :model-value="buttonsLayout"
+          :options="layoutOptions"
+          @update:model-value="emit('update:buttonsLayout', $event as ToastButtonsLayout)"
         />
 
         <div class="grid grid-cols-2 gap-2">

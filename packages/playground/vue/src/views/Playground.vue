@@ -12,6 +12,7 @@ import type {
   PauseStrategy,
   ToastButton,
   ToastButtonsAlignment,
+  ToastButtonsLayout,
   ToastId,
   ToastOptions,
   ToastOrder,
@@ -89,6 +90,7 @@ const showCreatedAt = ref(config.showCreatedAt);
 
 const enableButtons = ref(false);
 const buttonsAlignment = ref<ToastButtonsAlignment>('center-right');
+const buttonsLayout = ref<ToastButtonsLayout>('row');
 const buttonsGap = ref('');
 const buttonsContentGap = ref('');
 
@@ -241,6 +243,7 @@ function formatLogDetail(detail: unknown): string {
   }
   try {
     return JSON.stringify(detail, null, 2);
+    // eslint-disable-next-line
   } catch (error) {
     return String(detail);
   }
@@ -296,6 +299,7 @@ const buttonsConfig = computed(function (): ToastOptions['buttons'] | undefined 
 
   return {
     alignment: buttonsAlignment.value,
+    layout: buttonsLayout.value,
     buttons,
     gap: buttonsGap.value.trim() || undefined,
     contentGap: buttonsContentGap.value.trim() || undefined,
@@ -493,6 +497,7 @@ function resetToDefaults() {
 
   enableButtons.value = false;
   buttonsAlignment.value = 'bottom-right';
+  buttonsLayout.value = 'row';
   buttonsGap.value = '';
   buttonsContentGap.value = '';
   playgroundButtons.value = [
@@ -566,6 +571,7 @@ const shareableState = computed(function () {
     showCreatedAt: showCreatedAt.value,
     enableButtons: enableButtons.value,
     buttonsAlignment: buttonsAlignment.value,
+    buttonsLayout: buttonsLayout.value,
     buttonsGap: buttonsGap.value,
     buttonsContentGap: buttonsContentGap.value,
     buttons: playgroundButtons.value,
@@ -657,6 +663,7 @@ function hydrateFromQuery() {
 
   applyBoolean(enableButtons, 'enableButtons');
   applyString(buttonsAlignment, 'buttonsAlignment');
+  applyString(buttonsLayout, 'buttonsLayout');
   applyString(buttonsGap, 'buttonsGap');
   applyString(buttonsContentGap, 'buttonsContentGap');
 
@@ -779,6 +786,9 @@ function buildButtonsSnippetLines() {
   const lines: string[] = [];
   lines.push('buttons: {');
   lines.push(`  alignment: '${buttonsAlignment.value}',`);
+  if (buttonsLayout.value !== 'row') {
+    lines.push(`  layout: '${buttonsLayout.value}',`);
+  }
   if (buttonsGap.value.trim()) {
     lines.push(`  gap: '${buttonsGap.value.trim()}',`);
   }
@@ -994,6 +1004,7 @@ watch(queue, function (enabled) {
         v-model:showCreatedAt="showCreatedAt"
         v-model:enableButtons="enableButtons"
         v-model:buttonsAlignment="buttonsAlignment"
+        v-model:buttonsLayout="buttonsLayout"
         v-model:buttonsGap="buttonsGap"
         v-model:buttonsContentGap="buttonsContentGap"
         v-model:order="order"

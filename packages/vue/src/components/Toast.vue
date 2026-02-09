@@ -2,8 +2,10 @@
 import type { Ref } from "vue";
 import { computed, type CSSProperties, inject, ref, toRefs, watch } from "vue";
 import ToastProgress from "./ToastProgress.vue";
+import ToastButtonsGroup from "./ToastButtonsGroup.vue";
 import type {
   ToastButton,
+  ToastButtonsLayout,
   ToastContext,
   ToastId,
   ToastInstance,
@@ -147,18 +149,30 @@ const { handleClick, handleCloseClick } = useClickHandlers(toast, emit);
 const {
   hasButtons,
   buttons,
-  buttonsSide,
+  buttonsPlacement,
   buttonsClasses,
   buttonsVarsStyle,
   handleButtonClick,
 } = useButtons(toast);
 
 const showMetaLeft = computed(function () {
-  return hasButtons.value && buttonsSide.value === "left";
+  return hasButtons.value && buttonsPlacement.value === "left";
 });
 
 const showMetaRight = computed(function () {
-  return hasButtons.value && buttonsSide.value === "right";
+  return hasButtons.value && buttonsPlacement.value === "right";
+});
+
+const showMetaTop = computed(function () {
+  return hasButtons.value && buttonsPlacement.value === "top";
+});
+
+const showMetaBottom = computed(function () {
+  return hasButtons.value && buttonsPlacement.value === "bottom";
+});
+
+const hasOutsideButtons = computed(function () {
+  return showMetaTop.value || showMetaBottom.value;
 });
 
 const showInlineCreatedAt = computed(function () {
@@ -482,6 +496,10 @@ function useButtons(toast: Ref<ToastInstance>) {
     return toast.value.buttons?.buttons ?? [];
   });
 
+  const buttonsLayout = computed<ToastButtonsLayout>(function () {
+    return toast.value.buttons?.layout ?? "row";
+  });
+
   const buttonsAlignment = computed<string>(function () {
     const alignment = toast.value.buttons?.alignment ?? "bottom-right";
 
@@ -506,6 +524,7 @@ function useButtons(toast: Ref<ToastInstance>) {
 
   type ButtonsSide = "left" | "right";
   type ButtonsVertical = "top" | "center" | "bottom";
+  type ButtonsPlacement = "left" | "right" | "top" | "bottom";
 
   const buttonsSide = computed<ButtonsSide>(function () {
     const alignment = buttonsAlignment.value;
@@ -526,6 +545,27 @@ function useButtons(toast: Ref<ToastInstance>) {
     return "center";
   });
 
+  const buttonsPlacement = computed<ButtonsPlacement>(function () {
+    if (buttonsLayout.value === "row") {
+      return buttonsSide.value;
+    }
+
+    const vertical = buttonsVertical.value;
+    if (vertical === "top") {
+      return "top";
+    }
+    if (vertical === "bottom") {
+      return "bottom";
+    }
+    return buttonsSide.value;
+  });
+
+  const isSidePlacement = computed(function () {
+    return (
+      buttonsPlacement.value === "left" || buttonsPlacement.value === "right"
+    );
+  });
+
   const buttonsJustifyClass = computed(function () {
     if (buttonsSide.value === "left") {
       return "tf-toast-actions--start";
@@ -541,6 +581,10 @@ function useButtons(toast: Ref<ToastInstance>) {
   });
 
   const buttonsVerticalClass = computed(function () {
+    if (!isSidePlacement.value) {
+      return undefined;
+    }
+
     const vertical = buttonsVertical.value;
     if (vertical === "bottom") {
       return "tf-toast-buttons--bottom";
@@ -570,7 +614,7 @@ function useButtons(toast: Ref<ToastInstance>) {
   return {
     hasButtons,
     buttons,
-    buttonsSide,
+    buttonsPlacement,
     buttonsClasses,
     buttonsVarsStyle,
     handleButtonClick,
@@ -643,26 +687,28 @@ function stripHtmlToText(value: string): string {
       @pointercancel="handlePointerUp"
     >
       <div class="tf-toast-surface">
+        <div v-if="showMetaTop" class="tf-toast-meta-row tf-toast-meta-row--top">
+          <ToastButtonsGroup
+            :buttons="buttons"
+            :classes="buttonsClasses"
+            :on-button-click="handleButtonClick"
+          />
+        </div>
+
         <!-- main row -->
-        <div class="tf-toast-main">
+        <div
+          class="tf-toast-main"
+          :class="[
+            hasOutsideButtons && 'tf-toast-main--full',
+            showMetaLeft && 'tf-toast-main--content-end',
+          ]"
+        >
           <div v-if="showMetaLeft" class="tf-toast-meta tf-toast-meta--left">
-            <div :class="buttonsClasses">
-              <button
-                v-for="(button, index) in buttons"
-                :key="button.id ?? index"
-                type="button"
-                class="tf-toast-button"
-                :class="button.className"
-                :aria-label="button.ariaLabel || undefined"
-                @click.stop="handleButtonClick(button, $event)"
-                @pointerdown.stop
-                @pointerup.stop
-                @pointercancel.stop
-              >
-                <span v-if="button.label">{{ button.label }}</span>
-                <span v-else-if="button.html" v-html="button.html"></span>
-              </button>
-            </div>
+            <ToastButtonsGroup
+              :buttons="buttons"
+              :classes="buttonsClasses"
+              :on-button-click="handleButtonClick"
+            />
           </div>
 
           <div class="tf-toast-main-content">
@@ -734,24 +780,23 @@ function stripHtmlToText(value: string): string {
           </div>
 
           <div v-if="showMetaRight" class="tf-toast-meta tf-toast-meta--right">
-            <div :class="buttonsClasses">
-              <button
-                v-for="(button, index) in buttons"
-                :key="button.id ?? index"
-                type="button"
-                class="tf-toast-button"
-                :class="button.className"
-                :aria-label="button.ariaLabel || undefined"
-                @click.stop="handleButtonClick(button, $event)"
-                @pointerdown.stop
-                @pointerup.stop
-                @pointercancel.stop
-              >
-                <span v-if="button.label">{{ button.label }}</span>
-                <span v-else-if="button.html" v-html="button.html"></span>
-              </button>
-            </div>
+            <ToastButtonsGroup
+              :buttons="buttons"
+              :classes="buttonsClasses"
+              :on-button-click="handleButtonClick"
+            />
           </div>
+        </div>
+
+        <div
+          v-if="showMetaBottom"
+          class="tf-toast-meta-row tf-toast-meta-row--bottom"
+        >
+          <ToastButtonsGroup
+            :buttons="buttons"
+            :classes="buttonsClasses"
+            :on-button-click="handleButtonClick"
+          />
         </div>
 
         <!-- bottom progress -->
@@ -922,6 +967,23 @@ function stripHtmlToText(value: string): string {
   width: 100%;
 }
 
+.tf-toast-main--full > .tf-toast-main-content {
+  width: 100%;
+  min-width: 0;
+  flex: 1 1 100%;
+}
+
+.tf-toast-main--content-end > .tf-toast-main-content {
+  margin-left: auto;
+  max-width: 100%;
+  flex: 0 1 auto;
+}
+
+.tf-toast-main--content-end > .tf-toast-main-content > .tf-toast-body {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
 .tf-toast-main-content {
   display: flex;
   align-items: center;
@@ -946,31 +1008,53 @@ function stripHtmlToText(value: string): string {
   align-items: flex-end;
 }
 
-/* actions */
-.tf-toast-actions {
+.tf-toast-meta-row {
   display: flex;
-  gap: var(--tf-toast-buttons-gap);
-  flex-wrap: wrap;
+  min-width: 0;
 }
 
-.tf-toast-buttons--center {
+.tf-toast-meta-row--top {
+  margin-bottom: var(--tf-toast-buttons-content-gap);
+}
+
+.tf-toast-meta-row--bottom {
+  margin-top: var(--tf-toast-buttons-content-gap);
+}
+
+.tf-toast-meta-row :deep(.tf-toast-actions--start) {
+  margin-right: auto;
+}
+
+.tf-toast-meta-row :deep(.tf-toast-actions--end) {
+  margin-left: auto;
+}
+
+/* actions */
+:deep(.tf-toast-actions) {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--tf-toast-buttons-gap);
+}
+
+:deep(.tf-toast-buttons--center) {
   margin-top: auto;
   margin-bottom: auto;
 }
 
-.tf-toast-buttons--bottom {
+:deep(.tf-toast-buttons--bottom) {
   margin-top: auto;
 }
 
-.tf-toast-actions--start {
+:deep(.tf-toast-actions--start) {
   justify-content: flex-start;
 }
 
-.tf-toast-actions--end {
+:deep(.tf-toast-actions--end) {
   justify-content: flex-end;
 }
 
-.tf-toast-button {
+:deep(.tf-toast-button) {
   appearance: none;
   border: var(--tf-toast-button-border-width) solid
     var(--tf-toast-button-border-color);

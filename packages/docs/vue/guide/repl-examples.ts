@@ -1,4 +1,12 @@
-﻿export const helperFiles: Record<string, string> = {
+﻿declare const __VUE_TOASTFLOW_VERSION__: string;
+
+const VUE_TOASTFLOW_VERSION =
+  typeof __VUE_TOASTFLOW_VERSION__ === "string"
+    ? __VUE_TOASTFLOW_VERSION__
+    : "latest";
+const VUE_TOASTFLOW_CSS_URL = `https://cdn.jsdelivr.net/npm/vue-toastflow@${VUE_TOASTFLOW_VERSION}/dist/vue-toastflow.css`;
+
+export const helperFiles: Record<string, string> = {
   "main.ts": `import { createApp } from "vue";
 import App from "./App.vue";
 import { createToastflow } from "vue-toastflow";
@@ -124,7 +132,7 @@ function dismissLast() {
 </template>
 
 <style>
-@import url("https://cdn.jsdelivr.net/npm/vue-toastflow@1.1.5/dist/vue-toastflow.css");
+@import url("${VUE_TOASTFLOW_CSS_URL}");
 
 button {
   border: 1px solid #cbd5e1;
@@ -234,7 +242,7 @@ function pushManualInfo() {
 </template>
 
 <style>
-@import url("https://cdn.jsdelivr.net/npm/vue-toastflow@1.1.5/dist/vue-toastflow.css");
+@import url("${VUE_TOASTFLOW_CSS_URL}");
 
 button {
   border: 1px solid #cbd5e1;
@@ -337,7 +345,7 @@ function pushHtmlWarning() {
 </template>
 
 <style>
-@import url("https://cdn.jsdelivr.net/npm/vue-toastflow@1.1.5/dist/vue-toastflow.css");
+@import url("${VUE_TOASTFLOW_CSS_URL}");
 
 button {
   border: 1px solid #cbd5e1;
@@ -436,7 +444,7 @@ function pushCustom(type: DemoType) {
 </template>
 
 <style>
-@import url("https://cdn.jsdelivr.net/npm/vue-toastflow@1.1.5/dist/vue-toastflow.css");
+@import url("${VUE_TOASTFLOW_CSS_URL}");
 
 button {
   border: 1px solid #cbd5e1;
@@ -606,7 +614,7 @@ function pushUpdateTarget() {
 </template>
 
 <style>
-@import url("https://cdn.jsdelivr.net/npm/vue-toastflow@1.1.5/dist/vue-toastflow.css");
+@import url("${VUE_TOASTFLOW_CSS_URL}");
 
 button {
   border: 1px solid #cbd5e1;
@@ -759,7 +767,7 @@ function clearSaved() {
 </template>
 
 <style>
-@import url("https://cdn.jsdelivr.net/npm/vue-toastflow@1.1.5/dist/vue-toastflow.css");
+@import url("${VUE_TOASTFLOW_CSS_URL}");
 
 button {
   border: 1px solid #cbd5e1;
@@ -888,7 +896,7 @@ function resumeQueueFlow() {
 </template>
 
 <style>
-@import url("https://cdn.jsdelivr.net/npm/vue-toastflow@1.1.5/dist/vue-toastflow.css");
+@import url("${VUE_TOASTFLOW_CSS_URL}");
 
 button {
   border: 1px solid #cbd5e1;

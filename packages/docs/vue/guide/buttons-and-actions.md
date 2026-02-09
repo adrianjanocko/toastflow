@@ -56,6 +56,7 @@ type ToastButtonsAlignment =
 `ToastButtonsConfig` fields:
 
 - `alignment`
+- `layout` (`"row"` default, or `"column"`)
 - `buttons`
 - `gap` (optional, defaults to half toast gap)
 - `contentGap` (optional, defaults to half toast gap)
@@ -79,6 +80,25 @@ Headless rendering with custom markup: [Controlled Store](/guide/controlled-stor
 ## Alignment Behavior With Right Text Layout
 
 If toast `alignment` is `right`, left and right button alignments are mirrored so visual flow stays consistent.
+
+## Layout Direction
+
+Use `buttons.layout` to control how the action group is positioned around toast content.
+
+```ts
+toast.info({
+  title: "Release 1.2.0",
+  description: "Pick an action",
+  buttons: {
+    alignment: "bottom-right",
+    layout: "column",
+    buttons: [{ label: "Open changelog" }, { label: "Remind me later" }],
+  },
+});
+```
+
+- `layout: "row"` keeps the current side-by-side action flow.
+- `layout: "column"` places the action group in column flow (top/bottom for `top-*`/`bottom-*`, side for `center-*`), while buttons stay side-by-side.
 
 ## Close Interactions
 
