@@ -1088,9 +1088,13 @@ watch(queue, function (enabled) {
   <Teleport to="body">
     <div class="lg:hidden fixed inset-x-0 bottom-0 z-40 w-full bg-white/95 shadow-lg backdrop-blur">
       <ActionsFooter
+        :queue-enabled="queue"
+        :queue-paused="queuePaused"
         @push="push()"
         @push-burst="pushBurst"
         @update-last="updateLast"
+        @pause-queue="pauseQueueProcessing"
+        @resume-queue="resumeQueueProcessing"
         @dismiss-all="toast.dismissAll"
         @reset="resetToDefaults"
       />

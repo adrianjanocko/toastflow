@@ -6,7 +6,7 @@ import Card from '@/components/card/Card.vue';
 import SectionHeading from '@/components/SectionHeading.vue';
 import CardLayout from '@/components/card/CardLayout.vue';
 
-const props = defineProps<{
+defineProps<{
   useOnMount: boolean;
   useOnUnmount: boolean;
   useOnClick: boolean;
@@ -81,7 +81,7 @@ const emit = defineEmits<{
 
     <div>
       <SectionHeading text="Content" />
-      <CardLayout>
+      <CardLayout grid>
         <InputField
           label="Title"
           :model-value="title"

@@ -87,7 +87,7 @@ function openMore(targetId = 'more-info', offsetPx = 20) {
       id="main-content"
       class="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col gap-14 px-4 py-8"
     >
-      <header class="flex items-center justify-between">
+      <header class="flex flex-col sm:flex-row gap-2 items-center justify-between">
         <div class="flex items-center gap-2">
           <h1 class="text-lg font-semibold tracking-tight text-slate-900">Toastflow</h1>
           <span
@@ -156,7 +156,6 @@ function openMore(targetId = 'more-info', offsetPx = 20) {
           <div class="flex justify-center">
             <Button
               variant="primary"
-              class="w-full md:w-auto"
               :aria-expanded="showMore"
               aria-controls="more-info"
               @click="showMore ? (showMore = false) : openMore()"

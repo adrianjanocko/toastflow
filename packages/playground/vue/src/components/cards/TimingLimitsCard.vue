@@ -5,7 +5,7 @@ import SectionHeading from '@/components/SectionHeading.vue';
 import Card from '@/components/card/Card.vue';
 import CardLayout from '@/components/card/CardLayout.vue';
 
-const props = defineProps<{
+defineProps<{
   duration: number;
   maxVisible: number;
   offset: string;
@@ -54,7 +54,7 @@ const maxVisibleOptions = [0, 1, 2, 3, 5, 10];
 
     <div>
       <SectionHeading text="Layout (global)" />
-      <CardLayout>
+      <CardLayout grid>
         <InputField
           label="Offset"
           :model-value="offset"

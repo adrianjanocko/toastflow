@@ -124,6 +124,7 @@ const relAttr = computed(function () {
     :href="props.href"
     :target="props.target"
     :rel="relAttr"
+    class="btn"
     :class="[baseClass, sizeClass, shapeClass, variantClass, newBadgeClass]"
     :title="props.tooltip || undefined"
     :aria-label="ariaLabelAttr"

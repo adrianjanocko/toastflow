@@ -69,3 +69,11 @@ function toggleQueue() {
     </div>
   </div>
 </template>
+
+<style scoped>
+@reference "tailwindcss";
+
+:deep(.btn) {
+  @apply text-sm sm:text-[0.8rem];
+}
+</style>

@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Settings } from 'lucide-vue-next';
-import type {
-  PauseStrategy,
-  ToastButtonsAlignment,
-  ToastButtonsLayout,
-  ToastOrder,
-} from 'toastflow-core';
+import type { PauseStrategy, ToastButtonsAlignment, ToastButtonsLayout, ToastOrder, } from 'toastflow-core';
 
 import Button from '../Button.vue';
 import Modal from '../Modal.vue';
@@ -100,7 +95,7 @@ function emitButtonUpdate(id: string, updates: Partial<PlaygroundButton>) {
   <Card>
     <div>
       <SectionHeading text="Behavior" />
-      <CardLayout>
+      <CardLayout grid>
         <Button
           variant="toggle"
           :model-value="preventDuplicates"
