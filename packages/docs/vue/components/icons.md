@@ -19,14 +19,14 @@ outline: deep
 
 ## Default Type Mapping
 
-| Toast type | Default icon |
-| --- | --- |
-| `loading` | `ArrowPath` |
-| `default` | `QuestionMarkCircle` |
-| `success` | `CheckCircle` |
-| `error` | `XCircle` |
-| `warning` | `Bell` |
-| `info` | `InfoCircle` |
+| Toast type | Default icon         |
+| ---------- | -------------------- |
+| `loading`  | `ArrowPath`          |
+| `default`  | `QuestionMarkCircle` |
+| `success`  | `CheckCircle`        |
+| `error`    | `XCircle`            |
+| `warning`  | `Bell`               |
+| `info`     | `InfoCircle`         |
 
 ## Replace Icons
 

@@ -67,6 +67,7 @@ const defaults: ToastConfig = {
   },
   closeButton: true,
   closeOnClick: false,
+  swipeToDismiss: false,
   supportHtml: false,
   showCreatedAt: false,
   createdAtFormatter: defaultCreatedAtFormatter,
@@ -915,6 +916,7 @@ function resolveConfig(
     title,
     description,
     animation: animationOverride,
+    buttons: buttonsOverride,
     ...restOverrides
   } = overrides as Partial<ToastOptions>;
 
@@ -923,10 +925,19 @@ function resolveConfig(
     ...(animationOverride ?? {}),
   };
 
+  const buttons =
+    base.buttons || buttonsOverride
+      ? {
+          ...(base.buttons ?? {}),
+          ...(buttonsOverride ?? {}),
+        }
+      : undefined;
+
   return {
     ...base,
     ...restOverrides,
     animation,
+    buttons,
     type: type ?? "default",
     title: title ?? "",
     description: description ?? "",

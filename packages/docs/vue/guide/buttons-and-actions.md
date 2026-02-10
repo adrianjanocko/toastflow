@@ -55,9 +55,9 @@ type ToastButtonsAlignment =
 
 `ToastButtonsConfig` fields:
 
-- `alignment`
+- `alignment` (optional, defaults to `"bottom-right"`)
 - `layout` (`"row"` default, or `"column"`)
-- `buttons`
+- `buttons` (optional, defaults to no buttons)
 - `gap` (optional, defaults to half toast gap)
 - `contentGap` (optional, defaults to half toast gap)
 
@@ -98,7 +98,8 @@ toast.info({
 ```
 
 - `layout: "row"` keeps the current side-by-side action flow.
-- `layout: "column"` places the action group in column flow (top/bottom for `top-*`/`bottom-*`, side for `center-*`), while buttons stay side-by-side.
+- `layout: "column"` places the action group in column flow (top/bottom for `top-*`/`bottom-*`, side for `center-*`),
+  while buttons stay side-by-side.
 
 ## Close Interactions
 
@@ -138,7 +139,7 @@ toast.default({
 });
 ```
 
-If formatter throws, the Vue renderer catches it and falls back to empty string for display.
+If formatter throws (or is missing), the Vue renderer falls back to the default time formatter.
 
 ::: tip Reference
 Toast payload fields including `showCreatedAt` and formatter behavior: [Toasts](/guide/toasts).

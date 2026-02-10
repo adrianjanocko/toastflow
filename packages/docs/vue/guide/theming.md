@@ -89,15 +89,15 @@ Runtime behavior around duplicate/update transitions: [Events](/api/events).
 
 ## Important Token Groups
 
-| Group | Examples |
-| --- | --- |
-| Layout | `--tf-toast-padding`, `--tf-toast-gap`, `--tf-toast-border-radius` |
-| Stack | `--tf-toast-stack-padding-top`, `--tf-toast-stack-padding-right` |
-| Typography | `--tf-toast-title-font-size`, `--tf-toast-description-line-height` |
-| Close button | `--tf-toast-close-size`, `--tf-toast-close-icon-size` |
-| Action buttons | `--tf-toast-button-*` |
-| Progress | `--tf-toast-progress-height`, `--tf-toast-progress-duration` |
-| Motion | `--tf-toast-animation-in-duration`, `--tf-toast-animation-out-duration` |
+| Group          | Examples                                                                |
+| -------------- | ----------------------------------------------------------------------- |
+| Layout         | `--tf-toast-padding`, `--tf-toast-gap`, `--tf-toast-border-radius`      |
+| Stack          | `--tf-toast-stack-padding-top`, `--tf-toast-stack-padding-right`        |
+| Typography     | `--tf-toast-title-font-size`, `--tf-toast-description-line-height`      |
+| Close button   | `--tf-toast-close-size`, `--tf-toast-close-icon-size`                   |
+| Action buttons | `--tf-toast-button-*`                                                   |
+| Progress       | `--tf-toast-progress-height`, `--tf-toast-progress-duration`            |
+| Motion         | `--tf-toast-animation-in-duration`, `--tf-toast-animation-out-duration` |
 
 ## HTML Support
 

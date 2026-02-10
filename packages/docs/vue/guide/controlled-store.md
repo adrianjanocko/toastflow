@@ -55,7 +55,7 @@ State structure and lifecycle fields used by custom renderers: [State](/api/stat
     dismiss,
     bumpAnimationClass,
     clearAllAnimationClass,
-    updateAnimationClass
+    updateAnimationClass,
   }"
 >
   <div

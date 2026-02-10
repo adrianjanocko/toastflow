@@ -21,4 +21,3 @@ Framework-agnostic toast engine with a Vue 3 renderer
 ## 📄 License
 
 MIT - see [LICENSE](LICENSE)
-

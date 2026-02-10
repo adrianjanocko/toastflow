@@ -34,4 +34,3 @@ store.dismiss(id);
 ## 📄 License
 
 MIT
-

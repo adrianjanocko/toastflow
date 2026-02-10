@@ -26,11 +26,11 @@ off();
 
 ## Event Kinds
 
-| Kind | Emitted when |
-| --- | --- |
-| `duplicate` | `show(...)` found an existing matching toast while `preventDuplicates: true` |
+| Kind          | Emitted when                                                                                         |
+| ------------- | ---------------------------------------------------------------------------------------------------- |
+| `duplicate`   | `show(...)` found an existing matching toast while `preventDuplicates: true`                         |
 | `timer-reset` | visible toast timer was reset (`update` on visible toast, or `resume` with `pauseStrategy: "reset"`) |
-| `update` | `update(id, options)` succeeded |
+| `update`      | `update(id, options)` succeeded                                                                      |
 
 ## Important Behavior Notes
 

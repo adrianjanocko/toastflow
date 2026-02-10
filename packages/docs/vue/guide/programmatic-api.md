@@ -108,10 +108,14 @@ import { toast } from "vue-toastflow";
 
 export async function saveSettings(payload: unknown) {
   return toast.loading(
-    () => fetch("/api/settings", { method: "POST", body: JSON.stringify(payload) }),
+    () =>
+      fetch("/api/settings", { method: "POST", body: JSON.stringify(payload) }),
     {
       loading: { title: "Saving settings" },
-      success: { title: "Settings saved", description: "Everything is up to date" },
+      success: {
+        title: "Settings saved",
+        description: "Everything is up to date",
+      },
       error: (err) => ({
         title: "Save failed",
         description: err instanceof Error ? err.message : "Unknown error",

@@ -13,16 +13,16 @@ When you provide default slot content to `<ToastContainer>`, you switch to headl
 
 Slot props:
 
-| Prop | Type | Meaning |
-| --- | --- | --- |
-| `toast` | `ToastInstance` | Current toast item |
-| `progressResetKey` | `number` | Changes when timer/progress should restart |
-| `duplicateKey` | `number` | Changes when duplicate event is emitted |
-| `updateKey` | `number` | Changes when update event is emitted |
-| `bumpAnimationClass` | `string` | Class name for duplicate bump animation |
-| `clearAllAnimationClass` | `string` | Class name for clear-all animation |
-| `updateAnimationClass` | `string` | Class name for update animation |
-| `dismiss` | `(id: ToastId) => void` | Dismiss helper |
+| Prop                     | Type                    | Meaning                                    |
+| ------------------------ | ----------------------- | ------------------------------------------ |
+| `toast`                  | `ToastInstance`         | Current toast item                         |
+| `progressResetKey`       | `number`                | Changes when timer/progress should restart |
+| `duplicateKey`           | `number`                | Changes when duplicate event is emitted    |
+| `updateKey`              | `number`                | Changes when update event is emitted       |
+| `bumpAnimationClass`     | `string`                | Class name for duplicate bump animation    |
+| `clearAllAnimationClass` | `string`                | Class name for clear-all animation         |
+| `updateAnimationClass`   | `string`                | Class name for update animation            |
+| `dismiss`                | `(id: ToastId) => void` | Dismiss helper                             |
 
 Example:
 
@@ -40,13 +40,13 @@ Example:
 
 `<Toast />` exposes named slots for local customization.
 
-| Slot | Slot props | Purpose |
-| --- | --- | --- |
-| `default` | `{ toast }` | Add extra content inside body |
-| `icon` | `{ toast }` | Replace default icon component |
-| `progress` | `{ toast }` | Replace progress renderer |
+| Slot         | Slot props             | Purpose                        |
+| ------------ | ---------------------- | ------------------------------ |
+| `default`    | `{ toast }`            | Add extra content inside body  |
+| `icon`       | `{ toast }`            | Replace default icon component |
+| `progress`   | `{ toast }`            | Replace progress renderer      |
 | `created-at` | `{ toast, formatted }` | Customize created-at rendering |
-| `close-icon` | `{ toast }` | Replace close button icon |
+| `close-icon` | `{ toast }`            | Replace close button icon      |
 
 ## `Toast` Event
 

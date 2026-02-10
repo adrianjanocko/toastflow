@@ -9,10 +9,10 @@ outline: deep
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `type` | `ToastType` | required | Type-based style context |
-| `progressAlignment` | `"left-to-right" \| "right-to-left"` | `"right-to-left"` | Progress direction |
+| Prop                | Type                                 | Default           | Description              |
+| ------------------- | ------------------------------------ | ----------------- | ------------------------ |
+| `type`              | `ToastType`                          | required          | Type-based style context |
+| `progressAlignment` | `"left-to-right" \| "right-to-left"` | `"right-to-left"` | Progress direction       |
 
 ## Behavior
 

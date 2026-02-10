@@ -124,8 +124,9 @@ function stackConfig(position: ToastPosition): ToastConfig {
 
 function stackStyle(position: ToastPosition): Record<string, string> {
   const { offset, width } = stackConfig(position);
+  const responsiveMaxWidth = `calc(100vw - (${offset}) - (${offset}))`;
   // Lock the stack width, so it doesn't collapse when leaving items get absolute-positioned
-  const style: Record<string, string> = { width, maxWidth: "100%" };
+  const style: Record<string, string> = { width, maxWidth: responsiveMaxWidth };
 
   if (position.startsWith("top-")) {
     style.top = offset;

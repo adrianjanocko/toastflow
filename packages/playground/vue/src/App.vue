@@ -350,4 +350,3 @@ function openMore(targetId = 'more-info', offsetPx = 20) {
   --tf-toast-icon-success: #f1c46b;
 }
 </style>
-

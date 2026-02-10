@@ -46,12 +46,12 @@ Render one container near app root.
 ```vue
 <!-- App.vue -->
 <template>
-  <ToastContainer/>
-  <RouterView/>
+  <ToastContainer />
+  <RouterView />
 </template>
 
 <script setup lang="ts">
-  import { ToastContainer } from "vue-toastflow";
+import { ToastContainer } from "vue-toastflow";
 </script>
 ```
 

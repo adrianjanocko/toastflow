@@ -78,11 +78,10 @@ Used by lifecycle hooks and action buttons.
 ```ts
 type ToastStandaloneInstance = {
   id?: string;
-  title: string;
-  description: string;
   type?: ToastType;
   createdAt?: number;
-} & Partial<...ToastInstanceFields>;
+} & ToastTextInput &
+  Partial<...ToastInstanceFields>;
 ```
 
 If fields are missing, Toast component applies safe defaults from store config.

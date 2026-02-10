@@ -30,10 +30,10 @@ Toastflow is a toast notification system with a typed core (`toastflow-core`) an
 
 ## 📦 Package Overview
 
-| Package | What it gives you |
-| --- | --- |
-| `toastflow-core` | `createToastStore`, all core types, loading helper, state subscriptions, event subscriptions |
-| `vue-toastflow` | `createToastflow`, `toast` helper, `<ToastContainer />`, `<Toast />`, `<ToastProgress />`, icon components, default CSS |
+| Package          | What it gives you                                                                                                       |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `toastflow-core` | `createToastStore`, all core types, loading helper, state subscriptions, event subscriptions                            |
+| `vue-toastflow`  | `createToastflow`, `toast` helper, `<ToastContainer />`, `<Toast />`, `<ToastProgress />`, icon components, default CSS |
 
 ## 🔍 Runtime Model
 

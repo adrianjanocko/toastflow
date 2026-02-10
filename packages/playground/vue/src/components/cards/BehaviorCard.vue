@@ -22,6 +22,7 @@ defineProps<{
   pauseOnHover: boolean;
   closeButton: boolean;
   closeOnClick: boolean;
+  swipeToDismiss: boolean;
   supportHtml: boolean;
   showCreatedAt: boolean;
   queue: boolean;
@@ -42,6 +43,7 @@ const emit = defineEmits<{
   'update:pauseOnHover': [boolean];
   'update:closeButton': [boolean];
   'update:closeOnClick': [boolean];
+  'update:swipeToDismiss': [boolean];
   'update:supportHtml': [boolean];
   'update:showCreatedAt': [boolean];
   'update:queue': [boolean];
@@ -142,6 +144,16 @@ function emitButtonUpdate(id: string, updates: Partial<PlaygroundButton>) {
           @update:model-value="emit('update:closeOnClick', $event)"
         >
           <span>Close on click</span>
+        </Button>
+
+        <Button
+          variant="toggle"
+          :model-value="swipeToDismiss"
+          tooltip="Swipe to dismiss"
+          @update:model-value="emit('update:swipeToDismiss', $event)"
+          is-new
+        >
+          <span>Swipe to dismiss</span>
         </Button>
 
         <Button

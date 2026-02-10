@@ -1,6 +1,14 @@
 ﻿<script setup lang="ts">
 import type { Ref } from "vue";
-import { computed, type CSSProperties, inject, ref, toRefs, watch } from "vue";
+import {
+  computed,
+  type CSSProperties,
+  inject,
+  onUnmounted,
+  ref,
+  toRefs,
+  watch,
+} from "vue";
 import ToastProgress from "./ToastProgress.vue";
 import ToastButtonsGroup from "./ToastButtonsGroup.vue";
 import type {
@@ -51,6 +59,33 @@ const emit = defineEmits<{
 const injectedStore = inject<ToastStore | null>(toastStoreKey, null);
 const store: ToastStore = injectedStore ?? getToastStore();
 
+const VALID_TOAST_TYPES = new Set<ToastType>([
+  "loading",
+  "default",
+  "success",
+  "error",
+  "info",
+  "warning",
+]);
+
+function resolveToastType(value: unknown): ToastType {
+  if (typeof value === "string" && VALID_TOAST_TYPES.has(value as ToastType)) {
+    return value as ToastType;
+  }
+  return "default";
+}
+
+function defaultCreatedAtFormatter(createdAt: number): string {
+  try {
+    return new Date(createdAt).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  } catch {
+    return new Date(createdAt).toISOString();
+  }
+}
+
 const toast = computed<ToastInstance>(function () {
   const createdAt = isNumberFinite(toastProp.value.createdAt)
     ? toastProp.value.createdAt
@@ -62,9 +97,9 @@ const toast = computed<ToastInstance>(function () {
     ...toastProp.value,
     createdAt,
     id: toastProp.value.id ?? `toast-${createdAt}`,
-    type: toastProp.value.type ?? "default",
-    title: toastProp.value.title,
-    description: toastProp.value.description,
+    type: resolveToastType(toastProp.value.type),
+    title: toastProp.value.title ?? "",
+    description: toastProp.value.description ?? "",
     progressBar: toastProp.value.progressBar ?? false,
     duration: toastProp.value.duration ?? Infinity,
   } as ToastInstance;
@@ -118,6 +153,11 @@ const typeMeta: Record<
 };
 
 const assertiveTypes = new Set<ToastType>(["error", "warning"]);
+const SWIPE_START_DISTANCE = 8;
+const SWIPE_DISMISS_THRESHOLD_RATIO = 0.35;
+const SWIPE_DISMISS_THRESHOLD_MIN = 96;
+const SWIPE_SNAP_DURATION = 160;
+const SWIPE_DISMISS_DURATION = 140;
 
 const {
   accentClass,
@@ -142,10 +182,23 @@ const {
   isHovered,
   handleMouseEnter,
   handleMouseLeave,
-  handlePointerDown,
-  handlePointerUp,
+  handlePointerDown: handlePausePointerDown,
+  handlePointerUp: handlePausePointerUp,
 } = useHoverPause(toast, store, duration);
-const { handleClick, handleCloseClick } = useClickHandlers(toast, emit);
+const {
+  isSwipeEnabled,
+  swipeStyle,
+  handlePointerDown: handleSwipePointerDown,
+  handlePointerMove: handleSwipePointerMove,
+  handlePointerUp: handleSwipePointerUp,
+  handlePointerCancel: handleSwipePointerCancel,
+  consumeSuppressedClick,
+} = useSwipeDismiss(toast, emit);
+const { handleClick, handleCloseClick } = useClickHandlers(
+  toast,
+  emit,
+  consumeSuppressedClick,
+);
 const {
   hasButtons,
   buttons,
@@ -154,6 +207,31 @@ const {
   buttonsVarsStyle,
   handleButtonClick,
 } = useButtons(toast);
+
+const toastStyle = computed<CSSProperties>(function () {
+  return {
+    ...buttonsVarsStyle.value,
+  };
+});
+
+function handlePointerDown(event: PointerEvent) {
+  handlePausePointerDown(event);
+  handleSwipePointerDown(event);
+}
+
+function handlePointerMove(event: PointerEvent) {
+  handleSwipePointerMove(event);
+}
+
+function handlePointerUp(event: PointerEvent) {
+  handleSwipePointerUp(event);
+  handlePausePointerUp(event);
+}
+
+function handlePointerCancel(event: PointerEvent) {
+  handleSwipePointerCancel(event);
+  handlePausePointerUp(event);
+}
 
 const showMetaLeft = computed(function () {
   return hasButtons.value && buttonsPlacement.value === "left";
@@ -233,8 +311,14 @@ function useAria(toast: Ref<ToastInstance>) {
       return "";
     }
 
+    const formatter = toast.value.createdAtFormatter;
+
+    if (typeof formatter !== "function") {
+      return defaultCreatedAtFormatter(toast.value.createdAt);
+    }
+
     try {
-      return toast.value.createdAtFormatter(toast.value.createdAt);
+      return formatter(toast.value.createdAt);
     } catch (error) {
       console.error(
         "[vue-toastflow] Something failed in createdAtFormatter",
@@ -242,7 +326,7 @@ function useAria(toast: Ref<ToastInstance>) {
       );
     }
 
-    return "";
+    return defaultCreatedAtFormatter(toast.value.createdAt);
   });
 
   const createdAtAriaLabel = computed(function () {
@@ -465,11 +549,250 @@ function useHoverPause(
   };
 }
 
-function useClickHandlers(
+function useSwipeDismiss(
   toast: Ref<ToastInstance>,
   emit: (e: "dismiss", id: ToastId) => void,
 ) {
+  const isSwipeEnabled = computed(function () {
+    return Boolean(toast.value.swipeToDismiss);
+  });
+  const swipeOffsetX = ref(0);
+  const swipeOpacity = ref(1);
+  const isDragging = ref(false);
+  const suppressClick = ref(false);
+  const activePointerId = ref<number | null>(null);
+  const startX = ref(0);
+  const startY = ref(0);
+  const toastWidth = ref(0);
+  const axisLocked = ref(false);
+  const blockedByDirection = ref(false);
+  const hasMoved = ref(false);
+
+  let dismissTimer: ReturnType<typeof setTimeout> | null = null;
+
+  const swipeStyle = computed<CSSProperties>(function () {
+    if (
+      !isSwipeEnabled.value &&
+      swipeOffsetX.value === 0 &&
+      swipeOpacity.value === 1
+    ) {
+      return {};
+    }
+
+    return {
+      transform: `translate3d(${swipeOffsetX.value}px, 0, 0)`,
+      opacity: swipeOpacity.value,
+      transition: isDragging.value
+        ? "none"
+        : `transform ${SWIPE_SNAP_DURATION}ms ease, opacity ${SWIPE_SNAP_DURATION}ms ease`,
+    };
+  });
+
+  function clearTimers() {
+    if (dismissTimer) {
+      clearTimeout(dismissTimer);
+      dismissTimer = null;
+    }
+  }
+
+  function resetPointerState() {
+    activePointerId.value = null;
+    axisLocked.value = false;
+    blockedByDirection.value = false;
+    hasMoved.value = false;
+    toastWidth.value = 0;
+  }
+
+  function restorePosition() {
+    isDragging.value = false;
+
+    if (swipeOffsetX.value === 0 && swipeOpacity.value === 1) {
+      return;
+    }
+
+    swipeOffsetX.value = 0;
+    swipeOpacity.value = 1;
+  }
+
+  function pointerMatches(event: PointerEvent): boolean {
+    return (
+      activePointerId.value !== null &&
+      activePointerId.value === event.pointerId
+    );
+  }
+
+  function releaseCapture(event: PointerEvent) {
+    const element = event.currentTarget as HTMLElement | null;
+    if (!element?.releasePointerCapture) {
+      return;
+    }
+
+    try {
+      element.releasePointerCapture(event.pointerId);
+    } catch {}
+  }
+
+  function shouldStart(event: PointerEvent): boolean {
+    if (!isSwipeEnabled.value) {
+      return false;
+    }
+    if (event.button !== undefined && event.button !== 0) {
+      return false;
+    }
+    return !isInteractiveTarget(event.target);
+  }
+
+  function handlePointerDown(event: PointerEvent) {
+    if (!shouldStart(event)) {
+      return;
+    }
+
+    clearTimers();
+    suppressClick.value = false;
+    isDragging.value = false;
+    activePointerId.value = event.pointerId;
+    startX.value = event.clientX;
+    startY.value = event.clientY;
+
+    const element = event.currentTarget as HTMLElement | null;
+    toastWidth.value = element?.getBoundingClientRect().width ?? 0;
+
+    if (element?.setPointerCapture) {
+      try {
+        element.setPointerCapture(event.pointerId);
+      } catch {}
+    }
+  }
+
+  function handlePointerMove(event: PointerEvent) {
+    if (!pointerMatches(event) || blockedByDirection.value) {
+      return;
+    }
+
+    const deltaX = event.clientX - startX.value;
+    const deltaY = event.clientY - startY.value;
+    const absX = Math.abs(deltaX);
+    const absY = Math.abs(deltaY);
+
+    if (!axisLocked.value) {
+      if (absX < SWIPE_START_DISTANCE && absY < SWIPE_START_DISTANCE) {
+        return;
+      }
+
+      if (deltaX <= 0 || absY > absX) {
+        blockedByDirection.value = true;
+        restorePosition();
+        return;
+      }
+
+      axisLocked.value = true;
+    }
+
+    event.preventDefault();
+    isDragging.value = true;
+    hasMoved.value = true;
+
+    const nextOffset = Math.max(0, deltaX);
+    const width = toastWidth.value > 0 ? toastWidth.value : 1;
+    const progress = Math.min(nextOffset / width, 1);
+
+    swipeOffsetX.value = nextOffset;
+    swipeOpacity.value = Math.max(1 - progress * 0.85, 0.15);
+  }
+
+  function handlePointerUp(event: PointerEvent) {
+    if (!pointerMatches(event)) {
+      return;
+    }
+
+    releaseCapture(event);
+
+    if (!axisLocked.value || blockedByDirection.value || !hasMoved.value) {
+      restorePosition();
+      resetPointerState();
+      return;
+    }
+
+    const width = toastWidth.value > 0 ? toastWidth.value : 1;
+    const threshold = Math.max(
+      width * SWIPE_DISMISS_THRESHOLD_RATIO,
+      SWIPE_DISMISS_THRESHOLD_MIN,
+    );
+
+    if (swipeOffsetX.value >= threshold) {
+      isDragging.value = false;
+      suppressClick.value = true;
+      swipeOffsetX.value = width + 24;
+      swipeOpacity.value = 0;
+
+      dismissTimer = setTimeout(function () {
+        emit("dismiss", toast.value.id);
+        dismissTimer = null;
+      }, SWIPE_DISMISS_DURATION);
+    } else {
+      if (swipeOffsetX.value > SWIPE_START_DISTANCE) {
+        suppressClick.value = true;
+      }
+      restorePosition();
+    }
+
+    resetPointerState();
+  }
+
+  function handlePointerCancel(event: PointerEvent) {
+    if (!pointerMatches(event)) {
+      return;
+    }
+
+    releaseCapture(event);
+    restorePosition();
+    resetPointerState();
+  }
+
+  function consumeSuppressedClick(): boolean {
+    if (!suppressClick.value) {
+      return false;
+    }
+
+    suppressClick.value = false;
+    return true;
+  }
+
+  watch(isSwipeEnabled, function (enabled) {
+    if (enabled) {
+      return;
+    }
+
+    clearTimers();
+    restorePosition();
+    resetPointerState();
+  });
+
+  onUnmounted(function () {
+    clearTimers();
+  });
+
+  return {
+    isSwipeEnabled,
+    swipeStyle,
+    handlePointerDown,
+    handlePointerMove,
+    handlePointerUp,
+    handlePointerCancel,
+    consumeSuppressedClick,
+  };
+}
+
+function useClickHandlers(
+  toast: Ref<ToastInstance>,
+  emit: (e: "dismiss", id: ToastId) => void,
+  shouldIgnoreClick?: () => boolean,
+) {
   function handleClick(event: MouseEvent) {
+    if (shouldIgnoreClick && shouldIgnoreClick()) {
+      return;
+    }
+
     const context = toToastContext(toast.value);
 
     if (toast.value.onClick) {
@@ -623,6 +946,18 @@ function useButtons(toast: Ref<ToastInstance>) {
 
 // -> Helpers
 
+function isInteractiveTarget(target: EventTarget | null): boolean {
+  if (!(target instanceof Element)) {
+    return false;
+  }
+
+  return Boolean(
+    target.closest(
+      "button, a, input, textarea, select, option, [role='button'], [contenteditable='true']",
+    ),
+  );
+}
+
 function toToastContext(toast: ToastInstance): ToastContext {
   return {
     id: toast.id,
@@ -660,7 +995,12 @@ function stripHtmlToText(value: string): string {
 </script>
 
 <template>
-  <div :role="role" :aria-live="ariaLive" class="tf-toast-wrapper">
+  <div
+    :role="role"
+    :aria-live="ariaLive"
+    class="tf-toast-wrapper"
+    :style="swipeStyle"
+  >
     <div
       class="tf-toast"
       :aria-label="toastAriaLabel || undefined"
@@ -676,18 +1016,23 @@ function stripHtmlToText(value: string): string {
           updateAnimationClass,
         toast.phase === 'clear-all' && clearAllAnimationClass,
         isHovered && 'tf-toast--paused',
+        isSwipeEnabled && 'tf-toast--swipe-enabled',
       ]"
       :data-align="toast.alignment"
-      :style="buttonsVarsStyle"
+      :style="toastStyle"
       @click="handleClick"
       @mouseenter="handleMouseEnter"
       @mouseleave="handleMouseLeave"
       @pointerdown="handlePointerDown"
+      @pointermove="handlePointerMove"
       @pointerup="handlePointerUp"
-      @pointercancel="handlePointerUp"
+      @pointercancel="handlePointerCancel"
     >
       <div class="tf-toast-surface">
-        <div v-if="showMetaTop" class="tf-toast-meta-row tf-toast-meta-row--top">
+        <div
+          v-if="showMetaTop"
+          class="tf-toast-meta-row tf-toast-meta-row--top"
+        >
           <ToastButtonsGroup
             :buttons="buttons"
             :classes="buttonsClasses"
@@ -867,6 +1212,17 @@ function stripHtmlToText(value: string): string {
   --tf-toast-created-at-color: var(--tf-toast-description-color);
   --tf-toast-created-at-border-color: var(--tf-toast-border-color);
   --tf-toast-created-at-bg: var(--tf-toast-bg);
+}
+
+.tf-toast--swipe-enabled {
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: grab;
+}
+
+.tf-toast--swipe-enabled:active {
+  cursor: grabbing;
 }
 
 .tf-toast[data-align="right"] .tf-toast-main-content {

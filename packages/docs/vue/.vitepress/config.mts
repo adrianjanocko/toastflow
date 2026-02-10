@@ -26,7 +26,10 @@ function readPackageVersion(
       const packageJsonRaw = readFileSync(packageJsonPath, "utf8");
       const packageJson = JSON.parse(packageJsonRaw) as PackageJson;
 
-      if (typeof packageJson.version === "string" && packageJson.version.trim()) {
+      if (
+        typeof packageJson.version === "string" &&
+        packageJson.version.trim()
+      ) {
         return packageJson.version;
       }
     } catch (error) {

@@ -103,22 +103,19 @@ Queue-related methods and signatures: [Actions](/api/actions).
 `loading` wraps async work and updates the same toast id.
 
 ```ts
-const result = toast.loading(
-  () => fetch("/api/import").then((r) => r.json()),
-  {
-    loading: { title: "Importing", description: "Processing file" },
-    success: (data) => ({
-      title: "Import complete",
-      description: `${data.count} records saved`,
-      duration: 6000,
-    }),
-    error: (error) => ({
-      title: "Import failed",
-      description: error instanceof Error ? error.message : "Unknown error",
-      duration: 10000,
-    }),
-  },
-);
+const result = toast.loading(() => fetch("/api/import").then((r) => r.json()), {
+  loading: { title: "Importing", description: "Processing file" },
+  success: (data) => ({
+    title: "Import complete",
+    description: `${data.count} records saved`,
+    duration: 6000,
+  }),
+  error: (error) => ({
+    title: "Import failed",
+    description: error instanceof Error ? error.message : "Unknown error",
+    duration: 10000,
+  }),
+});
 
 await result;
 console.log(result.toastId);

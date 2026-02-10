@@ -11,20 +11,20 @@ It is used internally by `<ToastContainer />`, but can also be used standalone.
 
 ## Props
 
-| Prop | Type | Required | Description |
-| --- | --- | --- | --- |
-| `toast` | `ToastStandaloneInstance \| ToastInstance` | yes | Toast payload |
-| `progressResetKey` | `number` | no | Changes restart progress animation |
-| `duplicateKey` | `number` | no | Changes trigger bump animation |
-| `updateKey` | `number` | no | Changes trigger update animation |
-| `bumpAnimationClass` | `string` | no | Duplicate animation class |
-| `clearAllAnimationClass` | `string` | no | Clear-all animation class |
-| `updateAnimationClass` | `string` | no | Update animation class |
+| Prop                     | Type                                       | Required | Description                        |
+| ------------------------ | ------------------------------------------ | -------- | ---------------------------------- |
+| `toast`                  | `ToastStandaloneInstance \| ToastInstance` | yes      | Toast payload                      |
+| `progressResetKey`       | `number`                                   | no       | Changes restart progress animation |
+| `duplicateKey`           | `number`                                   | no       | Changes trigger bump animation     |
+| `updateKey`              | `number`                                   | no       | Changes trigger update animation   |
+| `bumpAnimationClass`     | `string`                                   | no       | Duplicate animation class          |
+| `clearAllAnimationClass` | `string`                                   | no       | Clear-all animation class          |
+| `updateAnimationClass`   | `string`                                   | no       | Update animation class             |
 
 ## Events
 
-| Event | Payload | Meaning |
-| --- | --- | --- |
+| Event     | Payload   | Meaning           |
+| --------- | --------- | ----------------- |
 | `dismiss` | `ToastId` | Request dismissal |
 
 ## Slot Support
@@ -60,6 +60,7 @@ When using `<Toast />` directly with partial data:
 - Body click calls `onClick` if provided.
 - If `closeOnClick` is true, body click also dismisses.
 - Hover or touch pause uses `pauseOnHover` and finite `duration`.
+- If `swipeToDismiss` is true, dragging/swiping right dismisses the toast with slide+fade feedback.
 
 ## Related
 

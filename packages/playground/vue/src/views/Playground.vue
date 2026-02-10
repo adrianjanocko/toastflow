@@ -83,6 +83,7 @@ const pauseStrategy = ref<PauseStrategy>(config.pauseStrategy);
 
 const closeButton = ref(config.closeButton);
 const closeOnClick = ref(config.closeOnClick);
+const swipeToDismiss = ref(config.swipeToDismiss);
 
 const supportHtml = ref(config.supportHtml);
 
@@ -336,6 +337,7 @@ const baseConfig = computed<Partial<ToastOptions>>(function () {
 
     closeButton: closeButton.value,
     closeOnClick: closeOnClick.value,
+    swipeToDismiss: swipeToDismiss.value,
 
     supportHtml: supportHtml.value,
 
@@ -488,6 +490,7 @@ function resetToDefaults() {
 
   closeButton.value = true;
   closeOnClick.value = false;
+  swipeToDismiss.value = false;
 
   supportHtml.value = false;
 
@@ -567,6 +570,7 @@ const shareableState = computed(function () {
     pauseStrategy: pauseStrategy.value,
     closeButton: closeButton.value,
     closeOnClick: closeOnClick.value,
+    swipeToDismiss: swipeToDismiss.value,
     supportHtml: supportHtml.value,
     showCreatedAt: showCreatedAt.value,
     enableButtons: enableButtons.value,
@@ -657,6 +661,7 @@ function hydrateFromQuery() {
 
   applyBoolean(closeButton, 'closeButton');
   applyBoolean(closeOnClick, 'closeOnClick');
+  applyBoolean(swipeToDismiss, 'swipeToDismiss');
 
   applyBoolean(supportHtml, 'supportHtml');
   applyBoolean(showCreatedAt, 'showCreatedAt');
@@ -854,6 +859,7 @@ function buildOptionsLines(content: { title: string; description: string }, toas
   add('pauseStrategy', pauseStrategy.value);
   add('closeButton', closeButton.value);
   add('closeOnClick', closeOnClick.value);
+  add('swipeToDismiss', swipeToDismiss.value);
   add('supportHtml', supportHtml.value);
   add('showCreatedAt', showCreatedAt.value);
 
@@ -1000,6 +1006,7 @@ watch(queue, function (enabled) {
         v-model:pauseOnHover="pauseOnHover"
         v-model:closeButton="closeButton"
         v-model:closeOnClick="closeOnClick"
+        v-model:swipeToDismiss="swipeToDismiss"
         v-model:supportHtml="supportHtml"
         v-model:showCreatedAt="showCreatedAt"
         v-model:enableButtons="enableButtons"

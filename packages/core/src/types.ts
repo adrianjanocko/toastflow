@@ -148,12 +148,18 @@ export interface ToastButtonHtml extends ToastButtonBase {
  * Button group configuration for a toast.
  */
 export interface ToastButtonsConfig {
-  alignment: ToastButtonsAlignment;
+  /**
+   * Placement of the button group around the toast content. (Default: "bottom-right")
+   */
+  alignment?: ToastButtonsAlignment;
   /**
    * Button stack direction. (Default: "row")
    */
   layout?: ToastButtonsLayout;
-  buttons: ToastButton[];
+  /**
+   * Buttons to render in the group. (Default: [])
+   */
+  buttons?: ToastButton[];
   /**
    * Gap between individual buttons. (Default: "calc(var(--tf-toast-gap) / 2)")
    */
@@ -252,6 +258,10 @@ export interface ToastConfig {
    * Allow closing a toast by clicking anywhere on it. (Default: false)
    */
   closeOnClick: boolean;
+  /**
+   * Allow dismissing a toast by swiping/dragging it to the right. (Default: false)
+   */
+  swipeToDismiss: boolean;
 
   /**
    * Optional action buttons rendered inside a toast.
@@ -365,13 +375,12 @@ export interface ToastInstance extends ToastOptions {
  */
 export type ToastStandaloneInstance = {
   id?: ToastId;
-  title: string;
-  description: string;
   type?: ToastType;
   createdAt?: number;
-} & Partial<
-  Omit<ToastInstance, "id" | "title" | "description" | "type" | "createdAt">
->;
+} & ToastTextInput &
+  Partial<
+    Omit<ToastInstance, "id" | "title" | "description" | "type" | "createdAt">
+  >;
 
 /**
  * Shape of the store's current state.

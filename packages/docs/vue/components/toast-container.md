@@ -52,6 +52,7 @@ This allows plugin-driven and global helper-driven setups.
 - Internal positions are fixed to all six anchors.
 - `overflowScroll` applies only to `top-*` positions in renderer.
 - Global root z-index follows highest visible toast z-index.
+- Stack width uses configured `width`, but is clamped responsively to `calc(100vw - offset - offset)` so toasts do not overflow narrow screens.
 - Stack-level visual config (`offset`, `gap`, etc.) is derived from first toast in each position when present.
 
 ## Transition Durations

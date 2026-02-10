@@ -9,17 +9,17 @@ Actions are the mutating methods on `ToastStore` and `toast` helper.
 
 ## Method Reference
 
-| Method | Purpose |
-| --- | --- |
-| `show(...)` | Create toast and return `ToastId` |
+| Method                   | Purpose                                                |
+| ------------------------ | ------------------------------------------------------ |
+| `show(...)`              | Create toast and return `ToastId`                      |
 | `loading(input, config)` | Bind async flow to loading/success/error toast updates |
-| `update(id, options)` | Patch existing toast and resolve config again |
-| `dismiss(id)` | Dismiss one toast |
-| `dismissAll()` | Dismiss all visible and queued toasts |
-| `pause(id)` | Pause timer for one toast |
-| `resume(id)` | Resume timer using `pauseStrategy` |
-| `pauseQueue()` | Pause queue processing globally |
-| `resumeQueue()` | Resume queue processing globally |
+| `update(id, options)`    | Patch existing toast and resolve config again          |
+| `dismiss(id)`            | Dismiss one toast                                      |
+| `dismissAll()`           | Dismiss all visible and queued toasts                  |
+| `pause(id)`              | Pause timer for one toast                              |
+| `resume(id)`             | Resume timer using `pauseStrategy`                     |
+| `pauseQueue()`           | Pause queue processing globally                        |
+| `resumeQueue()`          | Resume queue processing globally                       |
 
 ## `show` Signatures
 
