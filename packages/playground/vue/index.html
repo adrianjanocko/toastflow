@@ -1,86 +1,274 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="shortcut icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-title" content="Toastflow" />
-    <link rel="manifest" href="/site.webmanifest" />
-    <title>Toast Notifications Playground for Vue and Nuxt | Toastflow</title>
-    <meta
-      name="description"
-      content="Test Toastflow for Vue and Nuxt. Adjust positions, timing, animations, and behaviors in a live playground."
-    />
-    <meta
-      name="keywords"
-      content="vue toast, nuxt toast, toast notifications, toastflow, vue toast library, nuxt module, toast messages"
-    />
-    <meta name="robots" content="index,follow" />
-    <link rel="canonical" href="https://toastflow.top/" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-title" content="Toastflow" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <title>Toast Notifications Playground for Vue and Nuxt | Toastflow</title>
+  <meta
+    name="description"
+    content="Test Toastflow toast notifications for Vue 3 and Nuxt. Configure positions, timing, animations, and behaviors in an interactive live playground."
+  />
+  <meta
+    name="keywords"
+    content="vue toast, nuxt toast, toast notifications, toastflow, vue toast library, nuxt module, toast messages, vue 3 notifications, nuxt toast plugin"
+  />
+  <meta name="robots" content="index,follow" />
+  <link rel="canonical" href="https://toastflow.top/" />
+  <meta name="author" content="Adrián Janočko" />
 
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://toastflow.top/" />
-    <meta property="og:site_name" content="Toastflow" />
-    <meta property="og:title" content="Toast Notifications Playground for Vue and Nuxt | Toastflow" />
-    <meta
-      property="og:description"
-      content="Experiment with Toastflow in Vue and Nuxt. Tune positions, animations, and behaviors in real-time."
-    />
-    <meta
-      property="og:image"
-      content="https://raw.githubusercontent.com/adrianjanocko/toastflow/main/images/banner.png"
-    />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:url" content="https://toastflow.top/" />
+  <meta property="og:site_name" content="Toastflow" />
+  <meta property="og:title" content="Toast Notifications Playground for Vue and Nuxt | Toastflow" />
+  <meta
+    property="og:description"
+    content="Test Toastflow toast notifications for Vue 3 and Nuxt. Configure positions, timing, animations, and behaviors in an interactive live playground."
+  />
+  <meta
+    property="og:image"
+    content="https://raw.githubusercontent.com/adrianjanocko/toastflow/main/images/banner.png"
+  />
+  <meta property="og:image:width" content="1252" />
+  <meta property="og:image:height" content="679" />
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Toast Notifications Playground for Vue and Nuxt | Toastflow" />
-    <meta
-      name="twitter:description"
-      content="Experiment with Toastflow in Vue and Nuxt. Tune positions, animations, and behaviors in real-time."
-    />
-    <meta
-      name="twitter:image"
-      content="https://raw.githubusercontent.com/adrianjanocko/toastflow/main/images/banner.png"
-    />
-    <meta name="theme-color" content="#0ea5e9" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Toast Notifications Playground for Vue and Nuxt | Toastflow" />
+  <meta
+    name="twitter:description"
+    content="Test Toastflow toast notifications for Vue 3 and Nuxt. Configure positions, timing, animations, and behaviors in an interactive live playground."
+  />
+  <meta
+    name="twitter:image"
+    content="https://raw.githubusercontent.com/adrianjanocko/toastflow/main/images/banner.png"
+  />
+  <meta name="theme-color" content="#0ea5e9" />
 
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "Toastflow Toast Playground for Vue and Nuxt",
-        "applicationCategory": "DeveloperApplication",
-        "operatingSystem": "Web",
-        "url": "https://toastflow.top/",
-        "image": "https://raw.githubusercontent.com/adrianjanocko/toastflow/main/images/banner.png",
-        "description": "Live playground for testing Toastflow in Vue and Nuxt.",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-        }
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Toastflow",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web",
+      "url": "https://toastflow.top/",
+      "image": "https://raw.githubusercontent.com/adrianjanocko/toastflow/main/images/banner.png",
+      "description": "Accessible, customizable toast notification library for Vue 3 and Nuxt with CSS-first theming, queue management, and headless mode.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "Adrian Janočko",
+        "url": "https://www.linkedin.com/in/adrianjanocko"
       }
-    </script>
+    }
+  </script>
 
-    <!-- INTER FONT -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
-      rel="stylesheet"
-    />
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Toastflow",
+      "url": "https://toastflow.top/",
+      "logo": "https://raw.githubusercontent.com/adrianjanocko/toastflow/main/images/banner.png",
+      "sameAs": [
+        "https://github.com/adrianjanocko/toastflow",
+        "https://www.npmjs.com/package/vue-toastflow",
+        "https://www.npmjs.com/package/nuxt-toastflow"
+      ]
+    }
+  </script>
 
-    <!-- UMAMI ANALYTICS -->
-    <script
-      defer
-      src="https://cloud.umami.is/script.js"
-      data-website-id="%VITE_UMAMI_WEBSITE_ID%"
-    ></script>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="./src/main.ts"></script>
-  </body>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is Toastflow accessible?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Toasts use alert/status live regions, ARIA labels, a built-in pause-on-hover, and a prefers-reduced-motion media query to keep animations gentle."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Toastflow support SSR?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The core store is isomorphic, the Vue renderer defers DOM access until mounted, and the Nuxt module works out of the box with SSR."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use Toastflow outside Vue components?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Install the plugin once, then call toast methods from stores or services. In Nuxt, use nuxt-toastflow and call auto-imported toast or useToast(). For non-Vue apps, use the headless toastflow-core store and render your own UI."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I style Toastflow to match my brand?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Override CSS variables or animation class names, pass a theme or animation override, or use the headless slot to ship a fully custom card with the same store logic."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I log or react to toast events?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Subscribe to toast.subscribe for state changes or toast.subscribeEvents for duplicate/update/timer-reset signals, wire lifecycle hooks like onMount/onClose, and inspect toast.getState() when you need analytics."
+          }
+        }
+      ]
+    }
+  </script>
+
+  <!-- FONTS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    rel="preload"
+    as="style"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap"
+  />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap"
+  />
+
+  <!-- THEME (prevent FOUC) -->
+  <script>
+    (function() {
+      try {
+        var t = localStorage.getItem("toastflow-playground-theme");
+        if (t === "dark" || (!t && matchMedia("(prefers-color-scheme: dark)").matches)) {
+          document.documentElement.classList.add("dark");
+          document.documentElement.dataset.theme = "dark";
+        }
+      } catch (e) {
+      }
+    })();
+  </script>
+
+  <!-- UMAMI ANALYTICS -->
+  <script
+    defer
+    src="https://cloud.umami.is/script.js"
+    data-website-id="%VITE_UMAMI_WEBSITE_ID%"
+  ></script>
+</head>
+<body>
+<div id="app"></div>
+<script type="module" src="./src/main.ts"></script>
+<noscript>
+  <div style="max-width:960px;margin:0 auto;padding:2rem;font-family:sans-serif">
+    <h1>Toastflow — Toast Notifications for Vue and Nuxt</h1>
+    <p>
+      Toastflow is an accessible, lightweight toast notification library for Vue 3 and Nuxt.
+      This interactive playground lets you configure toast positions, timing, animations, and
+      behaviors, then copy the generated code straight into your project.
+    </p>
+    <p>
+      TypeScript-first · CSS-first theming · headless mode · SSR-ready · MIT licensed
+    </p>
+
+    <h2>Why Toastflow</h2>
+    <p>
+      Toastflow ships sensible defaults for accessibility, queue management, and keyboard
+      shortcuts. It is a typed core with a Vue renderer, Nuxt wrapper, CSS-first theming, and
+      headless hooks so you can render the same store logic with your own UI. The library weighs
+      under 5 kB gzipped, has zero runtime dependencies, and supports Vue 3.5+ with full
+      TypeScript inference.
+    </p>
+
+    <h3>Accessible toast notifications</h3>
+    <p>
+      ARIA live-region toasts with focus management, pause-on-hover, keyboard shortcuts, and a
+      prefers-reduced-motion media query — ready for WCAG out of the box.
+    </p>
+
+    <h3>Flexible and customizable UI</h3>
+    <p>
+      Configure placement, alignment, width, action buttons, and HTML support. Override CSS
+      variables, swap animation classes, or use the headless slot to render a fully custom toast
+      card while keeping core behaviors.
+    </p>
+
+    <h3>Lightweight and SSR-ready</h3>
+    <p>
+      Minimal bundle with zero runtime dependencies, SSR-safe guards, and CSS-only animations.
+      Works with Vite, Nuxt SSR, and edge runtimes without extra configuration.
+    </p>
+
+    <h2>Install Toastflow</h2>
+    <p>Works with Vue 3.5+ and Nuxt 3/4. Install the Vue plugin or the Nuxt module and start
+      showing toast notifications in minutes.</p>
+    <pre><code>npm install vue-toastflow
+npm install nuxt-toastflow</code></pre>
+
+    <h3>Common use cases</h3>
+    <ul>
+      <li>Product launches that need reliable, branded toast notifications</li>
+      <li>Dashboards and admin panels that queue multiple events without overlap</li>
+      <li>Nuxt SSR apps that require server-safe notification components</li>
+      <li>Teams looking for a typed, accessible Vue toast library with headless support</li>
+    </ul>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <h3>Is Toastflow accessible?</h3>
+    <p>
+      Yes. Toasts use alert/status live regions, ARIA labels (even for HTML titles), a built-in
+      pause-on-hover, and a prefers-reduced-motion media query to keep animations gentle.
+    </p>
+
+    <h3>Does it support SSR?</h3>
+    <p>
+      The core store is isomorphic, the Vue renderer defers DOM access until mounted, and the
+      playground guards window usage, so Nuxt/Vite SSR works out of the box.
+    </p>
+
+    <h3>Can I use it outside Vue components?</h3>
+    <p>
+      Yes. Install the plugin once, then call toast methods from stores or services. In Nuxt, use
+      nuxt-toastflow and call auto-imported toast (or useToast()). For non-Vue apps, use the
+      headless toastflow-core store and render your own UI.
+    </p>
+
+    <h3>How do I style it to match my brand?</h3>
+    <p>
+      Override CSS variables or animation class names, pass a theme/animation override, or use the
+      headless slot to ship a fully custom card with the same store logic.
+    </p>
+
+    <h3>How do I log or react to toast events?</h3>
+    <p>
+      Subscribe to toast.subscribe for state changes or toast.subscribeEvents for
+      duplicate/update/timer-reset signals, wire lifecycle hooks like onMount/onClose, and inspect
+      toast.getState() when you need analytics.
+    </p>
+
+    <p>
+      <a href="https://docs.toastflow.top/">Documentation</a> |
+      <a href="https://github.com/adrianjanocko/toastflow">GitHub</a> |
+      <a href="https://www.npmjs.com/package/vue-toastflow">npm (Vue)</a> |
+      <a href="https://www.npmjs.com/package/nuxt-toastflow">npm (Nuxt)</a>
+    </p>
+  </div>
+</noscript>
+</body>
 </html>

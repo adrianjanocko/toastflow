@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap');
 @import 'tailwindcss';
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -8,16 +7,16 @@
     color-scheme: light;
 
     /* App-level design tokens */
-    --tf-ui-canvas-top: #c6e4f5;
-    --tf-ui-canvas-bottom: #9ecfe9;
+    --tf-ui-canvas-top: #f8fafc;
+    --tf-ui-canvas-bottom: #e2e8f0;
     --tf-ui-text-primary: #0f172a;
     --tf-ui-text-muted: #64748b;
 
-    --tf-ui-panel-bg: rgb(255 255 255 / 0.9);
-    --tf-ui-panel-muted-bg: rgb(248 250 252 / 0.82);
-    --tf-ui-panel-border: #dbe4ef;
+    --tf-ui-panel-bg: rgb(255 255 255 / 0.96);
+    --tf-ui-panel-muted-bg: rgb(248 250 252 / 0.88);
+    --tf-ui-panel-border: #e2e8f0;
     --tf-ui-card-bg: #ffffff;
-    --tf-ui-card-border: #e4ebf3;
+    --tf-ui-card-border: #e2e8f0;
 
     --tf-ui-brand-pill-bg: rgb(255 255 255 / 0.72);
     --tf-ui-brand-pill-border: #cfd9e5;
@@ -47,7 +46,7 @@
     --tf-ui-btn-primary-muted-border-hover: #020617;
 
     --tf-ui-btn-outline-bg: #ffffff;
-    --tf-ui-btn-outline-border: #cbd5e1;
+    --tf-ui-btn-outline-border: #e2e8f0;
     --tf-ui-btn-outline-fg: #334155;
     --tf-ui-btn-outline-bg-hover: #f1f5f9;
     --tf-ui-btn-outline-border-hover: #64748b;
@@ -83,19 +82,20 @@
   :root.dark {
     color-scheme: dark;
 
-    --tf-ui-canvas-top: #1e293b;
-    --tf-ui-canvas-bottom: #101827;
+    --tf-ui-canvas-top: #0a0f1d;
+    --tf-ui-canvas-bottom: rgb(255 255 255 / 0.05);
     --tf-ui-text-primary: #e2e8f0;
     --tf-ui-text-muted: #94a3b8;
 
-    --tf-ui-panel-bg: rgb(15 23 42 / 0.75);
-    --tf-ui-panel-muted-bg: rgb(30 41 59 / 0.6);
-    --tf-ui-panel-border: rgb(71 85 105 / 0.8);
-    --tf-ui-card-bg: rgb(15 23 42 / 0.8);
-    --tf-ui-card-border: rgb(71 85 105 / 0.8);
+    --tf-ui-panel-bg: rgb(15 23 42 / 0.85);
+    --tf-ui-panel-muted-bg: rgb(30 41 59 / 0.7);
+    --tf-ui-panel-border: rgb(255 255 255 / 0.08);
+
+    --tf-ui-card-bg: rgb(15 23 42 / 0.85);
+    --tf-ui-card-border: rgb(255 255 255 / 0.08);
 
     --tf-ui-brand-pill-bg: rgb(30 41 59 / 0.86);
-    --tf-ui-brand-pill-border: #475569;
+    --tf-ui-brand-pill-border: rgb(255 255 255 / 0.1);
     --tf-ui-brand-pill-fg: #e2e8f0;
     --tf-ui-brand-pill-icon: #cbd5e1;
 
@@ -122,13 +122,13 @@
     --tf-ui-btn-primary-muted-border-hover: #cbd5e1;
 
     --tf-ui-btn-outline-bg: rgb(30 41 59 / 0.55);
-    --tf-ui-btn-outline-border: #475569;
+    --tf-ui-btn-outline-border: rgb(255 255 255 / 0.1);
     --tf-ui-btn-outline-fg: #e2e8f0;
     --tf-ui-btn-outline-bg-hover: rgb(51 65 85 / 0.9);
     --tf-ui-btn-outline-border-hover: #94a3b8;
 
     --tf-ui-btn-subtle-bg: rgb(30 41 59 / 0.65);
-    --tf-ui-btn-subtle-border: #475569;
+    --tf-ui-btn-subtle-border: rgb(255 255 255 / 0.08);
     --tf-ui-btn-subtle-fg: #e2e8f0;
     --tf-ui-btn-subtle-bg-hover: rgb(51 65 85 / 0.9);
     --tf-ui-btn-subtle-border-hover: #94a3b8;
@@ -140,7 +140,7 @@
     --tf-ui-btn-toggle-active-border-hover: #f1f5f9;
 
     --tf-ui-btn-toggle-inactive-bg: rgb(30 41 59 / 0.72);
-    --tf-ui-btn-toggle-inactive-border: #475569;
+    --tf-ui-btn-toggle-inactive-border: rgb(255 255 255 / 0.05);
     --tf-ui-btn-toggle-inactive-fg: #e2e8f0;
     --tf-ui-btn-toggle-inactive-bg-hover: rgb(51 65 85 / 0.95);
     --tf-ui-btn-toggle-inactive-border-hover: #94a3b8;
@@ -179,7 +179,12 @@
 
 @layer components {
   .ui-canvas {
-    background-image: linear-gradient(to bottom, var(--tf-ui-canvas-top), var(--tf-ui-canvas-bottom));
+    background-color: var(--tf-ui-canvas-top);
+    background-image: radial-gradient(
+      var(--tf-ui-canvas-bottom) 1px,
+      transparent 1px
+    );
+    background-size: 24px 24px;
     color: var(--tf-ui-text-primary);
   }
 
@@ -196,6 +201,7 @@
   .ui-card-surface {
     background-color: var(--tf-ui-card-bg);
     box-shadow: inset 0 0 0 1px var(--tf-ui-card-border);
+    border-radius: 1rem;
   }
 
   .ui-brand-pill {
@@ -207,11 +213,12 @@
     background-color: var(--tf-ui-brand-pill-bg);
     padding: 0.25rem 0.625rem;
     color: var(--tf-ui-brand-pill-fg);
-    font-size: 0.62rem;
+    font-size: 0.65rem;
     font-weight: 700;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    backdrop-filter: blur(6px);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   }
 
   .ui-brand-pill-icon {

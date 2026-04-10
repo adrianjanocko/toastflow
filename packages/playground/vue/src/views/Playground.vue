@@ -1396,7 +1396,7 @@ watch(isOnboardingOpen, function (open) {
 
 <template>
   <div
-    class="ui-panel w-full max-w-5xl rounded-3xl p-6 shadow-2xl backdrop-blur-md grid gap-6 transition-colors duration-300 lg:max-h-180 lg:overflow-auto lg:pb-0"
+    class="ui-panel w-full max-w-5xl rounded-3xl p-8 shadow-2xl shadow-slate-300/40 backdrop-blur-md grid gap-8 transition-colors duration-300 lg:max-h-180 lg:overflow-auto lg:pb-0 dark:shadow-none"
   >
     <div class="flex flex-col gap-3">
       <div class="flex flex-wrap items-center justify-between gap-3">
@@ -1520,13 +1520,13 @@ watch(isOnboardingOpen, function (open) {
       />
     </div>
 
-    <section class="ui-panel-muted rounded-2xl p-4 grid gap-4">
-      <div class="flex flex-wrap items-center justify-between gap-2">
+    <section class="ui-panel-muted rounded-[1.5rem] p-6 grid gap-4 border border-[var(--tf-ui-panel-border)]">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-2">
         <div
           class="flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-slate-100"
         >
-          <Terminal class="h-4 w-4" />
-          Live code (mirrors current config)
+          <Terminal class="h-[1.15rem] w-[1.15rem] opacity-75" />
+          Live code <span class="text-xs font-normal text-slate-500 opacity-80">(mirrors current config)</span>
         </div>
         <Button
           variant="outline"
@@ -1568,7 +1568,7 @@ watch(isOnboardingOpen, function (open) {
   <Teleport to="body">
     <div
       ref="actionsMobileRef"
-      class="lg:hidden fixed inset-x-0 bottom-0 z-50 w-full bg-white/95 shadow-lg backdrop-blur dark:bg-slate-900/90"
+      class="lg:hidden fixed inset-x-0 bottom-0 z-50 w-full bg-white/75 shadow-[0_-8px_32px_rgba(0,0,0,0.06)] backdrop-blur-2xl dark:bg-slate-900/70 border-t border-slate-200/50 dark:border-white/5"
       :class="actionsTourClass"
     >
       <ActionsFooter
@@ -1593,7 +1593,7 @@ watch(isOnboardingOpen, function (open) {
       </div>
 
       <section
-        class="absolute inset-x-4 top-4 mx-auto w-full max-w-md rounded-2xl border border-slate-200 bg-white/95 p-4 text-slate-800 shadow-2xl dark:border-slate-700 dark:bg-slate-900/95 dark:text-slate-100 sm:inset-x-auto sm:right-6"
+        class="absolute inset-x-4 top-4 mx-auto w-full max-w-md rounded-3xl border border-white/40 bg-white/80 p-5 text-slate-800 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.15)] backdrop-blur-2xl dark:border-white/10 dark:bg-slate-900/80 dark:text-slate-100 sm:inset-x-auto sm:right-6 ring-1 ring-black/5 dark:ring-white/5"
         role="dialog"
         aria-modal="true"
         aria-label="Playground onboarding"

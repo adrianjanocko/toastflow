@@ -1,13 +1,18 @@
 {
   "name": "nuxt-toastflow",
   "author": "adrianjanocko",
-  "description": "Nuxt wrapper module for vue-toastflow.",
+  "description": "Nuxt module for Toastflow — accessible, customizable toast notifications with auto-imports, SSR support, and CSS-first theming.",
   "keywords": [
     "nuxt",
+    "nuxt-module",
     "toast",
     "toastflow",
+    "notifications",
     "notification",
-    "vue"
+    "toast-notifications",
+    "toaster",
+    "vue",
+    "typescript"
   ],
   "license": "MIT",
   "homepage": "https://toastflow.top/",
