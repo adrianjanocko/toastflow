@@ -109,7 +109,7 @@ onMounted(async function () {
               "vue-toastflow": `${window.location.origin}/@toastflow-local/vue/toastflow.es.js`,
             }
           : {
-              "toastflow-core": `https://esm.sh/toastflow-core@${TOASTFLOW_CORE_VERSION}?bundle`,
+              "toastflow-core": `https://cdn.jsdelivr.net/npm/toastflow-core@${TOASTFLOW_CORE_VERSION}/dist/index.mjs`,
               "vue-toastflow": `https://cdn.jsdelivr.net/npm/vue-toastflow@${VUE_TOASTFLOW_VERSION}/dist/toastflow.es.js`,
             },
       },
