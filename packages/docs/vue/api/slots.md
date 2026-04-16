@@ -1,5 +1,6 @@
 ﻿---
 title: Slots
+description: Available slots for customizing toast icons, close buttons, progress bars, and content.
 outline: deep
 ---
 

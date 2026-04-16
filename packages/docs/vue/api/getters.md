@@ -1,5 +1,6 @@
 ﻿---
 title: Getters
+description: Read-only accessors for toast state and store configuration.
 outline: deep
 ---
 

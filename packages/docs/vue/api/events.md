@@ -1,5 +1,6 @@
 ﻿---
 title: Events
+description: Subscribe to toast lifecycle events like duplicates, timer resets, and updates.
 outline: deep
 ---
 

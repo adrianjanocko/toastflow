@@ -1,5 +1,6 @@
 ﻿---
 title: Getting Started
+description: Install vue-toastflow and set up toast notifications in your Vue 3 or Nuxt app in minutes.
 outline: deep
 ---
 

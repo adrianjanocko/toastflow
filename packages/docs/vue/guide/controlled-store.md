@@ -1,5 +1,6 @@
 ﻿---
 title: Controlled Store
+description: Access and control the toast store directly for advanced state management and subscriptions.
 outline: deep
 ---
 

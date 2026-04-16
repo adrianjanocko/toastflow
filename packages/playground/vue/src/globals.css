@@ -5,6 +5,7 @@
 @layer base {
   :root {
     color-scheme: light;
+    touch-action: manipulation;
 
     /* App-level design tokens */
     --tf-ui-canvas-top: #f8fafc;

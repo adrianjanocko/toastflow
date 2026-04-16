@@ -1,5 +1,6 @@
 ﻿---
 title: Introduction
+description: Overview of Toastflow — a typed toast engine for Vue 3 and Nuxt with CSS-first theming and full layout control.
 outline: deep
 ---
 

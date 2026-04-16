@@ -1,5 +1,6 @@
 ﻿---
 title: Toasts
+description: Toast payload model, supported types, show and update semantics in Toastflow.
 outline: deep
 ---
 

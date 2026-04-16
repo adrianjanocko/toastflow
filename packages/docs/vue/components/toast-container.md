@@ -1,5 +1,6 @@
 ﻿---
 title: ToastContainer
+description: The root container component that renders and positions all toast stacks.
 outline: deep
 ---
 

@@ -1,5 +1,6 @@
 ﻿---
 title: Programmatic API
+description: Show, update, dismiss, and manage toasts programmatically with the toast helper.
 outline: deep
 ---
 

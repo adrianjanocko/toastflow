@@ -32,33 +32,36 @@ const props = withDefaults(
 
 .tf-toast-progress-bar {
   height: 100%;
+  width: 100%;
   background: var(--tf-toast-progress-bar-bg);
+  transform-origin: left;
   animation-name: tf-toast-progress-rtl;
   animation-duration: var(--tf-toast-progress-duration, 5000ms);
   animation-timing-function: linear;
   animation-fill-mode: forwards;
+  will-change: transform;
 }
 
 .tf-toast-progress[data-align="left-to-right"] .tf-toast-progress-bar {
-  width: 0;
+  transform-origin: right;
   animation-name: tf-toast-progress-ltr;
 }
 
 @keyframes tf-toast-progress-rtl {
   from {
-    width: 100%;
+    transform: scaleX(1);
   }
   to {
-    width: 0;
+    transform: scaleX(0);
   }
 }
 
 @keyframes tf-toast-progress-ltr {
   from {
-    width: 0;
+    transform: scaleX(0);
   }
   to {
-    width: 100%;
+    transform: scaleX(1);
   }
 }
 </style>

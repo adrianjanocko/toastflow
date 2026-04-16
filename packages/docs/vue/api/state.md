@@ -1,5 +1,6 @@
 ﻿---
 title: State
+description: Toast state structure, subscriptions, and reactive state access in Toastflow.
 outline: deep
 ---
 

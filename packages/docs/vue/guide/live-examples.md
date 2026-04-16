@@ -1,5 +1,6 @@
 ﻿---
 title: Live Examples
+description: Interactive Vue REPL examples demonstrating Toastflow features and configuration.
 outline: deep
 ---
 

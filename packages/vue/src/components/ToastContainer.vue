@@ -259,10 +259,6 @@ function beforeLeave(el: Element) {
   const parentHeight = cached?.parentHeight ?? parent.clientHeight;
   const parentWidth = cached?.parentWidth ?? parent.clientWidth;
 
-  if (!isBottom) {
-    parent.style.minHeight = `${parentHeight}px`;
-  }
-
   element.style.position = "absolute";
   element.style.width = `${parentWidth}px`;
   element.style.left = "0";
@@ -280,10 +276,6 @@ function beforeLeave(el: Element) {
 
 function afterLeave(el: Element) {
   const element = el as HTMLElement;
-  const parent = element.parentElement;
-  if (parent) {
-    parent.style.minHeight = "";
-  }
 
   element.style.position = "";
   element.style.width = "";

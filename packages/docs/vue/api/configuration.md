@@ -1,5 +1,6 @@
 ﻿---
 title: Configuration
+description: All available Toastflow configuration options for global and per-toast behavior.
 outline: deep
 ---
 

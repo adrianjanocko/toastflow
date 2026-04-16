@@ -264,14 +264,7 @@ export function createToastStore(
       syncState(insertToast(state.toasts, next));
 
       if (next.onMount) {
-        next.onMount({
-          id: next.id,
-          position: next.position,
-          type: next.type,
-          title: next.title,
-          description: next.description,
-          createdAt: next.createdAt,
-        });
+        next.onMount(toContext(next));
       }
 
       scheduleAutoDismiss(next);
@@ -393,14 +386,7 @@ export function createToastStore(
     syncState(insertToast(state.toasts, toastInstance));
 
     if (toastInstance.onMount) {
-      toastInstance.onMount({
-        id,
-        position: toastInstance.position,
-        type: toastInstance.type,
-        title: toastInstance.title,
-        description: toastInstance.description,
-        createdAt: toastInstance.createdAt,
-      });
+      toastInstance.onMount(toContext(toastInstance));
     }
 
     scheduleAutoDismiss(toastInstance);
@@ -529,11 +515,9 @@ export function createToastStore(
     // Validate the merged result (not the raw input) has content
     assertContentFields(merged, "update");
 
-    const resolved = resolveConfig(resolvedGlobalConfig, merged);
-
     const updated: ToastInstance = {
       ...located.toast,
-      ...resolved,
+      ...merged,
       id: located.toast.id,
       createdAt: located.toast.createdAt,
     };
@@ -564,14 +548,7 @@ export function createToastStore(
     promiseRuns.delete(id);
 
     const toast = located.toast;
-    const context: ToastContext = {
-      id,
-      position: toast.position,
-      type: toast.type,
-      title: toast.title,
-      description: toast.description,
-      createdAt: toast.createdAt,
-    };
+    const context = toContext(toast);
 
     if (toast.onClose) {
       toast.onClose(context);
@@ -636,34 +613,16 @@ export function createToastStore(
       clearAutoDismiss(toast.id);
       promiseRuns.delete(toast.id);
 
-      const context: ToastContext = {
-        id: toast.id,
-        position: toast.position,
-        type: toast.type,
-        title: toast.title,
-        description: toast.description,
-        createdAt: toast.createdAt,
-      };
-
       if (toast.onClose) {
-        toast.onClose(context);
+        toast.onClose(toContext(toast));
       }
     }
 
     for (const toast of queued) {
       promiseRuns.delete(toast.id);
 
-      const context: ToastContext = {
-        id: toast.id,
-        position: toast.position,
-        type: toast.type,
-        title: toast.title,
-        description: toast.description,
-        createdAt: toast.createdAt,
-      };
-
       if (toast.onClose) {
-        toast.onClose(context);
+        toast.onClose(toContext(toast));
       }
     }
 
@@ -684,17 +643,8 @@ export function createToastStore(
 
     setTimeout(function () {
       for (const toast of current) {
-        const context: ToastContext = {
-          id: toast.id,
-          position: toast.position,
-          type: toast.type,
-          title: toast.title,
-          description: toast.description,
-          createdAt: toast.createdAt,
-        };
-
         if (toast.onUnmount) {
-          toast.onUnmount(context);
+          toast.onUnmount(toContext(toast));
         }
       }
 
@@ -852,6 +802,17 @@ export function createToastStore(
 }
 
 // ------------- helpers -------------
+
+function toContext(t: ToastInstance): ToastContext {
+  return {
+    id: t.id,
+    position: t.position,
+    type: t.type,
+    title: t.title,
+    description: t.description,
+    createdAt: t.createdAt,
+  };
+}
 
 function normalizeShowArgs(
   arg1: ToastShowInput | ToastTextInput | string,

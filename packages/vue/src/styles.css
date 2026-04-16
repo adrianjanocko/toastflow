@@ -55,7 +55,6 @@
   --tf-toast-close-bg: var(--tf-toast-bg);
   --tf-toast-close-ring-color: var(--tf-toast-close-border-color);
   --tf-toast-close-font-size: 11px;
-  --tf-toast-close-offset: 40%;
 
   /* buttons */
   --tf-toast-button-font-size: 12px;
@@ -106,20 +105,6 @@
   --tf-toast-normal-description-color-default: var(
     --tf-toast-normal-text-default
   );
-  --tf-toast-normal-close-bg-default: var(--tf-toast-normal-bg-default);
-  --tf-toast-normal-close-border-default: var(--tf-toast-normal-border-default);
-  --tf-toast-normal-close-ring-default: var(--tf-toast-normal-border-default);
-  --tf-toast-normal-close-color-default: var(--tf-toast-normal-text-default);
-  --tf-toast-normal-button-color-default: var(--tf-toast-normal-text-default);
-  --tf-toast-normal-button-border-default: var(
-    --tf-toast-normal-border-default
-  );
-  --tf-toast-normal-button-bg-default: transparent;
-  --tf-toast-normal-created-at-bg-default: var(--tf-toast-normal-bg-default);
-  --tf-toast-normal-created-at-border-default: var(
-    --tf-toast-normal-border-default
-  );
-  --tf-toast-normal-created-at-color-default: var(--tf-toast-description-color);
 
   --tf-toast-loading-bg-default: hsl(48, 100%, 96%);
   --tf-toast-loading-border-default: hsl(46, 100%, 88%);
@@ -135,24 +120,6 @@
   --tf-toast-loading-color-default: var(--tf-toast-loading-text-default);
   --tf-toast-loading-title-color-default: var(--tf-toast-loading-text-default);
   --tf-toast-loading-description-color-default: var(
-    --tf-toast-loading-text-default
-  );
-  --tf-toast-loading-close-bg-default: var(--tf-toast-loading-bg-default);
-  --tf-toast-loading-close-border-default: var(
-    --tf-toast-loading-border-default
-  );
-  --tf-toast-loading-close-ring-default: var(--tf-toast-loading-border-default);
-  --tf-toast-loading-close-color-default: var(--tf-toast-loading-text-default);
-  --tf-toast-loading-button-color-default: var(--tf-toast-loading-text-default);
-  --tf-toast-loading-button-border-default: var(
-    --tf-toast-loading-border-default
-  );
-  --tf-toast-loading-button-bg-default: transparent;
-  --tf-toast-loading-created-at-bg-default: var(--tf-toast-loading-bg-default);
-  --tf-toast-loading-created-at-border-default: var(
-    --tf-toast-loading-border-default
-  );
-  --tf-toast-loading-created-at-color-default: var(
     --tf-toast-loading-text-default
   );
 
@@ -172,24 +139,6 @@
   --tf-toast-success-description-color-default: var(
     --tf-toast-success-text-default
   );
-  --tf-toast-success-close-bg-default: var(--tf-toast-success-bg-default);
-  --tf-toast-success-close-border-default: var(
-    --tf-toast-success-border-default
-  );
-  --tf-toast-success-close-ring-default: var(--tf-toast-success-border-default);
-  --tf-toast-success-close-color-default: var(--tf-toast-success-text-default);
-  --tf-toast-success-button-color-default: var(--tf-toast-success-text-default);
-  --tf-toast-success-button-border-default: var(
-    --tf-toast-success-border-default
-  );
-  --tf-toast-success-button-bg-default: transparent;
-  --tf-toast-success-created-at-bg-default: var(--tf-toast-success-bg-default);
-  --tf-toast-success-created-at-border-default: var(
-    --tf-toast-success-border-default
-  );
-  --tf-toast-success-created-at-color-default: var(
-    --tf-toast-success-text-default
-  );
 
   --tf-toast-info-bg-default: hsl(208, 100%, 97%);
   --tf-toast-info-border-default: hsl(221, 91%, 93%);
@@ -203,18 +152,6 @@
   --tf-toast-info-color-default: var(--tf-toast-info-text-default);
   --tf-toast-info-title-color-default: var(--tf-toast-info-text-default);
   --tf-toast-info-description-color-default: var(--tf-toast-info-text-default);
-  --tf-toast-info-close-bg-default: var(--tf-toast-info-bg-default);
-  --tf-toast-info-close-border-default: var(--tf-toast-info-border-default);
-  --tf-toast-info-close-ring-default: var(--tf-toast-info-border-default);
-  --tf-toast-info-close-color-default: var(--tf-toast-info-text-default);
-  --tf-toast-info-button-color-default: var(--tf-toast-info-text-default);
-  --tf-toast-info-button-border-default: var(--tf-toast-info-border-default);
-  --tf-toast-info-button-bg-default: transparent;
-  --tf-toast-info-created-at-bg-default: var(--tf-toast-info-bg-default);
-  --tf-toast-info-created-at-border-default: var(
-    --tf-toast-info-border-default
-  );
-  --tf-toast-info-created-at-color-default: var(--tf-toast-info-text-default);
 
   --tf-toast-warning-bg-default: hsl(49, 100%, 97%);
   --tf-toast-warning-border-default: hsl(49, 91%, 84%);
@@ -232,24 +169,6 @@
   --tf-toast-warning-description-color-default: var(
     --tf-toast-warning-text-default
   );
-  --tf-toast-warning-close-bg-default: var(--tf-toast-warning-bg-default);
-  --tf-toast-warning-close-border-default: var(
-    --tf-toast-warning-border-default
-  );
-  --tf-toast-warning-close-ring-default: var(--tf-toast-warning-border-default);
-  --tf-toast-warning-close-color-default: var(--tf-toast-warning-text-default);
-  --tf-toast-warning-button-color-default: var(--tf-toast-warning-text-default);
-  --tf-toast-warning-button-border-default: var(
-    --tf-toast-warning-border-default
-  );
-  --tf-toast-warning-button-bg-default: transparent;
-  --tf-toast-warning-created-at-bg-default: var(--tf-toast-warning-bg-default);
-  --tf-toast-warning-created-at-border-default: var(
-    --tf-toast-warning-border-default
-  );
-  --tf-toast-warning-created-at-color-default: var(
-    --tf-toast-warning-text-default
-  );
 
   --tf-toast-error-bg-default: hsl(359, 100%, 97%);
   --tf-toast-error-border-default: hsl(359, 100%, 94%);
@@ -265,18 +184,6 @@
   --tf-toast-error-description-color-default: var(
     --tf-toast-error-text-default
   );
-  --tf-toast-error-close-bg-default: var(--tf-toast-error-bg-default);
-  --tf-toast-error-close-border-default: var(--tf-toast-error-border-default);
-  --tf-toast-error-close-ring-default: var(--tf-toast-error-border-default);
-  --tf-toast-error-close-color-default: var(--tf-toast-error-text-default);
-  --tf-toast-error-button-color-default: var(--tf-toast-error-text-default);
-  --tf-toast-error-button-border-default: var(--tf-toast-error-border-default);
-  --tf-toast-error-button-bg-default: transparent;
-  --tf-toast-error-created-at-bg-default: var(--tf-toast-error-bg-default);
-  --tf-toast-error-created-at-border-default: var(
-    --tf-toast-error-border-default
-  );
-  --tf-toast-error-created-at-color-default: var(--tf-toast-error-text-default);
 
   /* animations */
   --tf-toast-motion-offset: 10px;
@@ -359,7 +266,7 @@
 }
 
 .Toastflow__animation-update {
-  animation: Toastflow__update-kf var(--tf-toast-animation-in-duration)
+  animation: Toastflow__bump-kf var(--tf-toast-animation-in-duration)
     cubic-bezier(0.33, 1, 0.68, 1);
 }
 
@@ -373,18 +280,6 @@
 }
 
 @keyframes Toastflow__bump-kf {
-  0% {
-    transform: none;
-  }
-  40% {
-    transform: scale(1.01);
-  }
-  100% {
-    transform: none;
-  }
-}
-
-@keyframes Toastflow__update-kf {
   0% {
     transform: none;
   }

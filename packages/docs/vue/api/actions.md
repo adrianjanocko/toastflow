@@ -1,5 +1,6 @@
 ﻿---
 title: Actions
+description: Store actions for showing, updating, dismissing, pausing, and managing toasts.
 outline: deep
 ---
 

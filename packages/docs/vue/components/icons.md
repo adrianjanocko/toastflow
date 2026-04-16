@@ -1,5 +1,6 @@
 ﻿---
 title: Icons
+description: Built-in SVG icon components for each toast type — success, error, warning, info, and more.
 outline: deep
 ---
 

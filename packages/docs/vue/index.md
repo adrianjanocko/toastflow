@@ -1,6 +1,10 @@
 ---
-title: Redirecting
+title: Toastflow
 outline: false
+head:
+  - - meta
+    - name: robots
+      content: noindex
 ---
 
 <script setup lang="ts">

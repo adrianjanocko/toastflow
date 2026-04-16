@@ -1,5 +1,6 @@
 ﻿---
 title: ToastProgress
+description: The ToastProgress component for rendering animated progress bars inside toasts.
 outline: deep
 ---
 

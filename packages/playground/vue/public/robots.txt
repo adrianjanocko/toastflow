@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://toastflow.top/sitemap.xml
+Sitemap: https://www.toastflow.top/sitemap.xml
 

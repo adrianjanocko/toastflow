@@ -1,14 +1,11 @@
 import { defineConfig } from "vitepress";
-import {
-  createReadStream,
-  existsSync,
-  readFileSync,
-  statSync,
-} from "node:fs";
+import { createReadStream, existsSync, readFileSync, statSync } from "node:fs";
 import { extname, resolve } from "node:path";
 import type { Plugin } from "vite";
 
 const DOCS_HOSTNAME = "https://docs.toastflow.top";
+const OG_IMAGE =
+  "https://raw.githubusercontent.com/adrianjanocko/toastflow/main/images/banner.png";
 
 type PackageJson = {
   version?: string;
@@ -145,7 +142,7 @@ function toastflowLocalDevPlugin(): Plugin {
 export default defineConfig({
   title: "Toastflow",
   description:
-    "Framework-agnostic toast engine with Vue 3 renderer and Nuxt module support. Typed core, smooth stack animations, CSS-first theming, and full control over layout and behavior.",
+    "Toast engine for Vue 3 and Nuxt. Typed core, smooth animations, CSS-first theming, and full layout control.",
   cleanUrls: true,
   lastUpdated: true,
   sitemap: {
@@ -177,7 +174,21 @@ export default defineConfig({
     ["meta", { name: "robots", content: "index,follow" }],
     ["meta", { property: "og:site_name", content: "Toastflow Docs" }],
     ["meta", { property: "og:type", content: "website" }],
+    [
+      "meta",
+      {
+        property: "og:image",
+        content: OG_IMAGE,
+      },
+    ],
     ["meta", { name: "twitter:card", content: "summary_large_image" }],
+    [
+      "meta",
+      {
+        name: "twitter:image",
+        content: OG_IMAGE,
+      },
+    ],
   ],
   transformHead: (ctx) => {
     const canonicalUrl = resolveCanonicalUrl(ctx.page);

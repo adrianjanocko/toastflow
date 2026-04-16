@@ -1,5 +1,6 @@
 ﻿---
 title: Buttons and Actions
+description: Add action buttons to toasts with configurable layout, alignment, and click handlers.
 outline: deep
 ---
 

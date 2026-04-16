@@ -1,5 +1,6 @@
 ﻿---
 title: Utilities
+description: Helper utilities exported by Toastflow for type validation and formatting.
 outline: deep
 ---
 

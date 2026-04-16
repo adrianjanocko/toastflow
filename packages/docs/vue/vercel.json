@@ -1,4 +1,11 @@
 {
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/guide/introduction",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/:path((?!assets/|.*\\..*).*)",

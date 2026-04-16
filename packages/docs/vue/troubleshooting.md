@@ -1,5 +1,6 @@
 ﻿---
 title: Troubleshooting
+description: Common issues and solutions when using Toastflow with Vue 3 or Nuxt.
 outline: deep
 ---
 

@@ -1,5 +1,6 @@
 ﻿---
 title: Theming
+description: Customize toast appearance with CSS variables, accent themes, and per-toast style overrides.
 outline: deep
 ---
 

@@ -561,8 +561,12 @@ function useHoverPause(
   duration: Ref<number | undefined>,
 ) {
   const isHovered = ref(false);
+  let lastPointerType = "";
 
   function handleMouseEnter() {
+    if (lastPointerType === "touch" || lastPointerType === "pen") {
+      return;
+    }
     if (!canPause()) {
       return;
     }
@@ -570,6 +574,10 @@ function useHoverPause(
   }
 
   function handleMouseLeave() {
+    if (lastPointerType === "touch" || lastPointerType === "pen") {
+      lastPointerType = "";
+      return;
+    }
     if (!canPause()) {
       return;
     }
@@ -577,6 +585,7 @@ function useHoverPause(
   }
 
   function handlePointerDown(event: PointerEvent) {
+    lastPointerType = event.pointerType;
     if (!canPause(event, true)) {
       return;
     }

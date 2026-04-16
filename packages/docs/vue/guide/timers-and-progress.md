@@ -1,5 +1,6 @@
 ﻿---
 title: Timers and Progress
+description: Configure auto-dismiss timers, progress bars, pause strategies, and duration controls.
 outline: deep
 ---
 
