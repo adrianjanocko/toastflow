@@ -181,10 +181,7 @@
 @layer components {
   .ui-canvas {
     background-color: var(--tf-ui-canvas-top);
-    background-image: radial-gradient(
-      var(--tf-ui-canvas-bottom) 1px,
-      transparent 1px
-    );
+    background-image: radial-gradient(var(--tf-ui-canvas-bottom) 1px, transparent 1px);
     background-size: 24px 24px;
     color: var(--tf-ui-text-primary);
   }
@@ -235,10 +232,11 @@
     font-size: 0.75rem;
     line-height: 1rem;
     padding: 0.25rem 0.5rem;
-    transition: border-color 160ms ease,
-    background-color 160ms ease,
-    box-shadow 160ms ease,
-    color 160ms ease;
+    transition:
+      border-color 160ms ease,
+      background-color 160ms ease,
+      box-shadow 160ms ease,
+      color 160ms ease;
   }
 
   .ui-field::placeholder {
@@ -281,7 +279,11 @@
   padding: 0;
   background-color: transparent;
   color: inherit;
-  transition: padding 180ms ease, background-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
+  transition:
+    padding 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease,
+    box-shadow 180ms ease;
 }
 
 #events-open-log-button.open-log-attention .events-log-icon-badge {

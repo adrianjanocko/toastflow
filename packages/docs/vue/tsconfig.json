@@ -1,5 +1,9 @@
 {
   "extends": "../../../tsconfig.base.json",
-  "include": ["env.d.ts", ".vitepress/**/*.ts", ".vitepress/**/*.vue", "**/*.ts"]
+  "include": [
+    "env.d.ts",
+    ".vitepress/**/*.ts",
+    ".vitepress/**/*.vue",
+    "**/*.ts"
+  ]
 }
-

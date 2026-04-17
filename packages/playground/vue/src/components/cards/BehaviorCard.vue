@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Settings } from 'lucide-vue-next';
-import type { PauseStrategy, ToastButtonsAlignment, ToastButtonsLayout, ToastOrder, } from 'toastflow-core';
+import type {
+  PauseStrategy,
+  ToastButtonsAlignment,
+  ToastButtonsLayout,
+  ToastOrder,
+} from 'toastflow-core';
 
 import Button from '../Button.vue';
 import Modal from '../Modal.vue';

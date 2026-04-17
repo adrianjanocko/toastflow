@@ -119,7 +119,7 @@ export default defineNuxtModule<NuxtToastflowOptions>({
           "  get(_target, key) {",
           "    const currentToast = useNuxtApp().$toast as Record<PropertyKey, unknown>;",
           "    const value = currentToast[key];",
-          "    if (typeof value === \"function\") {",
+          '    if (typeof value === "function") {',
           "      return (value as (...args: unknown[]) => unknown).bind(currentToast);",
           "    }",
           "    return value;",

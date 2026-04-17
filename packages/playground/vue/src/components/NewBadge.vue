@@ -3,7 +3,5 @@ import Badge from './Badge.vue';
 </script>
 
 <template>
-  <Badge variant="new">
-    New
-  </Badge>
+  <Badge variant="new"> New </Badge>
 </template>

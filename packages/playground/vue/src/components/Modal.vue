@@ -293,11 +293,7 @@ onBeforeUnmount(function () {
 <template>
   <teleport to="body">
     <div v-if="modelValue" :class="containerClass">
-      <div
-        ref="modalRef"
-        :class="panelClass"
-        :style="modalStyle"
-      >
+      <div ref="modalRef" :class="panelClass" :style="modalStyle">
         <header ref="dragHandleRef" :class="headerClass" @pointerdown="onPointerDown">
           <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">
             {{ title }}

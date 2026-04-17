@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import { computed, inject, onBeforeUpdate, onMounted, onUnmounted, ref, watch } from "vue";
+import {
+  computed,
+  inject,
+  onBeforeUpdate,
+  onMounted,
+  onUnmounted,
+  ref,
+  watch,
+} from "vue";
 import Toast from "./Toast.vue";
 import type {
   ToastAnimation,

@@ -101,7 +101,7 @@ toast.info({
   description: "Title and description inherit from color.",
   css: {
     bg: "#c33232",
-    color: "#fff7f2",         // → also sets titleColor + descriptionColor
+    color: "#fff7f2", // → also sets titleColor + descriptionColor
     descriptionColor: "#fdeae2", // explicit override for description only
   },
 });

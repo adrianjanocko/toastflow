@@ -10,7 +10,9 @@ type CryptoLike = {
 };
 
 export function generateUuid(): string {
-  const cryptoApi: CryptoLike | undefined = (globalThis as any)?.crypto;
+  const cryptoApi: CryptoLike | undefined = (
+    globalThis as unknown as { crypto?: CryptoLike }
+  )?.crypto;
 
   if (typeof cryptoApi?.randomUUID === "function") {
     try {

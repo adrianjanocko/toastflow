@@ -20,7 +20,7 @@
     "url": "https://github.com/adrianjanocko/toastflow.git",
     "directory": "packages/vue"
   },
-  "version": "1.1.9-beta.3",
+  "version": "1.1.9-beta.4",
   "main": "./dist/toastflow.umd.js",
   "module": "./dist/toastflow.es.js",
   "types": "./dist/index.d.ts",

@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { Copy, MessageCircle, Share2, Terminal } from 'lucide-vue-next';
-import { toast, type ToastAlignment, type ToastContext, type ToastProgressAlignment, } from 'vue-toastflow';
+import {
+  toast,
+  type ToastAlignment,
+  type ToastContext,
+  type ToastProgressAlignment,
+} from 'vue-toastflow';
 import Giscus from '@giscus/vue';
 import type {
   PauseStrategy,
@@ -1520,13 +1525,18 @@ watch(isOnboardingOpen, function (open) {
       />
     </div>
 
-    <section class="ui-panel-muted rounded-[1.5rem] p-6 grid gap-4 border border-[var(--tf-ui-panel-border)]">
+    <section
+      class="ui-panel-muted rounded-[1.5rem] p-6 grid gap-4 border border-[var(--tf-ui-panel-border)]"
+    >
       <div class="flex flex-wrap items-center justify-between gap-3 mb-2">
         <div
           class="flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-slate-100"
         >
           <Terminal class="h-[1.15rem] w-[1.15rem] opacity-75" />
-          Live code <span class="text-xs font-normal text-slate-500 opacity-80">(mirrors current config)</span>
+          Live code
+          <span class="text-xs font-normal text-slate-500 opacity-80"
+            >(mirrors current config)</span
+          >
         </div>
         <Button
           variant="outline"
@@ -1732,4 +1742,3 @@ watch(isOnboardingOpen, function (open) {
     box-shadow 280ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 </style>
-

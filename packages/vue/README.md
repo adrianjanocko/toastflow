@@ -38,9 +38,9 @@ createApp(App).use(createToastflow()).mount("#app");
 ```vue
 <!-- App.vue -->
 <script setup lang="ts">
-  import { ToastContainer, toast } from "vue-toastflow";
+import { ToastContainer, toast } from "vue-toastflow";
 
-  toast.success({ title: "Saved", description: "Your changes are live." });
+toast.success({ title: "Saved", description: "Your changes are live." });
 </script>
 
 <template>

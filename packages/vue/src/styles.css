@@ -205,7 +205,6 @@
 
 .tf-toast-motion {
   width: 100%;
-  will-change: transform, opacity;
   transform-origin: center;
 }
 
@@ -281,13 +280,13 @@
 
 @keyframes Toastflow__bump-kf {
   0% {
-    transform: none;
+    transform: scale(1);
   }
   40% {
     transform: scale(1.01);
   }
   100% {
-    transform: none;
+    transform: scale(1);
   }
 }
 

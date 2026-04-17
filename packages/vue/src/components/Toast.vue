@@ -1072,7 +1072,7 @@ function stripHtmlToText(value: string): string {
     const container = window.document.createElement("div");
     container.innerHTML = value;
     return normalizeWhitespace(container.textContent ?? "");
-  } catch (error) {
+  } catch {
     return fallback;
   }
 }
@@ -1588,7 +1588,10 @@ function stripHtmlToText(value: string): string {
 }
 
 .tf-toast-icon--custom .tf-toast-icon-svg {
-  color: var(--tf-toast-icon-color-override, var(--tf-toast-icon-custom, var(--tf-toast-icon-default)));
+  color: var(
+    --tf-toast-icon-color-override,
+    var(--tf-toast-icon-custom, var(--tf-toast-icon-default))
+  );
 }
 
 /* body */

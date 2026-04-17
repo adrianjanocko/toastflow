@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import NewBadge from './NewBadge.vue';
 
-const props = defineProps<{
+defineProps<{
   text: string;
   isNew?: boolean;
 }>();

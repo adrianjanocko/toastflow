@@ -15,7 +15,7 @@ Framework-agnostic toast engine with Vue 3 renderer and Nuxt module support
 
 - [`packages/vue`](packages/vue/README.md) - `vue-toastflow` package
 - [`packages/nuxt`](packages/nuxt/README.md) - `nuxt-toastflow` package
-    - [`packages/test/nuxt`](packages/test/nuxt) - local Nuxt smoke test for `nuxt-toastflow`
+  - [`packages/test/nuxt`](packages/test/nuxt) - local Nuxt smoke test for `nuxt-toastflow`
 - [`packages/core`](packages/core/README.md) - `toastflow-core` package
 - [`packages/playground/vue`](packages/playground/vue) - local playground app
 - [`packages/docs/vue`](packages/docs/vue) - docs source (VitePress)

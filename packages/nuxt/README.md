@@ -33,13 +33,13 @@ export default defineNuxtConfig({
 ```vue
 <!-- app.vue -->
 <script setup lang="ts">
-  // Optional:
-  // const toast = useToast();
+// Optional:
+// const toast = useToast();
 
-  toast.success({
-    title: "Saved",
-    description: "Your changes are live.",
-  });
+toast.success({
+  title: "Saved",
+  description: "Your changes are live.",
+});
 </script>
 
 <template>

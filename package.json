@@ -1,14 +1,22 @@
 {
   "name": "toastflow",
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "build": "pnpm -r build",
     "test": "pnpm -r test",
     "format": "prettier --cache --write .",
-    "format:check": "prettier --cache --check ."
+    "format:check": "prettier --cache --check .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "packageManager": "pnpm@9.12.3",
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.58.2",
+    "@typescript-eslint/parser": "^8.58.2",
+    "@vue/eslint-config-typescript": "^14.6.0",
+    "eslint": "^9.37.0",
+    "eslint-plugin-vue": "~10.5.0",
     "prettier": "3.6.2"
   }
 }

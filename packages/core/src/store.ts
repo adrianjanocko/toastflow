@@ -18,7 +18,12 @@ import type {
   ToastType,
   ToastUpdateInput,
 } from "./types";
-import { defaultCreatedAtFormatter, generateUuid, isNumberFinite, VALID_TOAST_TYPES, } from "./util";
+import {
+  defaultCreatedAtFormatter,
+  generateUuid,
+  isNumberFinite,
+  VALID_TOAST_TYPES,
+} from "./util";
 
 type Listener = (state: ToastState) => void;
 type EventListener = (event: ToastEvent) => void;
@@ -819,7 +824,12 @@ function normalizeShowArgs(
   arg2?: ToastShowOptions,
 ): ToastShowInput {
   if (typeof arg1 === "string") {
-    const { type = "default", title: _, description, ...rest } = arg2 ?? {};
+    const {
+      type = "default",
+      title: _title,
+      description,
+      ...rest
+    } = arg2 ?? {};
     return {
       ...rest,
       type,

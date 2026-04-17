@@ -74,5 +74,3 @@ export function useGitHubStars(owner: string, repo: string) {
 
   return { stars, isLoading, error };
 }
-
-
