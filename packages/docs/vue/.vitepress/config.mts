@@ -1,11 +1,18 @@
 import { defineConfig } from "vitepress";
-import { createReadStream, existsSync, readFileSync, statSync } from "node:fs";
+import {
+  createReadStream,
+  existsSync,
+  readFileSync,
+  statSync,
+  cpSync,
+  readdirSync,
+} from "node:fs";
 import { extname, resolve } from "node:path";
 import type { Plugin } from "vite";
 
 const DOCS_HOSTNAME = "https://docs.toastflow.top";
 const OG_IMAGE =
-  "https://raw.githubusercontent.com/adrianjanocko/toastflow/main/images/banner.png";
+  "https://raw.githubusercontent.com/adrianjanocko/toastflow/main/assets/banner.png";
 
 type PackageJson = {
   version?: string;
@@ -139,6 +146,56 @@ function toastflowLocalDevPlugin(): Plugin {
   };
 }
 
+const sharedAssetsDir = resolve(process.cwd(), "../../../assets");
+
+function sharedAssetsPlugin(): Plugin {
+  return {
+    name: "shared-assets",
+    configureServer(server) {
+      return () => {
+        server.middlewares.use(function (req, res, next) {
+          const url = (req.url ?? "").split("?")[0];
+          const filePath = resolve(sharedAssetsDir, url.slice(1));
+
+          if (
+            filePath.startsWith(sharedAssetsDir) &&
+            existsSync(filePath) &&
+            statSync(filePath).isFile()
+          ) {
+            const mimeTypes: Record<string, string> = {
+              ".png": "image/png",
+              ".svg": "image/svg+xml",
+              ".ico": "image/x-icon",
+              ".json": "application/json",
+              ".xml": "application/xml",
+              ".webmanifest": "application/manifest+json",
+            };
+            res.setHeader(
+              "Content-Type",
+              mimeTypes[extname(filePath)] ?? "application/octet-stream",
+            );
+            createReadStream(filePath).pipe(res);
+            return;
+          }
+
+          next();
+        });
+      };
+    },
+    closeBundle() {
+      const outDir = resolve(process.cwd(), ".vitepress/dist");
+      if (!existsSync(sharedAssetsDir)) return;
+      for (const file of readdirSync(sharedAssetsDir)) {
+        if (file === "banner.png") continue;
+        const src = resolve(sharedAssetsDir, file);
+        if (statSync(src).isFile()) {
+          cpSync(src, resolve(outDir, file));
+        }
+      }
+    },
+  };
+}
+
 export default defineConfig({
   title: "Toastflow",
   description:
@@ -208,7 +265,7 @@ export default defineConfig({
       __VUE_TOASTFLOW_VERSION__: JSON.stringify(VUE_TOASTFLOW_VERSION),
       __TOASTFLOW_LOCAL_DEV__: JSON.stringify(isLocalDev),
     },
-    plugins: [toastflowLocalDevPlugin()],
+    plugins: [toastflowLocalDevPlugin(), sharedAssetsPlugin()],
     optimizeDeps: {
       exclude: ["@vue/repl"],
     },

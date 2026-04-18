@@ -1,21 +1,34 @@
-![Toastflow showcase](../../images/banner.png)
+<p align="center">
+  <img src="../../assets/banner.png" alt="Toastflow" width="100%" />
+</p>
 
-# nuxt-toastflow
+<h1 align="center">💚 nuxt-toastflow</h1>
 
-Nuxt module wrapper for `vue-toastflow` so Toastflow works out of the box in Nuxt
+<p align="center">
+  <strong>Nuxt module for Toastflow</strong> — auto-imports, SSR support, and zero-config setup.
+</p>
 
-## 📚 Documentation
+<p align="center">
+  <a href="https://www.npmjs.com/package/nuxt-toastflow"><img src="https://img.shields.io/npm/v/nuxt-toastflow?color=00dc82&style=flat-square" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/nuxt-toastflow"><img src="https://img.shields.io/npm/dm/nuxt-toastflow?style=flat-square" alt="npm downloads" /></a>
+  <a href="../../LICENSE"><img src="https://img.shields.io/github/license/adrianjanocko/toastflow?style=flat-square" alt="License" /></a>
+</p>
 
-- Docs: https://docs.toastflow.top/
-- Comparisons (Vue ecosystem toasts): https://docs.toastflow.top/comparisons/overview
-- Playground: https://toastflow.top/
-- npm: https://www.npmjs.com/package/nuxt-toastflow
+<p align="center">
+  <a href="https://docs.toastflow.top/">📖 Docs</a> · <a href="https://toastflow.top/">🎮 Playground</a> · <a href="https://docs.toastflow.top/comparisons/overview">⚔️ Comparisons</a>
+</p>
+
+---
 
 ## 🚀 Quick Start
+
+**1. Install**
 
 ```bash
 pnpm add nuxt-toastflow
 ```
+
+**2. Add the module**
 
 ```ts
 // nuxt.config.ts
@@ -30,12 +43,11 @@ export default defineNuxtConfig({
 });
 ```
 
+**3. Toast away 🎉**
+
 ```vue
 <!-- app.vue -->
 <script setup lang="ts">
-// Optional:
-// const toast = useToast();
-
 toast.success({
   title: "Saved",
   description: "Your changes are live.",
@@ -48,25 +60,27 @@ toast.success({
 </template>
 ```
 
-## Options
+> 💡 Both `toast` and `useToast()` are auto-imported — no manual imports needed!
 
-```ts
-type NuxtToastflowOptions = {
-  config: Partial<ToastConfig>;
-  css: boolean;
-  componentName: string | false;
-};
-```
+## ⚙️ Module Options
 
-Defaults:
+| Option             | Type                   |      Default       | Description                                |
+| :----------------- | :--------------------- | :----------------: | :----------------------------------------- |
+| 🛠️ `config`        | `Partial<ToastConfig>` |        `{}`        | Toast configuration passed to the plugin   |
+| 🎨 `css`           | `boolean`              |       `true`       | Include default styles                     |
+| 🧱 `componentName` | `string \| false`      | `"ToastContainer"` | Auto-registered client-only component name |
 
-- `config: {}`
-- `css: true`
-- `componentName: "ToastContainer"`
+<details>
+<summary>💡 <strong>How does it work under the hood?</strong></summary>
 
-`ToastContainer` is auto-registered as a client-only component by the module.
-You can use either auto-imported `toast` (Vue-like API) or `useToast()`.
+<br />
 
-## License
+- `ToastContainer` is auto-registered as a **client-only** component
+- `toast` and `useToast()` are **auto-imported** — use either one
+- Styles are injected automatically unless `css: false`
 
-MIT
+</details>
+
+## 📄 License
+
+[MIT](../../LICENSE) — made with ❤️ by [@adrianjanocko](https://github.com/adrianjanocko)

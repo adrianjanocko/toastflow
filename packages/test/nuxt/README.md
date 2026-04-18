@@ -1,42 +1,33 @@
-# Nuxt Toastflow Test App
+# 🧪 Nuxt Toastflow — Test App
 
-This app is a local smoke test for `nuxt-toastflow`
+> Local smoke test for [`nuxt-toastflow`](../../packages/nuxt). Exercises `useToast()` across multiple scenarios.
 
-It mounts `ToastContainer` and uses `useToast()` to trigger multiple scenarios:
+### 🎯 Test Scenarios
 
-- basic type toasts
-- `show` and `update` flows
-- `loading` success/error flows
-- queue/maxVisible behavior
-- duplicate prevention behavior
-- dismiss single/all actions
+- ✅ Basic type toasts (`success`, `error`, `warning`, `info`)
+- 🔄 `show` → `update` flows
+- ⏳ `loading` → success / error flows
+- 📚 Queue & `maxVisible` behavior
+- 🚫 Duplicate prevention
+- 🗑️ Dismiss single / dismiss all
 
-## Setup
+---
 
-Install dependencies from the monorepo root:
-
-```bash
-pnpm install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
+### 📥 Setup
 
 ```bash
-pnpm --filter test-nuxt-toastflow dev
+pnpm install                              # from monorepo root
 ```
 
-## Production
+### 🖥️ Dev
 
-Build the application for production:
+```bash
+pnpm --filter test-nuxt-toastflow dev     # http://localhost:3000
+```
+
+### 🔨 Build & Preview
 
 ```bash
 pnpm --filter test-nuxt-toastflow build
-```
-
-Locally preview production build:
-
-```bash
 pnpm --filter test-nuxt-toastflow preview
 ```

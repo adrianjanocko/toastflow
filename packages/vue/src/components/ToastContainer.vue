@@ -268,6 +268,7 @@ function beforeLeave(el: Element) {
   const parentWidth = cached?.parentWidth ?? parent.clientWidth;
 
   element.style.position = "absolute";
+  element.style.zIndex = "0";
   element.style.width = `${parentWidth}px`;
   element.style.left = "0";
   element.style.right = "0";
@@ -286,6 +287,7 @@ function afterLeave(el: Element) {
   const element = el as HTMLElement;
 
   element.style.position = "";
+  element.style.zIndex = "";
   element.style.width = "";
   element.style.left = "";
   element.style.right = "";
@@ -473,5 +475,7 @@ watch(
 .tf-toast-item {
   pointer-events: auto;
   width: 100%;
+  position: relative;
+  z-index: 1;
 }
 </style>

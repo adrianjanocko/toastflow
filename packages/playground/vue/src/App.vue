@@ -2,7 +2,7 @@
 import { toast, ToastContainer } from 'vue-toastflow';
 import Playground from '@/views/Playground.vue';
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
-// @ts-ignore
+// @ts-expect-error -- vue-snowfall has no type declarations
 import { useSnowfall } from 'vue-snowfall';
 import { BookOpen, Github, MoonStar, Sparkles, Star, SunMedium } from 'lucide-vue-next';
 import Button from './components/Button.vue';

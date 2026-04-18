@@ -1,5 +1,5 @@
 ﻿<script setup lang="ts">
-import type { Ref } from "vue";
+import type { Component, Ref } from "vue";
 import {
   computed,
   type CSSProperties,
@@ -96,7 +96,7 @@ const typeMeta: Record<
     accent: string;
     icon: string;
     close: string;
-    component: any;
+    component: Component;
   }
 > = {
   success: {
@@ -1624,8 +1624,6 @@ function stripHtmlToText(value: string): string {
   font-size: var(--tf-toast-created-at-font-size);
   font-style: italic;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   align-self: end;
   justify-self: end;
   grid-column: 2;
