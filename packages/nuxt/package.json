@@ -21,7 +21,7 @@
     "url": "https://github.com/adrianjanocko/toastflow.git",
     "directory": "packages/nuxt"
   },
-  "version": "1.0.1-beta.0",
+  "version": "1.0.1",
   "main": "./dist/module.js",
   "module": "./dist/module.mjs",
   "types": "./dist/module.d.ts",
