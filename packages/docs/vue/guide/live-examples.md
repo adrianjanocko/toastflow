@@ -7,6 +7,7 @@ outline: deep
 <script setup lang="ts">
 import {
   coreFiles,
+  cssOverrideFiles,
   customFiles,
   eventsFiles,
   headlessFiles,
@@ -62,6 +63,17 @@ import {
   title="type: custom with theme, css overrides, and showIcon"
   description="Three custom toasts: CSS theme class, inline css object, and hidden icon."
   :height="1020"
+/>
+
+## 🎯 CSS Override Test
+
+<ToastflowRepl
+:files="cssOverrideFiles"
+main-file="main.ts"
+layout="vertical"
+title="Global :root color overrides"
+description="All toast types should share the same dark purple background from :root overrides."
+:height="1020"
 />
 
 ## 🧩 Headless Rendering

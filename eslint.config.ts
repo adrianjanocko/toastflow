@@ -22,11 +22,21 @@ const config: ConfigArray = [
       "**/deps/*.js",
       "**/scripts/*.cjs",
       "*.log",
+      // These packages have their own ESLint configs — lint them separately
+      "packages/playground/vue/**",
+      "packages/test/**",
     ],
   },
 
   // Base recommended rules
   ...tseslint.configs.recommended,
+  {
+    languageOptions: {
+      parserOptions: {
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
 
   // Vue files
   ...pluginVue.configs["flat/essential"],
@@ -35,6 +45,7 @@ const config: ConfigArray = [
     languageOptions: {
       parserOptions: {
         parser: tseslint.parser,
+        tsconfigRootDir: import.meta.dirname,
       },
     },
   },

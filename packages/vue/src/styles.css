@@ -1,173 +1,185 @@
-:root {
-  /* base look */
-  --tf-toast-font-family:
-    inherit, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
-  --tf-toast-border-radius: 12px;
-  --tf-toast-border-width: 1px;
-  --tf-toast-padding: 16px;
+@layer tf-defaults {
+  :root {
+    /* base look */
+    --tf-toast-font-family:
+      inherit, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+      sans-serif;
+    --tf-toast-border-radius: 12px;
+    --tf-toast-border-width: 1px;
+    --tf-toast-padding: 16px;
 
-  /* layout inside toast */
-  --tf-toast-gap: 10px;
-  --tf-toast-buttons-gap: calc(var(--tf-toast-gap) / 2);
-  --tf-toast-buttons-content-gap: calc(var(--tf-toast-gap) / 2);
+    /* layout inside toast */
+    --tf-toast-gap: 10px;
+    --tf-toast-buttons-gap: calc(var(--tf-toast-gap) / 2);
+    --tf-toast-buttons-content-gap: calc(var(--tf-toast-gap) / 2);
 
-  /* stack padding (used for scrollable stack) */
-  --tf-toast-stack-padding-top: 8px;
-  --tf-toast-stack-padding-right: 8px;
-  --tf-toast-stack-padding-bottom: 18px;
-  --tf-toast-stack-padding-left: 0;
+    /* stack padding (used for scrollable stack) */
+    --tf-toast-stack-padding-top: 8px;
+    --tf-toast-stack-padding-right: 8px;
+    --tf-toast-stack-padding-bottom: 18px;
+    --tf-toast-stack-padding-left: 0;
 
-  /* title */
-  --tf-toast-title-font-size: 14px;
-  --tf-toast-title-font-weight: 600;
-  --tf-toast-title-line-height: 1.25;
+    /* title */
+    --tf-toast-title-font-size: 14px;
+    --tf-toast-title-font-weight: 600;
+    --tf-toast-title-line-height: 1.25;
 
-  /* description */
-  --tf-toast-description-font-size: 13px;
-  --tf-toast-description-line-height: 1.4;
+    /* description */
+    --tf-toast-description-font-size: 13px;
+    --tf-toast-description-line-height: 1.4;
 
-  /* created at and close floating bar */
-  --tf-toast-float-x: 0.4;
-  --tf-toast-float-y: -0.4;
+    /* created at and close floating bar */
+    --tf-toast-float-x: 0.4;
+    --tf-toast-float-y: -0.4;
 
-  /* created at badge */
-  --tf-toast-created-at-font-size: 11px;
-  --tf-toast-created-at-offset: 0;
-  --tf-toast-created-at-padding-x: 8px;
-  --tf-toast-created-at-border-radius: 999px;
+    /* created at badge */
+    --tf-toast-created-at-font-size: 11px;
+    --tf-toast-created-at-offset: 0;
+    --tf-toast-created-at-padding-x: 8px;
+    --tf-toast-created-at-border-radius: 999px;
 
-  /* close button */
-  --tf-toast-close-size: 18px;
-  --tf-toast-close-icon-size: 12px;
-  --tf-toast-close-border-width: var(--tf-toast-border-width);
-  --tf-toast-close-border-radius: var(--tf-toast-border-radius);
-  --tf-toast-close-font-size: 11px;
+    /* close button */
+    --tf-toast-close-size: 18px;
+    --tf-toast-close-icon-size: 12px;
+    --tf-toast-close-border-width: var(--tf-toast-border-width);
+    --tf-toast-close-border-radius: var(--tf-toast-border-radius);
+    --tf-toast-close-font-size: 11px;
 
-  /* buttons */
-  --tf-toast-button-font-size: 12px;
-  --tf-toast-button-line-height: 1;
-  --tf-toast-button-padding-y: 7px;
-  --tf-toast-button-padding-x: 9px;
-  --tf-toast-button-border-radius: 10px;
-  --tf-toast-button-border-width: var(--tf-toast-border-width);
+    /* buttons */
+    --tf-toast-button-font-size: 12px;
+    --tf-toast-button-line-height: 1;
+    --tf-toast-button-padding-y: 7px;
+    --tf-toast-button-padding-x: 9px;
+    --tf-toast-button-border-radius: 10px;
+    --tf-toast-button-border-width: var(--tf-toast-border-width);
 
-  /* icon */
-  --tf-toast-icon-size: 24px;
-  --tf-toast-icon-loading: var(--tf-toast-loading-text-default);
-  --tf-toast-icon-default: var(--tf-toast-normal-text-default);
-  --tf-toast-icon-success: var(--tf-toast-success-text-default);
-  --tf-toast-icon-error: var(--tf-toast-error-text-default);
-  --tf-toast-icon-warning: var(--tf-toast-warning-text-default);
-  --tf-toast-icon-info: var(--tf-toast-info-text-default);
-  --tf-toast-icon-custom: var(--tf-toast-normal-text-default);
+    /* icon */
+    --tf-toast-icon-size: 24px;
+    --tf-toast-icon-loading: var(--tf-toast-loading-text-default);
+    --tf-toast-icon-default: var(--tf-toast-normal-text-default);
+    --tf-toast-icon-success: var(--tf-toast-success-text-default);
+    --tf-toast-icon-error: var(--tf-toast-error-text-default);
+    --tf-toast-icon-warning: var(--tf-toast-warning-text-default);
+    --tf-toast-icon-info: var(--tf-toast-info-text-default);
+    --tf-toast-icon-custom: var(--tf-toast-normal-text-default);
 
-  /* progress bar */
-  --tf-toast-progress-height: 4px;
-  --tf-toast-progress-border-radius: var(--tf-toast-border-radius);
-  --tf-toast-progress-duration: 5000ms;
+    /* progress bar */
+    --tf-toast-progress-height: 4px;
+    --tf-toast-progress-border-radius: var(--tf-toast-border-radius);
+    --tf-toast-progress-duration: 5000ms;
 
-  /* accent presets */
-  --tf-toast-normal-bg-default: #fff;
-  --tf-toast-normal-border-default: #e6e8eb;
-  --tf-toast-normal-text-default: #11181c;
-  --tf-toast-normal-progress-bar-bg-default: var(
-    --tf-toast-normal-text-default
-  );
-  --tf-toast-normal-progress-bg-default: color-mix(
-    in srgb,
-    var(--tf-toast-normal-text-default) 20%,
-    transparent
-  );
-  --tf-toast-normal-color-default: var(--tf-toast-normal-text-default);
-  --tf-toast-normal-title-color-default: var(--tf-toast-normal-text-default);
-  --tf-toast-normal-description-color-default: var(
-    --tf-toast-normal-text-default
-  );
+    /* accent presets */
+    --tf-toast-normal-bg-default: #fff;
+    --tf-toast-normal-border-default: #e6e8eb;
+    --tf-toast-normal-text-default: #11181c;
+    --tf-toast-normal-progress-bar-bg-default: var(
+      --tf-toast-normal-text-default
+    );
+    --tf-toast-normal-progress-bg-default: color-mix(
+      in srgb,
+      var(--tf-toast-normal-text-default) 20%,
+      transparent
+    );
+    --tf-toast-normal-color-default: var(--tf-toast-normal-text-default);
+    --tf-toast-normal-title-color-default: var(--tf-toast-normal-text-default);
+    --tf-toast-normal-description-color-default: var(
+      --tf-toast-normal-text-default
+    );
 
-  --tf-toast-loading-bg-default: hsl(48, 100%, 96%);
-  --tf-toast-loading-border-default: hsl(46, 100%, 88%);
-  --tf-toast-loading-text-default: hsl(40, 100%, 32%);
-  --tf-toast-loading-progress-bar-bg-default: var(
-    --tf-toast-loading-text-default
-  );
-  --tf-toast-loading-progress-bg-default: color-mix(
-    in srgb,
-    var(--tf-toast-loading-text-default) 20%,
-    transparent
-  );
-  --tf-toast-loading-color-default: var(--tf-toast-loading-text-default);
-  --tf-toast-loading-title-color-default: var(--tf-toast-loading-text-default);
-  --tf-toast-loading-description-color-default: var(
-    --tf-toast-loading-text-default
-  );
+    --tf-toast-loading-bg-default: hsl(48, 100%, 96%);
+    --tf-toast-loading-border-default: hsl(46, 100%, 88%);
+    --tf-toast-loading-text-default: hsl(40, 100%, 32%);
+    --tf-toast-loading-progress-bar-bg-default: var(
+      --tf-toast-loading-text-default
+    );
+    --tf-toast-loading-progress-bg-default: color-mix(
+      in srgb,
+      var(--tf-toast-loading-text-default) 20%,
+      transparent
+    );
+    --tf-toast-loading-color-default: var(--tf-toast-loading-text-default);
+    --tf-toast-loading-title-color-default: var(
+      --tf-toast-loading-text-default
+    );
+    --tf-toast-loading-description-color-default: var(
+      --tf-toast-loading-text-default
+    );
 
-  --tf-toast-success-bg-default: hsl(143, 85%, 96%);
-  --tf-toast-success-border-default: hsl(145, 92%, 87%);
-  --tf-toast-success-text-default: hsl(140, 100%, 27%);
-  --tf-toast-success-progress-bar-bg-default: var(
-    --tf-toast-success-text-default
-  );
-  --tf-toast-success-progress-bg-default: color-mix(
-    in srgb,
-    var(--tf-toast-success-text-default) 20%,
-    transparent
-  );
-  --tf-toast-success-color-default: var(--tf-toast-success-text-default);
-  --tf-toast-success-title-color-default: var(--tf-toast-success-text-default);
-  --tf-toast-success-description-color-default: var(
-    --tf-toast-success-text-default
-  );
+    --tf-toast-success-bg-default: hsl(143, 85%, 96%);
+    --tf-toast-success-border-default: hsl(145, 92%, 87%);
+    --tf-toast-success-text-default: hsl(140, 100%, 27%);
+    --tf-toast-success-progress-bar-bg-default: var(
+      --tf-toast-success-text-default
+    );
+    --tf-toast-success-progress-bg-default: color-mix(
+      in srgb,
+      var(--tf-toast-success-text-default) 20%,
+      transparent
+    );
+    --tf-toast-success-color-default: var(--tf-toast-success-text-default);
+    --tf-toast-success-title-color-default: var(
+      --tf-toast-success-text-default
+    );
+    --tf-toast-success-description-color-default: var(
+      --tf-toast-success-text-default
+    );
 
-  --tf-toast-info-bg-default: hsl(208, 100%, 97%);
-  --tf-toast-info-border-default: hsl(221, 91%, 93%);
-  --tf-toast-info-text-default: hsl(210, 92%, 45%);
-  --tf-toast-info-progress-bar-bg-default: var(--tf-toast-info-text-default);
-  --tf-toast-info-progress-bg-default: color-mix(
-    in srgb,
-    var(--tf-toast-info-text-default) 20%,
-    transparent
-  );
-  --tf-toast-info-color-default: var(--tf-toast-info-text-default);
-  --tf-toast-info-title-color-default: var(--tf-toast-info-text-default);
-  --tf-toast-info-description-color-default: var(--tf-toast-info-text-default);
+    --tf-toast-info-bg-default: hsl(208, 100%, 97%);
+    --tf-toast-info-border-default: hsl(221, 91%, 93%);
+    --tf-toast-info-text-default: hsl(210, 92%, 45%);
+    --tf-toast-info-progress-bar-bg-default: var(--tf-toast-info-text-default);
+    --tf-toast-info-progress-bg-default: color-mix(
+      in srgb,
+      var(--tf-toast-info-text-default) 20%,
+      transparent
+    );
+    --tf-toast-info-color-default: var(--tf-toast-info-text-default);
+    --tf-toast-info-title-color-default: var(--tf-toast-info-text-default);
+    --tf-toast-info-description-color-default: var(
+      --tf-toast-info-text-default
+    );
 
-  --tf-toast-warning-bg-default: hsl(49, 100%, 97%);
-  --tf-toast-warning-border-default: hsl(49, 91%, 84%);
-  --tf-toast-warning-text-default: hsl(31, 92%, 45%);
-  --tf-toast-warning-progress-bar-bg-default: var(
-    --tf-toast-warning-text-default
-  );
-  --tf-toast-warning-progress-bg-default: color-mix(
-    in srgb,
-    var(--tf-toast-warning-text-default) 20%,
-    transparent
-  );
-  --tf-toast-warning-color-default: var(--tf-toast-warning-text-default);
-  --tf-toast-warning-title-color-default: var(--tf-toast-warning-text-default);
-  --tf-toast-warning-description-color-default: var(
-    --tf-toast-warning-text-default
-  );
+    --tf-toast-warning-bg-default: hsl(49, 100%, 97%);
+    --tf-toast-warning-border-default: hsl(49, 91%, 84%);
+    --tf-toast-warning-text-default: hsl(31, 92%, 45%);
+    --tf-toast-warning-progress-bar-bg-default: var(
+      --tf-toast-warning-text-default
+    );
+    --tf-toast-warning-progress-bg-default: color-mix(
+      in srgb,
+      var(--tf-toast-warning-text-default) 20%,
+      transparent
+    );
+    --tf-toast-warning-color-default: var(--tf-toast-warning-text-default);
+    --tf-toast-warning-title-color-default: var(
+      --tf-toast-warning-text-default
+    );
+    --tf-toast-warning-description-color-default: var(
+      --tf-toast-warning-text-default
+    );
 
-  --tf-toast-error-bg-default: hsl(359, 100%, 97%);
-  --tf-toast-error-border-default: hsl(359, 100%, 94%);
-  --tf-toast-error-text-default: hsl(360, 100%, 45%);
-  --tf-toast-error-progress-bar-bg-default: var(--tf-toast-error-text-default);
-  --tf-toast-error-progress-bg-default: color-mix(
-    in srgb,
-    var(--tf-toast-error-text-default) 20%,
-    transparent
-  );
-  --tf-toast-error-color-default: var(--tf-toast-error-text-default);
-  --tf-toast-error-title-color-default: var(--tf-toast-error-text-default);
-  --tf-toast-error-description-color-default: var(
-    --tf-toast-error-text-default
-  );
+    --tf-toast-error-bg-default: hsl(359, 100%, 97%);
+    --tf-toast-error-border-default: hsl(359, 100%, 94%);
+    --tf-toast-error-text-default: hsl(360, 100%, 45%);
+    --tf-toast-error-progress-bar-bg-default: var(
+      --tf-toast-error-text-default
+    );
+    --tf-toast-error-progress-bg-default: color-mix(
+      in srgb,
+      var(--tf-toast-error-text-default) 20%,
+      transparent
+    );
+    --tf-toast-error-color-default: var(--tf-toast-error-text-default);
+    --tf-toast-error-title-color-default: var(--tf-toast-error-text-default);
+    --tf-toast-error-description-color-default: var(
+      --tf-toast-error-text-default
+    );
 
-  /* animations */
-  --tf-toast-motion-offset: 10px;
-  --tf-toast-animation-in-duration: 260ms;
-  --tf-toast-animation-out-duration: 220ms;
+    /* animations */
+    --tf-toast-motion-offset: 10px;
+    --tf-toast-animation-in-duration: 260ms;
+    --tf-toast-animation-out-duration: 220ms;
+  }
 }
 
 .tf-toast--paused .tf-toast-progress-bar {

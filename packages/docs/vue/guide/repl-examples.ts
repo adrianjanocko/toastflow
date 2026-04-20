@@ -1196,3 +1196,144 @@ button:hover {
 </style>
 `,
 };
+
+export const cssOverrideFiles: Record<string, string> = {
+  "main.ts": `import { createApp } from "vue";
+import App from "./App.vue";
+import { createToastflow } from "vue-toastflow";
+
+createApp(App)
+  .use(
+    createToastflow({
+      position: "top-right",
+      duration: 5000,
+      progressBar: true,
+      pauseOnHover: true,
+    }),
+  )
+  .mount("#app");
+`,
+  "App.vue": `<script setup lang="ts">
+import { toast, ToastContainer } from "vue-toastflow";
+
+// 1. Global :root override — all types get dark purple bg
+function pushGlobalOverride() {
+  toast.success({ title: ":root override", description: "Dark purple bg from :root, not green." });
+}
+
+// 2. Per-type preset override — only error type gets custom colors
+function pushPresetOverride() {
+  toast.error({ title: "Preset override", description: "Custom error palette from :root preset tokens." });
+}
+
+// 3. --tf-toast-color cascades to title + description
+function pushColorCascade() {
+  toast.info({ title: "Color cascade", description: "White text from --tf-toast-color on body." });
+}
+
+// 4. --tf-toast-accent-color shorthand
+function pushAccentColor() {
+  toast.warning({ title: "Accent color", description: "Cyan accent via --tf-toast-accent-color on body." });
+}
+
+// 5. Per-toast css prop (highest priority)
+function pushInlineCss() {
+  toast.info({
+    title: "Inline css prop",
+    description: "Orange accent overrides everything.",
+    css: {
+      bg: "#431407",
+      accentColor: "#fb923c",
+      borderColor: "#9a3412",
+      iconColor: "#fdba74",
+    },
+  });
+}
+
+// 6. Custom theme class
+function pushTheme() {
+  toast.show({
+    type: "custom",
+    title: "Theme class",
+    description: "Mint theme via .tf-toast-accent--mint",
+    theme: "mint",
+  });
+}
+
+// 7. Default toast (no type-specific accent)
+function pushDefault() {
+  toast.show({ type: "default", title: "Default", description: "Should inherit global overrides." });
+}
+</script>
+
+<template>
+  <main style="padding: 24px; font-family: Inter, system-ui, sans-serif; display: grid; gap: 12px;">
+    <h3 style="margin: 0;">CSS Override Test</h3>
+    <p style="margin: 0; color: #64748b;">Each button tests a different override layer.</p>
+
+    <div style="display: grid; gap: 8px; max-width: 200px;">
+      <button @click="pushGlobalOverride">:root global override</button>
+      <button @click="pushPresetOverride">preset token (error)</button>
+      <button @click="pushColorCascade">color cascade (info)</button>
+      <button @click="pushAccentColor">accent-color (warning)</button>
+      <button @click="pushInlineCss">inline css prop</button>
+      <button @click="pushTheme">theme class (mint)</button>
+      <button @click="pushDefault">default</button>
+      <button @click="toast.dismissAll()">dismiss all</button>
+    </div>
+  </main>
+
+  <ToastContainer />
+</template>
+
+<style>
+@import url("${VUE_TOASTFLOW_CSS_URL}");
+
+/* 1. Global color override on :root — should beat all accent classes */
+:root {
+  --tf-toast-bg: #1e1b4b;
+  --tf-toast-border-color: #4c1d95;
+  --tf-toast-border-radius: 14px;
+  --tf-toast-padding: 14px;
+}
+
+/* 2. Per-type preset override — only affects error toasts */
+:root {
+  --tf-toast-error-bg-default: #3b0764;
+  --tf-toast-error-border-default: #7e22ce;
+  --tf-toast-error-text-default: #e9d5ff;
+}
+
+/* 3. --tf-toast-color on body cascades to title + description */
+body {
+  --tf-toast-color: #e0e7ff;
+  --tf-toast-accent-color: #22d3ee;
+}
+
+/* 6. Custom theme class */
+.tf-toast-accent--mint {
+  --tf-toast-bg: #042f2e;
+  --tf-toast-color: #ccfbf1;
+  --tf-toast-border-color: #115e59;
+  --tf-toast-title-color: #f0fdfa;
+  --tf-toast-description-color: #99f6e4;
+  --tf-toast-progress-bg: color-mix(in srgb, #2dd4bf 20%, transparent);
+  --tf-toast-progress-bar-bg: #2dd4bf;
+}
+
+button {
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #0f172a;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+button:hover {
+  background: #f8fafc;
+}
+</style>
+`,
+};
+
