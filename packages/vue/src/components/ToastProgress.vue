@@ -27,13 +27,13 @@ const props = withDefaults(
   width: 100%;
   border-radius: 0 0 var(--tf-toast-progress-border-radius)
     var(--tf-toast-progress-border-radius);
-  background: var(--tf-toast-progress-bg);
+  background: var(--_tf-resolved-progress-bg);
 }
 
 .tf-toast-progress-bar {
   height: 100%;
   width: 100%;
-  background: var(--tf-toast-progress-bar-bg);
+  background: var(--_tf-resolved-progress-bar-bg);
   transform-origin: left;
   animation-name: tf-toast-progress-rtl;
   animation-duration: var(--tf-toast-progress-duration, 5000ms);

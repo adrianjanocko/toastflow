@@ -38,7 +38,7 @@ Toastflow resolves config in this order:
 | `closeOnClick`       | `boolean`                            | `false`               | Dismiss when clicking toast body.                                                 |
 | `swipeToDismiss`     | `boolean`                            | `false`               | Allows dismissing a toast with a right swipe/drag (touch and mouse).              |
 | `buttons`            | `ToastButtonsConfig`                 | `undefined`           | Inline action buttons config (alignment, layout, spacing).                        |
-| `css`                | `ToastCssOverrides`                  | `undefined`           | CSS variable overrides applied as inline styles. See [Theming](/guide/theming).   |
+| `css`                | `ToastCSSOverrides`                  | `undefined`           | CSS variable overrides applied as inline styles. See [Theming](/guide/theming).   |
 | `supportHtml`        | `boolean`                            | `false`               | Allows HTML in `title` and `description`.                                         |
 | `showCreatedAt`      | `boolean`                            | `false`               | Shows created-at text badge.                                                      |
 | `createdAtFormatter` | `(createdAt: number) => string`      | locale time formatter | Formatter for created-at display text.                                            |
@@ -54,7 +54,7 @@ These fields are available when calling `show`, typed helpers, or `update`:
 | Option  | Type                | Default     | Notes                                                                                                       |
 | ------- | ------------------- | ----------- | ----------------------------------------------------------------------------------------------------------- |
 | `theme` | `string`            | `undefined` | Custom accent class (e.g. `"brand"` → `tf-toast-accent--brand`).                                            |
-| `css`   | `ToastCssOverrides` | `undefined` | Per-toast CSS variable overrides (e.g. `{ accentColor, iconColor, bg, … }`). See [Theming](/guide/theming). |
+| `css`   | `ToastCSSOverrides` | `undefined` | Per-toast CSS variable overrides (e.g. `{ accentColor, iconColor, bg, … }`). See [Theming](/guide/theming). |
 
 Default `animation` object:
 

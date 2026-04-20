@@ -277,7 +277,7 @@ export interface ToastConfig {
    * Per-toast CSS variable overrides applied as inline styles on the toast element.
    * Allows programmatic control over any visual token without writing CSS.
    */
-  css?: ToastCssOverrides;
+  css?: ToastCSSOverrides;
 
   /**
    * When true, title/description may contain HTML. (Default: false)
@@ -322,7 +322,7 @@ export interface ToastConfig {
  * progress bar colors in one go. Individual properties always win over
  * the shorthand.
  */
-export interface ToastCssOverrides {
+export interface ToastCSSOverrides {
   // -- Convenience shorthands --
 
   /**
@@ -331,7 +331,7 @@ export interface ToastCssOverrides {
    */
   accentColor?: string;
   /**
-   * Overrides the icon SVG color.
+   * Overrides the icon SVG color. `--tf-toast-icon-color`
    */
   iconColor?: string;
 

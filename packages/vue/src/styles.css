@@ -6,9 +6,6 @@
   --tf-toast-border-radius: 12px;
   --tf-toast-border-width: 1px;
   --tf-toast-padding: 16px;
-  --tf-toast-bg: var(--tf-toast-normal-bg-default);
-  --tf-toast-color: var(--tf-toast-normal-text-default);
-  --tf-toast-border-color: var(--tf-toast-normal-border-default);
 
   /* layout inside toast */
   --tf-toast-gap: 10px;
@@ -25,12 +22,10 @@
   --tf-toast-title-font-size: 14px;
   --tf-toast-title-font-weight: 600;
   --tf-toast-title-line-height: 1.25;
-  --tf-toast-title-color: var(--tf-toast-color);
 
   /* description */
   --tf-toast-description-font-size: 13px;
   --tf-toast-description-line-height: 1.4;
-  --tf-toast-description-color: var(--tf-toast-color);
 
   /* created at and close floating bar */
   --tf-toast-float-x: 0.4;
@@ -41,19 +36,12 @@
   --tf-toast-created-at-offset: 0;
   --tf-toast-created-at-padding-x: 8px;
   --tf-toast-created-at-border-radius: 999px;
-  --tf-toast-created-at-bg: var(--tf-toast-close-bg);
-  --tf-toast-created-at-border-color: var(--tf-toast-close-border-color);
-  --tf-toast-created-at-color: var(--tf-toast-close-color);
 
   /* close button */
   --tf-toast-close-size: 18px;
   --tf-toast-close-icon-size: 12px;
   --tf-toast-close-border-width: var(--tf-toast-border-width);
   --tf-toast-close-border-radius: var(--tf-toast-border-radius);
-  --tf-toast-close-border-color: var(--tf-toast-border-color);
-  --tf-toast-close-color: var(--tf-toast-color);
-  --tf-toast-close-bg: var(--tf-toast-bg);
-  --tf-toast-close-ring-color: var(--tf-toast-close-border-color);
   --tf-toast-close-font-size: 11px;
 
   /* buttons */
@@ -63,9 +51,6 @@
   --tf-toast-button-padding-x: 9px;
   --tf-toast-button-border-radius: 10px;
   --tf-toast-button-border-width: var(--tf-toast-border-width);
-  --tf-toast-button-bg: var(--tf-toast-bg);
-  --tf-toast-button-color: var(--tf-toast-color);
-  --tf-toast-button-border-color: var(--tf-toast-border-color);
 
   /* icon */
   --tf-toast-icon-size: 24px;
@@ -79,13 +64,7 @@
 
   /* progress bar */
   --tf-toast-progress-height: 4px;
-  --tf-toast-progress-bg: color-mix(
-    in srgb,
-    var(--tf-toast-color) 20%,
-    transparent
-  );
   --tf-toast-progress-border-radius: var(--tf-toast-border-radius);
-  --tf-toast-progress-bar-bg: var(--tf-toast-color);
   --tf-toast-progress-duration: 5000ms;
 
   /* accent presets */
