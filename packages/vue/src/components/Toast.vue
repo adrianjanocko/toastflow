@@ -1307,15 +1307,21 @@ function stripHtmlToText(value: string): string {
   --_tf-resolved-title-color: var(
     --tf-toast-title-color,
     var(
-      --tf-toast-accent-color,
-      var(--_tf-title-color, var(--_tf-resolved-color))
+      --tf-toast-color,
+      var(
+        --tf-toast-accent-color,
+        var(--_tf-title-color, var(--_tf-resolved-color))
+      )
     )
   );
   --_tf-resolved-desc-color: var(
     --tf-toast-description-color,
     var(
-      --tf-toast-accent-color,
-      var(--_tf-desc-color, var(--_tf-resolved-color))
+      --tf-toast-color,
+      var(
+        --tf-toast-accent-color,
+        var(--_tf-desc-color, var(--_tf-resolved-color))
+      )
     )
   );
   --_tf-resolved-progress-bg: var(

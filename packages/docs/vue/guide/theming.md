@@ -46,6 +46,8 @@ Color-related vars (`--tf-toast-bg`, `--tf-toast-color`, etc.) follow this resol
 3. **Accent class** (set by the toast type, e.g. success, error)
 4. **Default preset** (`--tf-toast-normal-bg-default`)
 
+`--tf-toast-color` also cascades to title and description colors — setting it globally overrides both unless `--tf-toast-title-color` or `--tf-toast-description-color` is explicitly set.
+
 `--tf-toast-accent-color` is a CSS shorthand that sets `color`, `titleColor`, `descriptionColor`, and `progressBarBg` at once when set on `:root` or `body`.
 
 `--tf-toast-icon-color` overrides the icon color for all toast types when set globally.
@@ -56,28 +58,20 @@ Global defaults that can also be configured in code: [Configuration](/api/config
 
 ### Tailwind CSS v4
 
-If you use Tailwind v4 with semantic design tokens, map Toastflow vars in `@theme`:
-
-```css
-@theme {
-  --tf-toast-bg: var(--color-background-subtle);
-  --tf-toast-color: var(--color-foreground);
-  --tf-toast-border-color: var(--color-border);
-  --tf-toast-border-radius: var(--radius-lg);
-}
-```
-
-Or use `@layer base` for overrides that don't need to be Tailwind utilities:
+Use `@layer base` to override Toastflow tokens in Tailwind v4:
 
 ```css
 @layer base {
   :root {
-    --tf-toast-bg: #1e1b4b;
-    --tf-toast-color: #e0e7ff;
-    --tf-toast-border-color: #4c1d95;
+    --tf-toast-bg: var(--color-background-subtle);
+    --tf-toast-color: var(--color-foreground);
+    --tf-toast-border-color: var(--color-border);
+    --tf-toast-border-radius: var(--radius-lg);
   }
 }
 ```
+
+> `@theme` won't work for Toastflow overrides — Tailwind wraps `@theme` in `@layer theme`, which has lower priority than Toastflow's unlayered styles.
 
 ## Per-Type Color Override
 
