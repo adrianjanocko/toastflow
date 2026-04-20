@@ -42,18 +42,18 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsup src/module.ts --format cjs,esm --dts",
+    "build": "tsup src/module.ts --format cjs,esm && tsc --emitDeclarationOnly && node -e \"require('fs').copyFileSync('dist/module.d.ts','dist/module.d.mts')\"",
     "prepack": "pnpm run build"
   },
   "peerDependencies": {
     "nuxt": "^3.0.0 || ^4.0.0"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.17.5",
+    "@nuxt/kit": "^4.4.2",
     "vue-toastflow": "workspace:^"
   },
   "devDependencies": {
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   }
 }

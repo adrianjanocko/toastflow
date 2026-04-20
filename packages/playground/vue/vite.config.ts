@@ -4,7 +4,6 @@ import { resolve, extname } from 'node:path'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import tailwindcss from '@tailwindcss/vite'
 import type { Plugin } from 'vite'
@@ -71,7 +70,7 @@ function readLibraryVersion(): string {
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue(), vueJsx(), vueDevTools(), tailwindcss(), sharedAssetsPlugin()],
+  plugins: [vue(), vueDevTools(), tailwindcss(), sharedAssetsPlugin()],
   define: {
     __LIB_VERSION__: JSON.stringify(readLibraryVersion()),
   },

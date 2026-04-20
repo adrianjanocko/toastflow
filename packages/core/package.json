@@ -29,13 +29,13 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "build": "tsup src/index.ts --format cjs,esm && tsc --emitDeclarationOnly && node -e \"require('fs').copyFileSync('dist/index.d.ts','dist/index.d.mts')\"",
     "prepack": "pnpm run build",
     "test": "vitest"
   },
   "devDependencies": {
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.13"
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.4"
   }
 }
