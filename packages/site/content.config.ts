@@ -1,10 +1,5 @@
 import type { DefinedCollection } from "@nuxt/content";
 import { defineCollection, defineContentConfig, z } from "@nuxt/content";
-import { useNuxt } from "@nuxt/kit";
-import { joinURL } from "ufo";
-
-const { options } = useNuxt();
-const cwd = joinURL(options.rootDir, "content");
 
 const createDocsSchema = () =>
   z.object({
@@ -23,18 +18,14 @@ const createDocsSchema = () =>
 const collections: Record<string, DefinedCollection> = {
   landing: defineCollection({
     type: "page",
-    source: {
-      cwd,
-      include: "index.md",
-    },
+    source: "index.md",
   }),
   docs: defineCollection({
     type: "page",
     source: {
-      cwd,
       include: "docs/**",
+      exclude: ["docs/index.md"],
       prefix: "/docs",
-      exclude: ["index.md"],
     },
     schema: createDocsSchema(),
   }),
