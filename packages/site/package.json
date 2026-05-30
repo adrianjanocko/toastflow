@@ -5,6 +5,7 @@
   "description": "Unified Toastflow docs and playground built with Nuxt and Docus.",
   "scripts": {
     "dev": "nuxt dev",
+    "prebuild": "pnpm --filter toastflow-core build && pnpm --filter vue-toastflow build",
     "build": "nuxt build",
     "preview": "nuxt preview"
   },
