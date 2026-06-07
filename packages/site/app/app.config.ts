@@ -38,6 +38,12 @@ export default defineAppConfig({
         },
         {
           icon: "i-simple-icons-npm",
+          label: "toastflow-core",
+          to: "https://www.npmjs.com/package/toastflow-core",
+          target: "_blank",
+        },
+        {
+          icon: "i-simple-icons-vuedotjs",
           label: "vue-toastflow",
           to: "https://www.npmjs.com/package/vue-toastflow",
           target: "_blank",

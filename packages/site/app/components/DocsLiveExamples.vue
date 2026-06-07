@@ -58,7 +58,7 @@ const examples: LiveExample[] = [
   {
     title: "Headless rendering",
     description:
-      "Render custom cards through the ToastContainer slot while keeping Toastflow behavior.",
+      "Trigger different workflows and render each toast through the ToastContainer slot.",
     files: headlessFiles,
     height: 1000,
   },

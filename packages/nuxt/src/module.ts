@@ -111,6 +111,7 @@ export default defineNuxtModule<NuxtToastflowOptions>({
 
     const toastTemplate = addTemplate({
       filename: "toastflow/toast.ts",
+      write: true,
       getContents: function () {
         return [
           'import { useNuxtApp } from "#app";',
