@@ -10,9 +10,9 @@ const links = computed(() =>
   appConfig.github && appConfig.github.url
     ? [
         {
-          "icon": "i-simple-icons-github",
-          "to": appConfig.github.url,
-          "target": "_blank",
+          icon: "i-simple-icons-github",
+          to: appConfig.github.url,
+          target: "_blank",
           "aria-label": "GitHub",
         },
       ]
@@ -85,21 +85,14 @@ function toggleColorMode() {
     </template>
 
     <template #toggle="{ open, toggle }">
-      <IconMenuToggle
-        :open="open"
-        class="lg:hidden"
-        @click="toggle"
-      />
+      <IconMenuToggle :open="open" class="lg:hidden" @click="toggle" />
     </template>
 
     <template #body>
       <AppHeaderBody />
     </template>
 
-    <template
-      v-if="subNavigationMode === 'header'"
-      #bottom
-    >
+    <template v-if="subNavigationMode === 'header'" #bottom>
       <AppHeaderBottom />
     </template>
   </UHeader>

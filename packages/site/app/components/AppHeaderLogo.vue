@@ -19,10 +19,7 @@ function handleLogoError() {
 </script>
 
 <template>
-  <UContextMenu
-    v-if="shouldShowLogo"
-    :items="contextMenuItems"
-  >
+  <UContextMenu v-if="shouldShowLogo" :items="contextMenuItems">
     <span class="inline-flex h-6 shrink-0 items-center">
       <img
         :src="headerLightUrl"
@@ -30,14 +27,14 @@ function handleLogoError() {
         :class="[logoClass, 'dark:hidden']"
         decoding="async"
         @error="handleLogoError"
-      >
+      />
       <img
         :src="headerDarkUrl"
         :alt="logoAlt"
         :class="[logoClass, 'hidden dark:block']"
         decoding="async"
         @error="handleLogoError"
-      >
+      />
     </span>
   </UContextMenu>
   <span v-else>
