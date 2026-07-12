@@ -308,6 +308,133 @@ describe("createToastStore", () => {
     });
   });
 
+  describe("container scoping", () => {
+    function visibleIn(store: ToastStore, containerId?: string) {
+      return visibleToasts(store).filter((t) => t.containerId === containerId);
+    }
+
+    it("tracks capacity per (containerId, position)", () => {
+      const store = createToastStore({ maxVisible: 2, duration: Infinity });
+      store.show("d1");
+      store.show("d2");
+      store.show("a1", { containerId: "a" });
+      store.show("a2", { containerId: "a" });
+
+      expect(visibleToasts(store)).toHaveLength(4);
+      expect(visibleIn(store)).toHaveLength(2);
+      expect(visibleIn(store, "a")).toHaveLength(2);
+    });
+
+    it("evicts only within the same container", () => {
+      const store = createToastStore({ maxVisible: 2, duration: Infinity });
+      store.show("d1");
+      store.show("d2");
+      store.show("a1", { containerId: "a" });
+      store.show("a2", { containerId: "a" });
+      store.show("a3", { containerId: "a" });
+      vi.advanceTimersByTime(0);
+
+      expect(visibleIn(store).map((t) => t.title)).toEqual(["d2", "d1"]);
+      expect(
+        visibleIn(store, "a")
+          .map((t) => t.title)
+          .sort(),
+      ).toEqual(["a2", "a3"]);
+    });
+
+    it("queues per container and promotes only when its own slot frees up", () => {
+      const store = createToastStore({
+        maxVisible: 1,
+        queue: true,
+        duration: Infinity,
+      });
+      const defaultVisible = store.show("d-visible");
+      store.show("a-visible", { containerId: "a" });
+      store.show("a-queued", { containerId: "a" });
+
+      expect(store.getState().queue).toHaveLength(1);
+
+      // Freeing a default-container slot must not promote container "a".
+      store.dismiss(defaultVisible);
+      vi.advanceTimersByTime(0);
+      expect(store.getState().queue).toHaveLength(1);
+
+      const aVisible = visibleIn(store, "a")[0]!;
+      store.dismiss(aVisible.id);
+      vi.advanceTimersByTime(0);
+      expect(store.getState().queue).toHaveLength(0);
+      expect(visibleIn(store, "a").map((t) => t.title)).toEqual(["a-queued"]);
+    });
+
+    it("scopes duplicate detection per container", () => {
+      const store = createToastStore({
+        preventDuplicates: true,
+        duration: Infinity,
+      });
+      const first = store.show("Same");
+      const other = store.show("Same", { containerId: "a" });
+      const repeat = store.show("Same", { containerId: "a" });
+
+      expect(other).not.toBe(first);
+      expect(repeat).toBe(other);
+      expect(store.getState().toasts).toHaveLength(2);
+    });
+
+    it("dismissAll({ containerId }) clears only that container (visible + queued)", () => {
+      const store = createToastStore({
+        maxVisible: 1,
+        queue: true,
+        duration: Infinity,
+      });
+      store.show("d-visible");
+      store.show("d-queued");
+      store.show("a-visible", { containerId: "a" });
+      store.show("a-queued", { containerId: "a" });
+
+      store.dismissAll({ containerId: "a" });
+      vi.advanceTimersByTime(50);
+
+      expect(visibleIn(store, "a")).toHaveLength(0);
+      expect(visibleIn(store)).toHaveLength(1);
+      expect(store.getState().queue.map((t) => t.title)).toEqual(["d-queued"]);
+    });
+
+    it("dismissAll({ containerId: undefined }) clears only the default container", () => {
+      const store = createToastStore({ duration: Infinity });
+      store.show("default");
+      store.show("scoped", { containerId: "a" });
+
+      store.dismissAll({ containerId: undefined });
+      vi.advanceTimersByTime(50);
+
+      expect(visibleIn(store)).toHaveLength(0);
+      expect(visibleIn(store, "a")).toHaveLength(1);
+    });
+
+    it("bare dismissAll() still clears every container", () => {
+      const store = createToastStore({ duration: Infinity });
+      store.show("default");
+      store.show("scoped", { containerId: "a" });
+
+      store.dismissAll();
+      vi.advanceTimersByTime(50);
+      expect(store.getState().toasts).toHaveLength(0);
+    });
+
+    it("update and dismiss by id work across containers", () => {
+      const store = createToastStore({ duration: Infinity });
+      const scoped = store.show("scoped", { containerId: "a" });
+
+      store.update(scoped, { title: "updated" });
+      expect(store.getState().toasts[0]!.title).toBe("updated");
+      expect(store.getState().toasts[0]!.containerId).toBe("a");
+
+      store.dismiss(scoped);
+      vi.advanceTimersByTime(0);
+      expect(store.getState().toasts).toHaveLength(0);
+    });
+  });
+
   describe("loading", () => {
     it("shows a loading toast and updates it on success", async () => {
       const store = createToastStore({ duration: Infinity });

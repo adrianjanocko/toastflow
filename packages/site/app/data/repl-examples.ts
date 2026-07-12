@@ -2846,6 +2846,171 @@ button:hover {
 `,
 };
 
+export const multiContainerFiles: Record<string, string> = {
+  "main.ts": `import { createApp } from "vue";
+import App from "./App.vue";
+import { createToastflow } from "vue-toastflow";
+
+createApp(App)
+  .use(
+    createToastflow({
+      position: "top-right",
+      duration: 5200,
+      maxVisible: 3,
+    }),
+  )
+  .mount("#app");
+`,
+  "App.vue": `<script setup lang="ts">
+import { computed, onMounted, onUnmounted, ref } from "vue";
+import { toast, ToastContainer, type ToastState } from "vue-toastflow";
+
+const state = ref<ToastState>(toast.getState());
+const seq = ref(1);
+let off: (() => void) | null = null;
+
+onMounted(() => {
+  off = toast.subscribe((next) => {
+    state.value = next;
+  });
+});
+
+onUnmounted(() => {
+  off?.();
+});
+
+// toasts without a containerId belong to the default container
+const defaultCount = computed(
+  () => state.value.toasts.filter((t) => t.containerId === undefined).length,
+);
+const panelCount = computed(
+  () => state.value.toasts.filter((t) => t.containerId === "panel").length,
+);
+
+function pushDefault() {
+  toast.success({
+    title: "#" + String(seq.value++) + " Saved",
+    description: "No containerId, so this lands in the default container.",
+  });
+}
+
+// containerId routes the toast to <ToastContainer id="panel" />;
+// a different position keeps the two stacks visually apart
+function pushPanel() {
+  toast.info({
+    title: "#" + String(seq.value++) + " Panel event",
+    description: 'containerId: "panel" routes it to the named container.',
+    containerId: "panel",
+    position: "bottom-center",
+  });
+}
+
+// each container has its own maxVisible budget per position —
+// filling one never evicts toasts from the other
+function pushBatchBoth() {
+  for (let i = 0; i < 3; i += 1) {
+    pushDefault();
+    pushPanel();
+  }
+}
+</script>
+
+<template>
+  <main class="demo-shell">
+    <div>
+      <h3>Multiple containers</h3>
+      <p>Route toasts between the default container and id="panel".</p>
+    </div>
+
+    <div class="controls-grid">
+      <section class="control-column">
+        <span class="control-label">Route</span>
+        <button @click="pushDefault">toast → default (top-right)</button>
+        <button @click="pushPanel">toast → panel (bottom-center)</button>
+        <button @click="pushBatchBoth">batch → both (3 + 3)</button>
+      </section>
+
+      <section class="control-column">
+        <span class="control-label">Dismiss</span>
+        <button @click="toast.dismissAll({ containerId: 'panel' })">
+          dismissAll panel
+        </button>
+        <button @click="toast.dismissAll({ containerId: undefined })">
+          dismissAll default
+        </button>
+        <button @click="toast.dismissAll()">dismissAll everything</button>
+      </section>
+    </div>
+
+    <p style="margin: 0; color: #334155; font-size: 13px;">
+      Default: <strong>{{ defaultCount }}</strong> |
+      Panel: <strong>{{ panelCount }}</strong>
+    </p>
+  </main>
+
+  <!-- default container: receives toasts without a containerId -->
+  <ToastContainer />
+
+  <!-- named container: receives toasts with containerId: "panel" -->
+  <ToastContainer id="panel" />
+</template>
+
+<style>
+@import url("${VUE_TOASTFLOW_CSS_URL}");
+
+.demo-shell {
+  display: grid;
+  gap: 12px;
+  padding: 24px;
+  color: #f8fafc;
+  font-family: Inter, system-ui, sans-serif;
+}
+.demo-shell h3 {
+  margin: 0;
+}
+.demo-shell > div:first-child p {
+  margin: 0;
+  color: #94a3b8;
+}
+.controls-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 220px));
+  gap: 12px;
+  align-items: start;
+  max-width: 470px;
+}
+.control-column {
+  display: grid;
+  gap: 8px;
+}
+.control-label {
+  color: #93c5fd;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+button {
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #0f172a;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+}
+button:hover {
+  background: #f8fafc;
+}
+@media (max-width: 520px) {
+  .controls-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+`,
+};
+
 export const customFiles: Record<string, string> = {
   "main.ts": `import { createApp } from "vue";
 import App from "./App.vue";

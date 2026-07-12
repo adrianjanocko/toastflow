@@ -7,6 +7,7 @@ import {
   headlessFiles,
   helperFiles,
   loadingFiles,
+  multiContainerFiles,
   queueFiles,
   randomFeedFiles,
   themeFiles,
@@ -84,6 +85,13 @@ const examples: LiveExample[] = [
     height: 1100,
   },
   {
+    title: "Multiple containers",
+    description:
+      "Route toasts between the default container and a named container, then dismiss each scope separately.",
+    files: multiContainerFiles,
+    height: 1000,
+  },
+  {
     title: "Core store only",
     description:
       "Use createToastStore directly without the Vue plugin or default renderer.",
@@ -111,6 +119,6 @@ const examples: LiveExample[] = [
 <style scoped>
 .tf-live-examples {
   display: grid;
-  gap: 2rem;
+  gap: 1rem;
 }
 </style>

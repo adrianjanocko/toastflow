@@ -1509,6 +1509,7 @@ function toToastContext(toast: ToastInstance): ToastContext {
     title: toast.title,
     description: toast.description,
     createdAt: toast.createdAt,
+    containerId: toast.containerId,
   };
 }
 

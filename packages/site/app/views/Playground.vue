@@ -15,17 +15,17 @@ import {
   type ToastProgressAlignment,
 } from "vue-toastflow";
 import Giscus, { type BooleanString, type Mapping } from "@giscus/vue";
-import type {
-  PauseStrategy,
-  ToastButton,
-  ToastButtonsAlignment,
-  ToastButtonsLayout,
-  ToastConfig,
-  ToastId,
-  ToastOptions,
-  ToastOrder,
-  ToastPosition,
-  ToastType,
+import {
+  createToastStore,
+  type PauseStrategy,
+  type ToastButton,
+  type ToastButtonsAlignment,
+  type ToastButtonsLayout,
+  type ToastId,
+  type ToastOptions,
+  type ToastOrder,
+  type ToastPosition,
+  type ToastType,
 } from "toastflow-core";
 import ActionsFooter from "../components/ActionsFooter.vue";
 import BehaviorCard from "../components/cards/BehaviorCard.vue";
@@ -66,39 +66,9 @@ type PublicRuntimeGiscus = {
 };
 
 const runtimeConfig = useRuntimeConfig();
-const defaultToastConfig: ToastConfig = {
-  offset: "16px",
-  gap: "8px",
-  zIndex: 9999,
-  width: "350px",
-  overflowScroll: false,
-  duration: 5000,
-  maxVisible: 5,
-  queue: false,
-  position: "top-right",
-  alignment: "left",
-  progressAlignment: "right-to-left",
-  preventDuplicates: false,
-  order: "newest",
-  progressBar: true,
-  pauseOnHover: true,
-  pauseStrategy: "resume",
-  animation: {
-    name: "Toastflow__animation",
-    bump: "Toastflow__animation-bump",
-    clearAll: "Toastflow__animation-clearAll",
-    update: "Toastflow__animation-update",
-  },
-  closeButton: true,
-  showIcon: true,
-  closeOnClick: false,
-  swipeToDismiss: false,
-  supportHtml: false,
-  showCreatedAt: false,
-  createdAtFormatter(date) {
-    return new Date(date).toLocaleTimeString();
-  },
-};
+// SSR fallback: derive the library defaults instead of duplicating them
+// (getConfig() only resolves the config object — no timers are scheduled).
+const defaultToastConfig = createToastStore().getConfig();
 const config = import.meta.client ? toast.getConfig() : defaultToastConfig;
 // Baseline used by the live-code snippet: only options the user changed
 // away from these values are printed.

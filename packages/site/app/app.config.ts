@@ -9,7 +9,7 @@ export default defineAppConfig({
     title: "Toastflow",
     titleTemplate: "%s | Toastflow",
     description:
-      "Accessible toast notifications for Vue, Nuxt, and headless apps.",
+      "Toastflow is an accessible, lightweight toast notification library for Vue 3, Nuxt, and headless apps with queue and theming control.",
     image: "/banner.png",
     imageAlt: "Toastflow toast notification playground preview",
     url: "https://www.toastflow.top",

@@ -88,10 +88,20 @@ const seoImage = computed(() =>
 const seoImageAlt = computed(
   () => seo.imageAlt || "Toastflow toast notification preview",
 );
-const fontsHref =
-  "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap";
+const umamiWebsiteId = String(
+  useRuntimeConfig().public.umamiWebsiteId ?? "",
+).trim();
 
 useHead({
+  script: umamiWebsiteId
+    ? [
+        {
+          defer: true,
+          src: "https://cloud.umami.is/script.js",
+          "data-website-id": umamiWebsiteId,
+        },
+      ]
+    : [],
   titleTemplate(titleChunk) {
     if (!titleChunk || titleChunk === seoTitle.value) {
       return seoTitle.value;
@@ -122,28 +132,6 @@ useHead({
       href: "/apple-touch-icon.png",
     },
     { key: "manifest", rel: "manifest", href: "/site.webmanifest" },
-    {
-      key: "fonts-preconnect-googleapis",
-      rel: "preconnect",
-      href: "https://fonts.googleapis.com",
-    },
-    {
-      key: "fonts-preconnect-gstatic",
-      rel: "preconnect",
-      href: "https://fonts.gstatic.com",
-      crossorigin: "",
-    },
-    {
-      key: "fonts-preload",
-      rel: "preload",
-      as: "style",
-      href: fontsHref,
-    },
-    {
-      key: "fonts-stylesheet",
-      rel: "stylesheet",
-      href: fontsHref,
-    },
     ...(isDocsRoute.value
       ? []
       : [{ key: "canonical", rel: "canonical", href: canonicalUrl.value }]),
@@ -179,7 +167,11 @@ useSeoMeta({
 });
 
 if (isEnabled.value) {
-  const defaultLocale = useRuntimeConfig().public.i18n.defaultLocale!;
+  // Typed only when the docus i18n module is active, hence the cast.
+  const i18nConfig = useRuntimeConfig().public.i18n as {
+    defaultLocale?: string;
+  };
+  const defaultLocale = i18nConfig.defaultLocale!;
 
   onMounted(() => {
     const currentLocale = route.path.split("/")[1];

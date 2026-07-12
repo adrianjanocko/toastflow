@@ -104,8 +104,8 @@ export const toast = {
   dismiss(id: ToastId): void {
     return getToastStore().dismiss(id);
   },
-  dismissAll(): void {
-    return getToastStore().dismissAll();
+  dismissAll(filter?: { containerId?: string }): void {
+    return getToastStore().dismissAll(filter);
   },
   pause(id: ToastId): void {
     return getToastStore().pause(id);

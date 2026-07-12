@@ -91,6 +91,7 @@ export interface ToastContext {
   title: string;
   description: string;
   createdAt: number;
+  containerId?: string;
 }
 
 /**
@@ -199,9 +200,15 @@ export interface ToastConfig {
    */
   width: string;
   /**
-   * Beta: enable scrolling when a stack overflows; currently only works for top-* positions. (Default: false)
+   * Enable scrolling when a stack grows taller than the viewport. (Default: false)
    */
   overflowScroll: boolean;
+  /**
+   * Render this toast only inside the `<ToastContainer>` whose `id` prop matches.
+   * Toasts without a containerId render only in containers without an `id`.
+   * (Default: undefined)
+   */
+  containerId?: string;
 
   /**
    * Time in milliseconds before a toast auto-dismisses.
@@ -561,9 +568,12 @@ export interface ToastStore {
   dismiss(id: ToastId): void;
 
   /**
-   * Dismiss all toasts at once.
+   * Dismiss all toasts at once, or only those targeting a specific container.
+   * - `dismissAll()` — dismiss everything.
+   * - `dismissAll({ containerId: "x" })` — dismiss only toasts targeting container "x".
+   * - `dismissAll({ containerId: undefined })` — dismiss only default-container toasts.
    */
-  dismissAll(): void;
+  dismissAll(filter?: { containerId?: string }): void;
 
   /**
    * Pause the auto-dismiss timer for a toast.

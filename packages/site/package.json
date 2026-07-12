@@ -7,7 +7,8 @@
     "dev": "nuxt dev",
     "prebuild": "pnpm --filter toastflow-core build && pnpm --filter vue-toastflow build",
     "build": "nuxt build",
-    "preview": "nuxt preview"
+    "preview": "nuxt preview",
+    "typecheck:site": "nuxt typecheck"
   },
   "dependencies": {
     "@giscus/vue": "^3.1.1",
@@ -24,6 +25,7 @@
     "vue-toastflow": "workspace:^"
   },
   "devDependencies": {
-    "@iconify-json/tabler": "^1.2.35"
+    "@iconify-json/tabler": "^1.2.35",
+    "vue-tsc": "^3.3.6"
   }
 }

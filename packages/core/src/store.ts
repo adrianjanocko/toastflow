@@ -71,6 +71,12 @@ const defaults: ToastConfig = {
 // delay before removing clear-all toasts from state (lets the CSS animation start)
 const CLEAR_ALL_DELAY = 50;
 
+// Queues, capacity, duplicate detection, and ordering are scoped per
+// (position, containerId). ToastPosition values never contain "::".
+function scopeKeyOf(position: ToastPosition, containerId?: string): string {
+  return `${position}::${containerId ?? ""}`;
+}
+
 export function createToastStore(
   globalConfig: Partial<ToastConfig> = {},
 ): ToastStore {
@@ -79,7 +85,7 @@ export function createToastStore(
   const eventListeners = new Set<EventListener>();
   const timers = new Map<ToastId, TimerState>();
   const promiseRuns = new Map<ToastId, symbol>();
-  const queueByPosition = new Map<ToastPosition, ToastInstance[]>();
+  const queueByScope = new Map<string, ToastInstance[]>();
   // Internal delays (phase-2 removal, clear-all) tracked so destroy() can cancel them.
   const pendingTimeouts = new Set<TimeoutHandle>();
   let queuePaused = false;
@@ -96,7 +102,7 @@ export function createToastStore(
 
   function flattenQueue(): ToastInstance[] {
     const items: ToastInstance[] = [];
-    for (const queued of queueByPosition.values()) {
+    for (const queued of queueByScope.values()) {
       items.push(...queued);
     }
     return items;
@@ -109,10 +115,14 @@ export function createToastStore(
     };
   }
 
-  function getVisibleAt(position: ToastPosition): ToastInstance[] {
+  function getVisibleAt(
+    position: ToastPosition,
+    containerId?: string,
+  ): ToastInstance[] {
     return state.toasts.filter(function (t) {
       return (
         t.position === position &&
+        t.containerId === containerId &&
         t.phase !== "leaving" &&
         t.phase !== "clear-all"
       );
@@ -124,7 +134,7 @@ export function createToastStore(
     | {
         location: "queue";
         toast: ToastInstance;
-        position: ToastPosition;
+        scope: string;
         index: number;
       };
 
@@ -134,7 +144,7 @@ export function createToastStore(
       return { location: "visible", toast: visible };
     }
 
-    for (const [position, queued] of queueByPosition.entries()) {
+    for (const [scope, queued] of queueByScope.entries()) {
       const index = queued.findIndex((t) => t.id === id);
       if (index !== -1) {
         const toastAtIndex = queued[index];
@@ -144,7 +154,7 @@ export function createToastStore(
         return {
           location: "queue",
           toast: toastAtIndex,
-          position,
+          scope,
           index,
         };
       }
@@ -157,6 +167,7 @@ export function createToastStore(
     const predicate = function (t: ToastInstance) {
       return (
         t.position === toast.position &&
+        t.containerId === toast.containerId &&
         t.type === toast.type &&
         t.title === toast.title &&
         t.description === toast.description &&
@@ -170,7 +181,7 @@ export function createToastStore(
       return { location: "visible", toast: visible };
     }
 
-    for (const [position, queued] of queueByPosition.entries()) {
+    for (const [scope, queued] of queueByScope.entries()) {
       const index = queued.findIndex(predicate);
       if (index !== -1) {
         const toastAtIndex = queued[index];
@@ -180,7 +191,7 @@ export function createToastStore(
         return {
           location: "queue",
           toast: toastAtIndex,
-          position,
+          scope,
           index,
         };
       }
@@ -190,24 +201,24 @@ export function createToastStore(
   }
 
   function replaceQueuedToast(
-    position: ToastPosition,
+    scope: string,
     index: number,
     toast: ToastInstance,
   ): void {
-    const queued = queueByPosition.get(position);
+    const queued = queueByScope.get(scope);
     if (!queued) {
       return;
     }
     queued[index] = toast;
-    queueByPosition.set(position, queued);
+    queueByScope.set(scope, queued);
     syncState();
   }
 
   function removeQueuedToast(
-    position: ToastPosition,
+    scope: string,
     index: number,
   ): ToastInstance | null {
-    const queued = queueByPosition.get(position);
+    const queued = queueByScope.get(scope);
     if (!queued || index < 0 || index >= queued.length) {
       return null;
     }
@@ -215,9 +226,9 @@ export function createToastStore(
     const [removed] = queued.splice(index, 1);
 
     if (!queued.length) {
-      queueByPosition.delete(position);
+      queueByScope.delete(scope);
     } else {
-      queueByPosition.set(position, queued);
+      queueByScope.set(scope, queued);
     }
 
     syncState();
@@ -225,22 +236,23 @@ export function createToastStore(
   }
 
   function enqueueToast(toast: ToastInstance): void {
-    const queued = queueByPosition.get(toast.position) ?? [];
+    const scope = scopeKeyOf(toast.position, toast.containerId);
+    const queued = queueByScope.get(scope) ?? [];
     queued.push(toast);
-    queueByPosition.set(toast.position, queued);
+    queueByScope.set(scope, queued);
     syncState();
   }
 
-  function dequeueNext(position: ToastPosition): ToastInstance | null {
-    const queued = queueByPosition.get(position);
+  function dequeueNext(scope: string): ToastInstance | null {
+    const queued = queueByScope.get(scope);
     if (!queued || !queued.length) {
       return null;
     }
     const next = queued.shift() ?? null;
     if (!queued.length) {
-      queueByPosition.delete(position);
+      queueByScope.delete(scope);
     } else {
-      queueByPosition.set(position, queued);
+      queueByScope.set(scope, queued);
     }
     syncState();
     return next;
@@ -250,19 +262,20 @@ export function createToastStore(
     if (toast.maxVisible <= 0) {
       return true;
     }
-    const samePos = getVisibleAt(toast.position);
+    const samePos = getVisibleAt(toast.position, toast.containerId);
     return samePos.length < toast.maxVisible;
   }
 
-  function processQueue(position: ToastPosition): void {
+  function processQueue(position: ToastPosition, containerId?: string): void {
     if (queuePaused) {
       return;
     }
 
+    const scope = scopeKeyOf(position, containerId);
     let changed = false;
 
     while (true) {
-      const nextQueued = queueByPosition.get(position)?.[0];
+      const nextQueued = queueByScope.get(scope)?.[0];
       if (!nextQueued) {
         break;
       }
@@ -271,7 +284,7 @@ export function createToastStore(
         break;
       }
 
-      const next = dequeueNext(position);
+      const next = dequeueNext(scope);
       if (!next) {
         break;
       }
@@ -371,7 +384,7 @@ export function createToastStore(
             }),
           );
         } else {
-          replaceQueuedToast(duplicate.position, duplicate.index, updated);
+          replaceQueuedToast(duplicate.scope, duplicate.index, updated);
         }
 
         emitEvent({ id: updated.id, kind: "duplicate" });
@@ -389,7 +402,7 @@ export function createToastStore(
       }
 
       const toEvict = pickOverflowToast(
-        getVisibleAt(toastInstance.position),
+        getVisibleAt(toastInstance.position, toastInstance.containerId),
         toastInstance.order,
         toastInstance.position,
       );
@@ -543,7 +556,7 @@ export function createToastStore(
       syncState(state.toasts.map((t) => (t.id === id ? updated : t)));
       emitEvent({ id, kind: "timer-reset" });
     } else {
-      replaceQueuedToast(located.position, located.index, updated);
+      replaceQueuedToast(located.scope, located.index, updated);
     }
 
     emitEvent({ id, kind: "update" });
@@ -570,7 +583,7 @@ export function createToastStore(
     }
 
     if (located.location === "queue") {
-      removeQueuedToast(located.position, located.index);
+      removeQueuedToast(located.scope, located.index);
       notify();
       return;
     }
@@ -588,7 +601,7 @@ export function createToastStore(
     );
 
     notify();
-    processQueue(toast.position);
+    processQueue(toast.position, toast.containerId);
 
     // Phase 2: remove after the current render cycle so the leave
     // animation starts from where the toast was actually visible.
@@ -611,7 +624,7 @@ export function createToastStore(
       }
 
       notify();
-      processQueue(toast.position);
+      processQueue(toast.position, toast.containerId);
     }, 0);
   }
 
@@ -630,20 +643,31 @@ export function createToastStore(
     pendingTimeouts.clear();
 
     promiseRuns.clear();
-    queueByPosition.clear();
+    queueByScope.clear();
     listeners.clear();
     eventListeners.clear();
     state = { toasts: [], queue: [] };
   }
 
-  // Clear all toasts in their current positions.
-  function dismissAll(): void {
+  // Clear all toasts, or only those targeting a specific container.
+  // dismissAll() clears everything; dismissAll({ containerId }) clears one
+  // container ({ containerId: undefined } targets the default container).
+  function dismissAll(filter?: { containerId?: string }): void {
     if (!state.toasts.length && !state.queue.length) {
       return;
     }
 
-    const current = state.toasts;
-    const queued = flattenQueue();
+    const scoped = filter !== undefined && "containerId" in filter;
+    const matches = function (t: ToastInstance): boolean {
+      return !scoped || t.containerId === filter.containerId;
+    };
+
+    const current = state.toasts.filter(matches);
+    const queued = flattenQueue().filter(matches);
+
+    if (!current.length && !queued.length) {
+      return;
+    }
 
     for (const toast of current) {
       clearAutoDismiss(toast.id);
@@ -664,10 +688,28 @@ export function createToastStore(
 
     // Clear queue immediately to prevent processQueue from dequeuing
     // toasts that already had onClose called during the animation delay.
-    queueByPosition.clear();
+    if (!scoped) {
+      queueByScope.clear();
+    } else {
+      for (const [scope, bucket] of Array.from(queueByScope.entries())) {
+        const remaining = bucket.filter(function (t) {
+          return !matches(t);
+        });
+        if (!remaining.length) {
+          queueByScope.delete(scope);
+        } else {
+          queueByScope.set(scope, remaining);
+        }
+      }
+    }
+
+    const clearedIds = new Set(current.map((t) => t.id));
 
     syncState(
       state.toasts.map(function (t) {
+        if (!clearedIds.has(t.id)) {
+          return t;
+        }
         return {
           ...t,
           phase: "clear-all",
@@ -684,7 +726,11 @@ export function createToastStore(
         }
       }
 
-      syncState([]);
+      syncState(
+        state.toasts.filter(function (t) {
+          return !clearedIds.has(t.id);
+        }),
+      );
       notify();
     }, CLEAR_ALL_DELAY);
   }
@@ -700,8 +746,12 @@ export function createToastStore(
       return;
     }
     queuePaused = false;
-    for (const position of queueByPosition.keys()) {
-      processQueue(position);
+    // Snapshot bucket heads first: processQueue deletes emptied scope keys.
+    const heads = Array.from(queueByScope.values(), (bucket) => bucket[0]);
+    for (const head of heads) {
+      if (head) {
+        processQueue(head.position, head.containerId);
+      }
     }
   }
 
@@ -848,6 +898,7 @@ function toContext(t: ToastInstance): ToastContext {
     title: t.title,
     description: t.description,
     createdAt: t.createdAt,
+    containerId: t.containerId,
   };
 }
 
@@ -978,8 +1029,13 @@ function insertToast(
   const position = next.position;
   const order = next.order;
 
-  const others = existing.filter((t) => t.position !== position);
-  const samePos = existing.filter((t) => t.position === position);
+  // Ordering is scoped per (position, containerId) so each container's
+  // stack stays contiguous and deterministic.
+  const sameScope = (t: ToastInstance) =>
+    t.position === position && t.containerId === next.containerId;
+
+  const others = existing.filter((t) => !sameScope(t));
+  const samePos = existing.filter(sameScope);
 
   const isTop = position.startsWith("top-");
 

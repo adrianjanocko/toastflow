@@ -9,6 +9,12 @@ const toastflowCorePackage = JSON.parse(
   readFileSync(new URL("../core/package.json", import.meta.url), "utf8"),
 ) as { version?: string };
 const publicAssetsDir = fileURLToPath(new URL("../../assets", import.meta.url));
+const toastflowCoreDistDir = fileURLToPath(
+  new URL("../core/dist", import.meta.url),
+);
+const toastflowVueDistDir = fileURLToPath(
+  new URL("../vue/dist", import.meta.url),
+);
 
 loadLocalEnv();
 process.env.NUXT_PUBLIC_SITE_URL ??= "https://www.toastflow.top";
@@ -220,7 +226,7 @@ function docusMcpServer() {
 
 function dropDevOnlyRootPrerender(nitroConfig: {
   prerender?: { routes?: unknown[] };
-  routeRules?: Record<string, Record<string, unknown>>;
+  routeRules?: Record<string, { prerender?: unknown }>;
 }) {
   if (process.env.NODE_ENV === "production") {
     return;
@@ -251,6 +257,30 @@ function dropDevOnlyRootPrerender(nitroConfig: {
 export default defineNuxtConfig({
   extends: ["docus"],
   modules: ["@nuxtjs/sitemap"],
+  // In `nuxt dev` the REPL loads the local workspace builds (see
+  // ToastflowRepl.vue) so unpublished features are testable; production
+  // stays on the pinned CDN versions.
+  $development: {
+    vite: {
+      define: {
+        __TOASTFLOW_LOCAL_DEV__: JSON.stringify(true),
+      },
+    },
+    nitro: {
+      publicAssets: [
+        {
+          baseURL: "/@toastflow-local/core",
+          dir: toastflowCoreDistDir,
+          maxAge: 0,
+        },
+        {
+          baseURL: "/@toastflow-local/vue",
+          dir: toastflowVueDistDir,
+          maxAge: 0,
+        },
+      ],
+    },
+  },
   ...(resolvedDevPort !== null ? { devServer: { port: resolvedDevPort } } : {}),
   devtools: {
     enabled: envFlag("NUXT_DEVTOOLS"),
@@ -261,6 +291,18 @@ export default defineNuxtConfig({
         lang: "en",
       },
     },
+  },
+  // @nuxt/fonts (via Docus → @nuxt/ui) downloads these at build time and
+  // self-hosts them under /_fonts with preloads + metric-adjusted fallbacks.
+  fonts: {
+    families: [
+      {
+        name: "Manrope",
+        provider: "google",
+        weights: [400, 500, 600, 700, 800],
+      },
+      { name: "Fraunces", provider: "google", weights: [600, 700] },
+    ],
   },
   vite: {
     define: {

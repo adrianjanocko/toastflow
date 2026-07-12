@@ -56,6 +56,21 @@ const prefersReducedMotion =
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const showMore = ref(true);
 const hasMounted = ref(false);
+// Defer the heavy playground chunk until the main thread is idle so initial
+// hydration stays responsive (TBT/INP).
+const isPlaygroundReady = ref(false);
+
+onMounted(function () {
+  function startPlayground() {
+    isPlaygroundReady.value = true;
+  }
+
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(startPlayground, { timeout: 2000 });
+  } else {
+    setTimeout(startPlayground, 200);
+  }
+});
 const themeMode = computed<ThemeMode>(function () {
   return colorMode.value === "dark" ? "dark" : "light";
 });
@@ -98,9 +113,8 @@ const themeToggleLabel = computed(function () {
 const siteUrl = "https://www.toastflow.top/";
 const siteTitle = "Toast Notifications Playground for Vue and Nuxt | Toastflow";
 const siteDescription =
-  "Test Toastflow toast notifications for Vue 3 and Nuxt. Configure positions, timing, animations, and behaviors in an interactive live playground.";
+  "Test Toastflow toast notifications for Vue 3 and Nuxt in a live playground: positions, timers, animations, and copy-ready code.";
 const siteImage = "https://www.toastflow.top/banner.png";
-const umamiWebsiteId = String(runtimeConfig.public.umamiWebsiteId ?? "").trim();
 
 function toggleTheme() {
   colorMode.preference = isDarkTheme.value ? "light" : "dark";
@@ -159,15 +173,6 @@ useHead({
     },
   ],
   script: [
-    ...(umamiWebsiteId
-      ? [
-          {
-            defer: true,
-            src: "https://cloud.umami.is/script.js",
-            "data-website-id": umamiWebsiteId,
-          },
-        ]
-      : []),
     {
       type: "application/ld+json",
       innerHTML: JSON.stringify({
@@ -445,7 +450,12 @@ function openMore(targetId = "more-info", offsetPx = 20) {
         </section>
 
         <ClientOnly>
-          <Playground :theme-mode="themeMode" />
+          <Playground v-if="isPlaygroundReady" :theme-mode="themeMode" />
+          <LoadingPanel
+            v-else
+            label="Loading playground…"
+            class="max-w-5xl min-h-150 lg:min-h-180"
+          />
           <template #fallback>
             <LoadingPanel
               label="Loading playground…"
@@ -479,9 +489,19 @@ function openMore(targetId = "more-info", offsetPx = 20) {
                 <p class="text-slate-600 dark:text-slate-300">
                   Toastflow ships sensible defaults for accessibility, queue
                   management, and keyboard shortcuts. It is a typed core with a
-                  Vue renderer, Nuxt wrapper, CSS-first theming, and headless
-                  hooks so you can render the same store logic with your own UI.
-                  The library weighs under 5 kB gzipped, has zero runtime
+                  Vue renderer, Nuxt wrapper,
+                  <NuxtLink
+                    to="/docs/global/styling"
+                    class="font-medium text-sky-600 underline underline-offset-2 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300"
+                    >CSS-first theming</NuxtLink
+                  >, and
+                  <NuxtLink
+                    to="/docs/headless/headless-slot"
+                    class="font-medium text-sky-600 underline underline-offset-2 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300"
+                    >headless hooks</NuxtLink
+                  >
+                  so you can render the same store logic with your own UI. The
+                  library weighs under 5 kB gzipped, has zero runtime
                   dependencies, and supports Vue 3.5+ with full TypeScript
                   inference.
                 </p>
@@ -632,7 +652,13 @@ function openMore(targetId = "more-info", offsetPx = 20) {
                 </h2>
                 <p class="text-slate-600 dark:text-slate-300">
                   Quick answers for developers and teams evaluating Toastflow as
-                  their Vue or Nuxt toast notification solution.
+                  their Vue or Nuxt toast notification solution. See
+                  <NuxtLink
+                    to="/docs/more/comparisons"
+                    class="font-medium text-sky-600 underline underline-offset-2 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300"
+                    >how Toastflow compares</NuxtLink
+                  >
+                  to other Vue toast libraries.
                 </p>
               </div>
               <div class="grid gap-3">
@@ -670,8 +696,12 @@ function openMore(targetId = "more-info", offsetPx = 20) {
                     Yes. Install the plugin once, then call
                     <code>toast.*</code> from stores or services. In Nuxt, use
                     auto-imported <code>toast</code> or <code>useToast()</code>.
-                    For non-Vue apps, use the headless
-                    <code>toastflow-core</code> store.
+                    For non-Vue apps, use the
+                    <NuxtLink
+                      to="/docs/headless/core-store"
+                      class="font-medium text-sky-600 underline underline-offset-2 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300"
+                      >headless <code>toastflow-core</code> store</NuxtLink
+                    >.
                   </p>
                 </div>
                 <div
@@ -681,8 +711,12 @@ function openMore(targetId = "more-info", offsetPx = 20) {
                     How do I style it to match my brand?
                   </h3>
                   <p class="text-slate-600 dark:text-slate-300">
-                    Override CSS variables, pass a <code>theme</code> or inline
-                    <code>css</code>
+                    Override
+                    <NuxtLink
+                      to="/docs/global/styling"
+                      class="font-medium text-sky-600 underline underline-offset-2 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300"
+                      >CSS variables</NuxtLink
+                    >, pass a <code>theme</code> or inline <code>css</code>
                     object, or use the headless slot to ship a fully custom
                     card.
                   </p>
@@ -697,7 +731,13 @@ function openMore(targetId = "more-info", offsetPx = 20) {
                     Subscribe to <code>toast.subscribe</code> for state changes
                     or <code>toast.subscribeEvents</code> for duplicate, update,
                     and timer-reset signals, then wire your analytics from
-                    there.
+                    there. See the
+                    <NuxtLink
+                      to="/docs/api/events"
+                      class="font-medium text-sky-600 underline underline-offset-2 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300"
+                      >events API reference</NuxtLink
+                    >
+                    for every signal.
                   </p>
                 </div>
               </div>

@@ -16,8 +16,22 @@
     /* stack padding (used for scrollable stack) */
     --tf-toast-stack-padding-top: 8px;
     --tf-toast-stack-padding-right: 8px;
-    --tf-toast-stack-padding-bottom: 18px;
+    --tf-toast-stack-padding-bottom: 8px;
     --tf-toast-stack-padding-left: 0;
+
+    /* stack scrollbar (used for scrollable stack) */
+    --tf-toast-scrollbar-size: 6px;
+    --tf-toast-scrollbar-thumb: color-mix(
+      in srgb,
+      var(--tf-toast-normal-text-default) 25%,
+      transparent
+    );
+    --tf-toast-scrollbar-thumb-hover: color-mix(
+      in srgb,
+      var(--tf-toast-normal-text-default) 45%,
+      transparent
+    );
+    --tf-toast-scrollbar-track: transparent;
 
     /* title */
     --tf-toast-title-font-size: 14px;
@@ -380,9 +394,11 @@
   inset: 0;
 }
 
+/* Anchored-edge offset comes from inline styles; the opposite edge is pinned
+   to the viewport edge so a scrollable stack (and its scrollbar) never
+   extends past the visible area. */
 .tf-toast-stack {
   position: absolute;
-  height: 100%;
   display: flex;
   align-items: flex-start;
 }
@@ -400,6 +416,12 @@
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: contain;
+  /* The container owns scroll anchoring (keeps bottom stacks pinned to the
+     newest toast without fighting the FLIP move animation). */
+  overflow-anchor: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--tf-toast-scrollbar-thumb)
+    var(--tf-toast-scrollbar-track);
   padding-top: var(--tf-toast-stack-padding-top);
   padding-right: var(--tf-toast-stack-padding-right);
   padding-bottom: var(--tf-toast-stack-padding-bottom);
@@ -409,9 +431,56 @@
     var(--tf-toast-stack-padding-left);
 }
 
+/* Safari / older WebKit fallback (Chromium ignores these once
+   scrollbar-color applies) */
+.tf-toast-stack-inner--scroll::-webkit-scrollbar {
+  width: var(--tf-toast-scrollbar-size);
+}
+
+.tf-toast-stack-inner--scroll::-webkit-scrollbar-track {
+  background: var(--tf-toast-scrollbar-track);
+}
+
+.tf-toast-stack-inner--scroll::-webkit-scrollbar-thumb {
+  background: var(--tf-toast-scrollbar-thumb);
+  border-radius: 999px;
+}
+
+.tf-toast-stack-inner--scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--tf-toast-scrollbar-thumb-hover);
+}
+
+/* The edge opposite the stack's anchor is pinned to the viewport (0), so the
+   configured offset is added as scroll padding there — both ends of a fully
+   scrolled stack keep the same visual gap. --tf-toast-stack-offset is set
+   inline by the container from the `offset` config. */
+.tf-toast-stack-inner--scroll[data-position^="top-"] {
+  padding-bottom: calc(
+    var(--tf-toast-stack-padding-bottom) + var(--tf-toast-stack-offset, 0px)
+  );
+}
+
+.tf-toast-stack-inner--scroll[data-position^="bottom-"] {
+  padding-top: calc(
+    var(--tf-toast-stack-padding-top) + var(--tf-toast-stack-offset, 0px)
+  );
+}
+
+.tf-toast-stack--bottom {
+  align-items: flex-end;
+}
+
 .tf-toast-stack-inner--bottom {
   min-height: 100%;
   justify-content: flex-end;
+}
+
+/* Scrollable bottom stacks: a flex-end column clips overflowing top items
+   past the scroll origin, so the inner becomes a normal top-down column and
+   the outer .tf-toast-stack--bottom pins it to the viewport edge instead. */
+.tf-toast-stack-inner--bottom-scroll {
+  min-height: 0;
+  justify-content: flex-start;
 }
 
 .tf-toast-stack--left {
